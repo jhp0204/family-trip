@@ -1,3 +1,10 @@
+.jt-comment-body strong{font-size:13px}
+.jt-comment-body span{font-size:11px;color:var(--muted)}
+.jt-comment-body p{font-size:14px;white-space:pre-wrap;word-break:break-word}
+.jt-comment .jt-del{padding:4px}
+.jt-comment-input{margin-top:10px}
+.jt-comment-input input{padding:9px 12px}
+.jt-send{flex:0 0 auto;width:42px;border:0;border-radius:10px;background:var(--ink);color:#fff !important;display:grid;place-items:center}
 .jt-send:disabled{opacity:.3;cursor:not-allowed}
 .jt-formmsg{margin:0}
 .jt-maprow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
