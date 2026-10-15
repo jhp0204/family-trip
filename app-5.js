@@ -1,4 +1,3 @@
-.jt-spend:active{background:#F8F9FB}
 .jt-spend-main{min-width:0;flex:1}
 .jt-spend-amt{display:flex;flex-direction:column;align-items:flex-end;text-align:right;flex:0 0 auto}
 .jt-spend-amt strong{font-variant-numeric:tabular-nums}
@@ -405,57 +404,67 @@
 .jt .jt-msg-editbox textarea{font-size:15px;border-radius:12px;padding:8px 10px;resize:vertical}
 .jt-msg-editact{display:flex;justify-content:flex-end;gap:6px}
 @media (prefers-reduced-motion:reduce){.jt-msg.flash .jt-bubble{animation:none;box-shadow:0 0 0 3px #F2C14E}}
+/* 길게 눌러 누른 사람 보기 */
+.jt-hold{position:relative;display:inline-flex}
+.jt-holdbtn{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.jt-whopop{position:absolute;z-index:35;min-width:150px;max-width:220px;background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(20,33,61,.22);padding:10px 12px;animation:jt-pop .14s ease-out}
+.jt-whopop.up{bottom:calc(100% + 6px)}.jt-whopop.down{top:calc(100% + 6px)}.jt-whopop.left{left:0}.jt-whopop.right{right:0}
+.jt-whopop strong{display:block;font-size:13px;margin-bottom:6px;white-space:nowrap}
+.jt-whopop ul{display:flex;flex-direction:column;gap:6px}
+.jt-whopop li{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.jt-whopop p{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.jt-whopop{animation:none}}
 `;
 
 // src/main.jsx
 import { jsx as Z, jsxs as Kt } from "react/jsx-runtime";
-var tn = `rules_version = '2';
+var na = `rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /trips/{trip}/{document=**} {
       allow read, write: if trip.size() >= 12;
     }
   }
-}`, ii = (e) => {
-  let a = e && (e.code || e.message) || "";
-  return a.includes("permission") ? "Firebase 보안 규칙이 막고 있어요. 아래 규칙을 Firestore '규칙' 탭에 붙여넣고 '게시'를 눌러 주세요." : a.includes("timeout") ? "Firebase에 연결되지 않았어요. 인터넷 연결과 Firestore 데이터베이스를 만들었는지 확인해 주세요." : a.includes("api-key") || a.includes("invalid") ? "설정값이 맞지 않아요. Firebase 콘솔에서 firebaseConfig 부분을 다시 복사해 주세요." : "연결하지 못했어요. 설정값과 인터넷 연결을 확인해 주세요. (" + a + ")";
+}`, ri = (e) => {
+  let n = e && (e.code || e.message) || "";
+  return n.includes("permission") ? "Firebase 보안 규칙이 막고 있어요. 아래 규칙을 Firestore '규칙' 탭에 붙여넣고 '게시'를 눌러 주세요." : n.includes("timeout") ? "Firebase에 연결되지 않았어요. 인터넷 연결과 Firestore 데이터베이스를 만들었는지 확인해 주세요." : n.includes("api-key") || n.includes("invalid") ? "설정값이 맞지 않아요. Firebase 콘솔에서 firebaseConfig 부분을 다시 복사해 주세요." : "연결하지 못했어요. 설정값과 인터넷 연결을 확인해 주세요. (" + n + ")";
 };
 function si({ onDone: e }) {
-  let [a, n] = At("join"), [i, s] = At(""), [y, v] = At(""), [f, m] = At(!1), [w, l] = At(""), [M, x] = At(!1), b = async (d, E) => {
-    m(!0), l("");
+  let [n, a] = At("join"), [i, r] = At(""), [v, x] = At(""), [b, u] = At(!1), [y, l] = At(""), [M, f] = At(!1), z = async (c, N) => {
+    u(!0), l("");
     try {
-      Ce(d, E), await ja(), ga(d, E), e();
-    } catch (C) {
-      l(ii(C)), m(!1);
+      Ce(c, N), await yn(), bn(c, N), e();
+    } catch (E) {
+      l(ri(E)), u(!1);
     }
-  }, I = () => {
-    let d = ha(i);
-    if (!d) {
+  }, C = () => {
+    let c = vn(i);
+    if (!c) {
       l("설정값을 찾지 못했어요. apiKey, projectId, appId가 들어 있는 firebaseConfig 부분 전체를 붙여넣어 주세요.");
       return;
     }
-    b(d, xa());
-  }, r = () => {
-    let d = Ne(y);
-    if (!d) {
+    z(c, jn());
+  }, s = () => {
+    let c = Ne(v);
+    if (!c) {
       l("초대 링크가 아니에요. 가족에게 받은 주소 전체를 붙여넣어 주세요.");
       return;
     }
-    b(d.c, d.t);
+    z(c.c, c.t);
   };
   return /* @__PURE__ */ Kt("div", { className: "jt", children: [
-    /* @__PURE__ */ Z("style", { children: Ye }),
+    /* @__PURE__ */ Z("style", { children: Je }),
     /* @__PURE__ */ Kt("div", { className: "jt-setup", children: [
       /* @__PURE__ */ Z("h1", { children: "가족 여행 앱" }),
       /* @__PURE__ */ Kt("div", { className: "jt-seg", role: "tablist", children: [
-        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": a === "join", className: a === "join" ? "on" : "", onClick: () => n("join"), children: "초대받았어요" }),
-        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": a === "new", className: a === "new" ? "on" : "", onClick: () => n("new"), children: "처음 만들어요" })
+        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": n === "join", className: n === "join" ? "on" : "", onClick: () => a("join"), children: "초대받았어요" }),
+        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": n === "new", className: n === "new" ? "on" : "", onClick: () => a("new"), children: "처음 만들어요" })
       ] }),
-      a === "join" ? /* @__PURE__ */ Kt("div", { className: "jt-form", children: [
+      n === "join" ? /* @__PURE__ */ Kt("div", { className: "jt-form", children: [
         /* @__PURE__ */ Z("p", { className: "jt-lead", children: "가족에게 받은 초대 링크를 누르면 바로 들어와요. 홈 화면 아이콘으로 열었는데 이 화면이 보이면, 초대 링크를 아래에 붙여넣어 주세요." }),
-        /* @__PURE__ */ Z("textarea", { rows: 3, value: y, onChange: (d) => v(d.target.value), placeholder: "https://…#j=…", "aria-label": "초대 링크" }),
-        w && /* @__PURE__ */ Z("p", { className: "jt-warn-inline", children: w }),
-        /* @__PURE__ */ Z("button", { className: "jt-primary", disabled: f || !y.trim(), onClick: r, children: f ? "연결 중" : "여행에 들어가기" })
+        /* @__PURE__ */ Z("textarea", { rows: 3, value: v, onChange: (c) => x(c.target.value), placeholder: "https://…#j=…", "aria-label": "초대 링크" }),
+        y && /* @__PURE__ */ Z("p", { className: "jt-warn-inline", children: y }),
+        /* @__PURE__ */ Z("button", { className: "jt-primary", disabled: b || !v.trim(), onClick: s, children: b ? "연결 중" : "여행에 들어가기" })
       ] }) : /* @__PURE__ */ Kt("div", { className: "jt-form", children: [
         /* @__PURE__ */ Z("p", { className: "jt-lead", children: "가족 중 한 명만 한 번 하면 돼요. Firebase 프로젝트의 웹 앱 설정값(firebaseConfig)을 붙여넣어 주세요." }),
         /* @__PURE__ */ Z(
@@ -463,7 +472,7 @@ function si({ onDone: e }) {
           {
             rows: 7,
             value: i,
-            onChange: (d) => s(d.target.value),
+            onChange: (c) => r(c.target.value),
             placeholder: `const firebaseConfig = {
   apiKey: "…",
   authDomain: "…",
@@ -476,7 +485,7 @@ function si({ onDone: e }) {
         ),
         /* @__PURE__ */ Kt("div", { className: "jt-field", children: [
           /* @__PURE__ */ Z("span", { children: "Firestore 보안 규칙 (규칙 탭에 붙여넣기)" }),
-          /* @__PURE__ */ Z("pre", { className: "jt-rules", children: tn }),
+          /* @__PURE__ */ Z("pre", { className: "jt-rules", children: na }),
           /* @__PURE__ */ Z(
             "button",
             {
@@ -484,35 +493,35 @@ function si({ onDone: e }) {
               className: "jt-secondary",
               onClick: async () => {
                 try {
-                  await navigator.clipboard.writeText(tn), x(!0);
+                  await navigator.clipboard.writeText(na), f(!0);
                 } catch {
-                  x(!1);
+                  f(!1);
                 }
               },
               children: M ? "규칙을 복사했어요" : "규칙 복사"
             }
           )
         ] }),
-        w && /* @__PURE__ */ Z("p", { className: "jt-warn-inline", children: w }),
-        /* @__PURE__ */ Z("button", { className: "jt-primary", disabled: f || !i.trim(), onClick: I, children: f ? "연결 확인 중" : "연결하고 여행 만들기" })
+        y && /* @__PURE__ */ Z("p", { className: "jt-warn-inline", children: y }),
+        /* @__PURE__ */ Z("button", { className: "jt-primary", disabled: b || !i.trim(), onClick: C, children: b ? "연결 확인 중" : "연결하고 여행 만들기" })
       ] })
     ] }),
     /* @__PURE__ */ Z("style", { children: ".jt-lead{font-size:14px;color:#33405C}.jt-rules{margin:0;font-size:11.5px;line-height:1.5;background:#fff;border-radius:10px;padding:10px 12px;overflow-x:auto;white-space:pre}.jt .jt-setup .jt-seg{margin-bottom:16px}" })
   ] });
 }
-function ri() {
-  let [e, a] = At(() => {
-    let n = ua();
-    if (!n) return !1;
+function li() {
+  let [e, n] = At(() => {
+    let a = fn();
+    if (!a) return !1;
     try {
-      return Ce(n.c, n.t), !0;
+      return Ce(a.c, a.t), !0;
     } catch {
       return !1;
     }
   });
-  return ni(() => {
+  return oi(() => {
     "serviceWorker" in navigator && location.protocol === "https:" && navigator.serviceWorker.register("./sw.js").catch(() => {
     });
-  }, []), e ? /* @__PURE__ */ Z(He, {}) : /* @__PURE__ */ Z(si, { onDone: () => a(!0) });
+  }, []), e ? /* @__PURE__ */ Z(Ye, {}) : /* @__PURE__ */ Z(si, { onDone: () => n(!0) });
 }
-oi(document.getElementById("root")).render(/* @__PURE__ */ Z(ri, {}));
+ii(document.getElementById("root")).render(/* @__PURE__ */ Z(li, {}));
