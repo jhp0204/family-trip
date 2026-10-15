@@ -112,7 +112,7 @@ function vn(e) {
     r && (o[i] = r[1]);
   }), o.apiKey && o.projectId && o.appId ? o : null;
 }
-var Xt = null, xt = /* @__PURE__ */ new Map(), we = /* @__PURE__ */ new Set(), ke = Promise.resolve(), ve = null, pn = null, Ma = () => {
+var Xt = null, xt = /* @__PURE__ */ new Map(), we = /* @__PURE__ */ new Set(), ke = Promise.resolve(), ve = null, pn = null, Aa = () => {
   clearTimeout(pn), pn = setTimeout(() => we.forEach((e) => e()), 250);
 }, dn = (e) => un(Xt, "trips", Nt.code, "data", e), ye = (e) => qt + Nt.code + ":" + e, mn = (e) => Promise.race([e.then(() => !0), new Promise((n) => setTimeout(() => n(!0), 4e3))]);
 function ze(e, n) {
@@ -131,10 +131,10 @@ function ze(e, n) {
     (y) => {
       y.docChanges().forEach((x) => {
         x.type === "removed" ? xt.delete(x.doc.id) : xt.set(x.doc.id, x.doc.data().v);
-      }), i(), r || Ma(), r = !1;
+      }), i(), r || Aa(), r = !1;
     },
     () => i()
-  ), window.storage = Aa;
+  ), window.storage = Ma;
 }
 async function yn() {
   let e = un(Xt, "trips", Nt.code, "data", "_ping");
@@ -143,7 +143,7 @@ async function yn() {
     new Promise((n, o) => setTimeout(() => o(new Error("timeout")), 9e3))
   ]);
 }
-var Aa = {
+var Ma = {
   async get(e, n) {
     if (!n) {
       let o = localStorage.getItem(ye(e));
@@ -182,7 +182,7 @@ var q = { settings: "trip:settings", plan: "trip:plan", wish: "trip:wish", spend
 }, ft = (e, n) => {
   let o = Ct(e);
   return o.setDate(o.getDate() + n), o;
-}, ne = (e) => `${e.getMonth() + 1}/${e.getDate()}`, Mt = (e) => mo[e.getDay()], G = (e) => "¥" + Math.round(e).toLocaleString("ko-KR"), ae = (e, n) => "₩" + (Math.round(e * n / 100 / 10) * 10).toLocaleString("ko-KR"), nt = (e) => String(e).padStart(2, "0"), Pe = (e) => {
+}, ne = (e) => `${e.getMonth() + 1}/${e.getDate()}`, At = (e) => mo[e.getDay()], G = (e) => "¥" + Math.round(e).toLocaleString("ko-KR"), ae = (e, n) => "₩" + (Math.round(e * n / 100 / 10) * 10).toLocaleString("ko-KR"), nt = (e) => String(e).padStart(2, "0"), Pe = (e) => {
   let n = (Date.now() - e) / 1e3;
   if (n < 60) return "방금";
   if (n < 3600) return `${Math.floor(n / 60)}분 전`;
@@ -249,7 +249,7 @@ var go = (e) => {
 }, de = (e) => dt(e) ? `${e.lat},${e.lng}` : e.place ? Oe(e.place) : "", bo = (e, n) => {
   let o = e ? de(e) : "", i = de(n);
   return "https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=" + encodeURIComponent(i) + (o ? "&origin=" + encodeURIComponent(o) : "");
-}, ge = (e) => "https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=" + encodeURIComponent(dt(e) ? `${e.lat},${e.lng}` : Oe(e.name || e.title, e.area || e.place)) + (e.placeId ? "&destination_place_id=" + encodeURIComponent(e.placeId) : ""), Oe = (...e) => [...e, "일본"].filter(Boolean).join(" "), dt = (e) => typeof e.lat == "number" && typeof e.lng == "number", Un = (e) => dt(e) ? `${e.lat},${e.lng}` : Oe(e.name || e.title, e.area || e.place), At = (e) => /^https?:\/\//.test(e.link || "") ? e.link : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(Un(e)), xo = (e) => "https://maps.google.com/maps?hl=ko&z=15&output=embed&q=" + encodeURIComponent(Un(e)), jt = 256, Ee = (e, n, o) => {
+}, ge = (e) => "https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=" + encodeURIComponent(dt(e) ? `${e.lat},${e.lng}` : Oe(e.name || e.title, e.area || e.place)) + (e.placeId ? "&destination_place_id=" + encodeURIComponent(e.placeId) : ""), Oe = (...e) => [...e, "일본"].filter(Boolean).join(" "), dt = (e) => typeof e.lat == "number" && typeof e.lng == "number", Un = (e) => dt(e) ? `${e.lat},${e.lng}` : Oe(e.name || e.title, e.area || e.place), Mt = (e) => /^https?:\/\//.test(e.link || "") ? e.link : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(Un(e)), xo = (e) => "https://maps.google.com/maps?hl=ko&z=15&output=embed&q=" + encodeURIComponent(Un(e)), jt = 256, Ee = (e, n, o) => {
   let i = jt * 2 ** o, r = e * Math.PI / 180;
   return {
     x: (n + 180) / 360 * i,
@@ -259,7 +259,7 @@ var go = (e) => {
   let i = jt * 2 ** o, r = Math.PI - 2 * Math.PI * n / i;
   return { lat: 180 / Math.PI * Math.atan(Math.sinh(r)), lng: e / i * 360 - 180 };
 }, Gt = (e) => Math.max(3, Math.min(18, e));
-async function Me(e) {
+async function Ae(e) {
   let n = await window.storage.list(e, !0), o = (n && n.keys || []).map((r) => typeof r == "string" ? r : r.key).filter(Boolean), i = await Promise.all(o.map((r) => ht(r, null)));
   return o.map((r, y) => [r, i[y]]).filter(([, r]) => r);
 }
@@ -298,7 +298,7 @@ async function jo() {
   return null;
 }
 var En = (e) => e.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }), me = (e) => e.fx ? `100엔 = ₩${En(e.rate)} (${e.fx.source}, ${e.fx.date.slice(5).replace("-", "/")}${e.fx.cached ? ", 마지막으로 받은 값" : ""})` : `100엔 = ₩${En(e.rate)} (설정에 입력한 환율, 자동 환율을 불러오지 못했어요)`;
-function Mn(e, n) {
+function An(e, n) {
   let o = () => Object.fromEntries(n.map((b) => [b, 0])), i = o(), r = o(), y = [];
   e.forEach((b) => {
     let C = Number(b.amount) || 0, N = (b.split || []).filter((s) => n.includes(s));
@@ -368,7 +368,7 @@ function St({ onConfirm: e, label: n = "삭제" }) {
     }
   );
 }
-var An = [
+var Mn = [
   ["👍", "좋아요"],
   ["❤️", "사랑해요"],
   ["😆", "웃겨요"],
@@ -450,7 +450,7 @@ function Ue({ item: e, me: n, onReact: o, members: i = [] }) {
       g(k + " " + p);
     }
     y(!r);
-  }, E = An.filter(([N]) => (h[N] || []).length), b = Object.keys(h).find((N) => h[N].includes(n));
+  }, E = Mn.filter(([N]) => (h[N] || []).length), b = Object.keys(h).find((N) => h[N].includes(n));
   O(() => {
     if (!r) return;
     let N = (s) => m.current && !m.current.contains(s.target) && y(!1);
@@ -496,7 +496,7 @@ function Ue({ item: e, me: n, onReact: o, members: i = [] }) {
           }
         ),
         r && /* @__PURE__ */ a("div", { className: "jt-rpop " + x, role: "dialog", "aria-label": "이모티콘 고르기", children: [
-          /* @__PURE__ */ t("div", { className: "jt-rpop-row", children: An.map(([N, s]) => /* @__PURE__ */ t(
+          /* @__PURE__ */ t("div", { className: "jt-rpop-row", children: Mn.map(([N, s]) => /* @__PURE__ */ t(
             "button",
             {
               type: "button",
@@ -585,16 +585,16 @@ function We({ comments: e = [], me: n, members: o, onAdd: i, onDelete: r }) {
   ] });
 }
 function yo({ initial: e, onSave: n, onCancel: o }) {
-  let [i, r] = w(e?.title || "가족 일본여행"), [y, x] = w(e?.start || ct(new Date(Date.now() + 30 * 864e5))), [g, m] = w(e?.days || 4), [h, c] = w(e?.members || []), [E, b] = w(e?.rate || 900), [C, N] = w(e?.gmapsKey || ""), [s, p] = w("locked"), k = H(null), z = (M) => M ? M.length > 10 ? M.slice(0, 4) + "••••••••" + M.slice(-4) : "••••••••" : "설정 안 됨 (기본 지도 사용 중)", [A, v] = w(""), I = () => {
-    let M = A.trim();
-    !M || h.includes(M) || (c([...h, M]), v(""));
+  let [i, r] = w(e?.title || "가족 일본여행"), [y, x] = w(e?.start || ct(new Date(Date.now() + 30 * 864e5))), [g, m] = w(e?.days || 4), [h, c] = w(e?.members || []), [E, b] = w(e?.rate || 900), [C, N] = w(e?.gmapsKey || ""), [s, p] = w("locked"), k = H(null), z = (A) => A ? A.length > 10 ? A.slice(0, 4) + "••••••••" + A.slice(-4) : "••••••••" : "설정 안 됨 (기본 지도 사용 중)", [M, v] = w(""), I = () => {
+    let A = M.trim();
+    !A || h.includes(A) || (c([...h, A]), v(""));
   }, j = i.trim() && y && h.length > 0;
   return /* @__PURE__ */ a("div", { className: "jt-setup", children: [
     o && /* @__PURE__ */ t(Xn, { onBack: o }),
     /* @__PURE__ */ t("h1", { children: e ? "여행 설정" : "우리 가족 여행 만들기" }),
     /* @__PURE__ */ a("div", { className: "jt-form", children: [
-      /* @__PURE__ */ t(at, { label: "여행 이름", children: /* @__PURE__ */ t("input", { value: i, onChange: (M) => r(M.target.value) }) }),
-      /* @__PURE__ */ t(at, { label: "출발일", children: /* @__PURE__ */ t("input", { type: "date", value: y, onChange: (M) => x(M.target.value) }) }),
+      /* @__PURE__ */ t(at, { label: "여행 이름", children: /* @__PURE__ */ t("input", { value: i, onChange: (A) => r(A.target.value) }) }),
+      /* @__PURE__ */ t(at, { label: "출발일", children: /* @__PURE__ */ t("input", { type: "date", value: y, onChange: (A) => x(A.target.value) }) }),
       /* @__PURE__ */ a("div", { className: "jt-field", children: [
         /* @__PURE__ */ t("span", { children: "여행 일수" }),
         /* @__PURE__ */ a("div", { className: "jt-stepper", children: [
@@ -608,25 +608,25 @@ function yo({ initial: e, onSave: n, onCancel: o }) {
       ] }),
       /* @__PURE__ */ a("div", { className: "jt-field", children: [
         /* @__PURE__ */ t("span", { children: "함께 가는 가족" }),
-        /* @__PURE__ */ t("div", { className: "jt-chips", children: h.map((M) => /* @__PURE__ */ a("span", { className: "jt-chip on", children: [
-          /* @__PURE__ */ t(rt, { name: M, members: h, size: 20 }),
-          M,
-          /* @__PURE__ */ t("button", { type: "button", onClick: () => c(h.filter((l) => l !== M)), "aria-label": `${M} 빼기`, children: /* @__PURE__ */ t(_e, { size: 14 }) })
-        ] }, M)) }),
+        /* @__PURE__ */ t("div", { className: "jt-chips", children: h.map((A) => /* @__PURE__ */ a("span", { className: "jt-chip on", children: [
+          /* @__PURE__ */ t(rt, { name: A, members: h, size: 20 }),
+          A,
+          /* @__PURE__ */ t("button", { type: "button", onClick: () => c(h.filter((l) => l !== A)), "aria-label": `${A} 빼기`, children: /* @__PURE__ */ t(_e, { size: 14 }) })
+        ] }, A)) }),
         /* @__PURE__ */ a("div", { className: "jt-inline", children: [
           /* @__PURE__ */ t(
             "input",
             {
-              value: A,
-              onChange: (M) => v(M.target.value),
-              onKeyDown: (M) => M.key === "Enter" && I(),
+              value: M,
+              onChange: (A) => v(A.target.value),
+              onKeyDown: (A) => A.key === "Enter" && I(),
               placeholder: "이름이나 호칭 (예: 엄마)"
             }
           ),
           /* @__PURE__ */ t("button", { type: "button", className: "jt-secondary", onClick: I, children: "추가" })
         ] })
       ] }),
-      /* @__PURE__ */ t(at, { label: "예비 환율 (100엔당 원, 공식 환율을 못 불러올 때만 써요)", children: /* @__PURE__ */ t("input", { type: "number", inputMode: "numeric", value: E, onChange: (M) => b(Number(M.target.value) || 0) }) }),
+      /* @__PURE__ */ t(at, { label: "예비 환율 (100엔당 원, 공식 환율을 못 불러올 때만 써요)", children: /* @__PURE__ */ t("input", { type: "number", inputMode: "numeric", value: E, onChange: (A) => b(Number(A.target.value) || 0) }) }),
       /* @__PURE__ */ a("div", { className: "jt-field", children: [
         /* @__PURE__ */ t("span", { children: "구글 지도 API 키 (선택)" }),
         s === "edit" ? /* @__PURE__ */ t(
@@ -634,7 +634,7 @@ function yo({ initial: e, onSave: n, onCancel: o }) {
           {
             ref: k,
             value: C,
-            onChange: (M) => N(M.target.value.trim()),
+            onChange: (A) => N(A.target.value.trim()),
             placeholder: "AIza로 시작하는 키",
             autoComplete: "off",
             spellCheck: !1,
@@ -772,7 +772,7 @@ function No({ members: e, onPick: n, current: o, onBack: i }) {
   ] });
 }
 function Co({ initial: e, preset: n, gkey: o, dayItems: i = [], onSave: r, onDelete: y }) {
-  let [x, g] = w(e?.time || n?.time || ""), [m, h] = w(e?.end || n?.end || ""), [c, E] = w(e?.link || ""), [b, C] = w(e && dt(e) ? { lat: e.lat, lng: e.lng, placeId: e.placeId } : null), [N, s] = w([]), [p, k] = w(!1), [z, A] = w(""), [v, I] = w(e?.title || ""), [j, M] = w(e?.place || ""), [l, R] = w(e?.memo || ""), [u, f] = w(!1), T = (_) => {
+  let [x, g] = w(e?.time || n?.time || ""), [m, h] = w(e?.end || n?.end || ""), [c, E] = w(e?.link || ""), [b, C] = w(e && dt(e) ? { lat: e.lat, lng: e.lng, placeId: e.placeId } : null), [N, s] = w([]), [p, k] = w(!1), [z, M] = w(""), [v, I] = w(e?.title || ""), [j, A] = w(e?.place || ""), [l, R] = w(e?.memo || ""), [u, f] = w(!1), T = (_) => {
     if (I(_), !x || u) {
       let S = uo(_);
       S ? (g(S), f(!0)) : u && (g(""), f(!1));
@@ -780,15 +780,15 @@ function Co({ initial: e, preset: n, gkey: o, dayItems: i = [], onSave: r, onDel
   }, D = async () => {
     let _ = (j || v).trim();
     if (!_) {
-      A("장소 이름을 먼저 적어 주세요.");
+      M("장소 이름을 먼저 적어 주세요.");
       return;
     }
-    k(!0), A(""), s([]);
+    k(!0), M(""), s([]);
     try {
       let S = await Qn(_, o);
-      s(S), S.length || A("검색 결과가 없어요. 다른 이름이나 영어, 일본어로 검색해 보세요.");
+      s(S), S.length || M("검색 결과가 없어요. 다른 이름이나 영어, 일본어로 검색해 보세요.");
     } catch {
-      A("검색을 불러오지 못했어요. 장소 이름만 적어도 구글맵에서 찾을 수 있어요.");
+      M("검색을 불러오지 못했어요. 장소 이름만 적어도 구글맵에서 찾을 수 있어요.");
     }
     k(!1);
   }, X = x && m && zt(m) <= zt(x), Y = x ? i.filter((_) => {
@@ -840,7 +840,7 @@ function Co({ initial: e, preset: n, gkey: o, dayItems: i = [], onSave: r, onDel
           "input",
           {
             value: j,
-            onChange: (_) => M(_.target.value),
+            onChange: (_) => A(_.target.value),
             onKeyDown: (_) => _.key === "Enter" && !_.nativeEvent.isComposing && D(),
             placeholder: "예: 오사카성, 이치란 도톤보리",
             "aria-label": "장소"
@@ -855,7 +855,7 @@ function Co({ initial: e, preset: n, gkey: o, dayItems: i = [], onSave: r, onDel
       {
         type: "button",
         onClick: () => {
-          M(_.name), C({ lat: _.lat, lng: _.lng, placeId: _.placeId }), _.link && E(_.link), s([]), A("");
+          A(_.name), C({ lat: _.lat, lng: _.lng, placeId: _.placeId }), _.link && E(_.link), s([]), M("");
         },
         children: [
           /* @__PURE__ */ t("strong", { children: _.name }),
@@ -866,7 +866,7 @@ function Co({ initial: e, preset: n, gkey: o, dayItems: i = [], onSave: r, onDel
     b && /* @__PURE__ */ a("div", { className: "jt-picked", children: [
       /* @__PURE__ */ t(Et, { size: 14 }),
       /* @__PURE__ */ t("span", { children: "지도 위치가 연결됐어요" }),
-      /* @__PURE__ */ a("a", { className: "jt-maplink", href: At({ title: v, place: j, link: c, ...b }), target: "_blank", rel: "noopener noreferrer", children: [
+      /* @__PURE__ */ a("a", { className: "jt-maplink", href: Mt({ title: v, place: j, link: c, ...b }), target: "_blank", rel: "noopener noreferrer", children: [
         /* @__PURE__ */ t(Kt, { size: 13 }),
         "구글맵에서 확인"
       ] }),
@@ -930,8 +930,13 @@ function zo({ initial: e, onSave: n, onDelete: o }) {
   ] });
 }
 function Eo({ settings: e, me: n, defaultDay: o, initial: i, onSave: r, onDelete: y }) {
-  let { members: x, days: g, start: m, rate: h } = e, [c, E] = w(i?.title || ""), [b, C] = w(i ? String(Number(i.amount) || "") : ""), [N, s] = w(i && x.includes(i.payer) ? i.payer : n), [p, k] = w(i?.cat || "식비"), [z, A] = w(i ? Math.min(i.day, g - 1) : o), [v, I] = w(i ? (i.split || []).filter((u) => x.includes(u)) : x), j = Number(b) || 0, M = i ? [i.payer, ...i.split || []].filter((u, f, T) => u && !x.includes(u) && T.indexOf(u) === f) : [], l = (u) => I(v.includes(u) ? v.filter((f) => f !== u) : [...v, u]), R = c.trim() && j > 0 && v.length > 0;
+  let { members: x, days: g, start: m, rate: h } = e, [c, E] = w(i?.title || ""), [b, C] = w(i ? String(Number(i.amount) || "") : ""), [N, s] = w(i && x.includes(i.payer) ? i.payer : n), [p, k] = w(i?.cat || "식비"), [z, M] = w(i ? Math.min(i.day, g - 1) : o), [v, I] = w(i ? (i.split || []).filter((u) => x.includes(u)) : x), j = Number(b) || 0, A = i ? [i.payer, ...i.split || []].filter((u, f, T) => u && !x.includes(u) && T.indexOf(u) === f) : [], l = (u) => I(v.includes(u) ? v.filter((f) => f !== u) : [...v, u]), R = c.trim() && j > 0 && v.length > 0;
   return /* @__PURE__ */ a("div", { className: "jt-form", children: [
     /* @__PURE__ */ t(at, { label: "어디에 썼나요", children: /* @__PURE__ */ t("input", { value: c, onChange: (u) => E(u.target.value), placeholder: "예: 점심 라멘" }) }),
     /* @__PURE__ */ t(at, { label: "금액 (엔)", children: /* @__PURE__ */ t("input", { type: "number", inputMode: "numeric", value: b, onChange: (u) => C(u.target.value), placeholder: "0" }) }),
     j > 0 ? /* @__PURE__ */ a("p", { className: "jt-hint jt-fxhint", children: [
+      "약 ",
+      /* @__PURE__ */ t("b", { children: ae(j, h) }),
+      /* @__PURE__ */ t("br", {}),
+      me(e)
+    ] }) : /* @__PURE__ */ t("p", { className: "jt-hint", children: me(e) }),
