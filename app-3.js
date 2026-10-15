@@ -1,81 +1,44 @@
-function oa(t) {
-  let { view: a, setView: n, pins: o, temp: s, selectedId: g, onTap: f, onPinTap: d } = t, m = J(null), j = J(null), h = J(null), v = J([]), b = J(null), w = J({});
-  w.current = { onTap: f, onPinTap: d, setView: n };
-  let [u, p] = C("loading");
-  return Y(() => {
-    let i = !0;
-    return $n().then((c) => {
-      if (!i || !m.current) return;
-      h.current = c;
-      let k = new c.Map({
-        container: m.current,
-        style: Pn,
-        center: [a.lng, a.lat],
-        zoom: a.z - 1,
-        attributionControl: { compact: !0 },
-        dragRotate: !1,
-        pitchWithRotate: !1
-      });
-      k.touchZoomRotate.disableRotation(), k.addControl(new c.NavigationControl({ showCompass: !1 }), "top-right"), k.on("load", () => {
-        _n(k), i && p("ok");
-      }), k.on("click", (x) => {
-        x.originalEvent && x.originalEvent.target.closest && x.originalEvent.target.closest(".jt-mlpin") || w.current.onTap(x.lngLat.lat, x.lngLat.lng);
-      }), k.on("moveend", () => {
-        let x = k.getCenter();
-        w.current.setView({ lat: x.lat, lng: x.lng, z: k.getZoom() + 1 });
-      }), j.current = k, setTimeout(() => i && !k.loaded() && p((x) => x === "loading" ? "slow" : x), 6e3), setTimeout(() => {
-        i && j.current === k && !k.loaded() && (k.remove(), j.current = null, p("fail"));
-      }, 15e3);
-    }).catch(() => i && p("fail")), () => {
-      i = !1, j.current && j.current.remove(), j.current = null;
-    };
-  }, []), Y(() => {
-    let i = j.current;
-    if (!i) return;
-    let c = i.getCenter();
-    (Math.abs(c.lat - a.lat) > 1e-6 || Math.abs(c.lng - a.lng) > 1e-6 || Math.abs(i.getZoom() + 1 - a.z) > 0.01) && i.flyTo({ center: [a.lng, a.lat], zoom: a.z - 1, duration: 600 });
-  }, [a.lat, a.lng, a.z]), Y(() => {
-    let i = j.current, c = h.current;
-    !i || !c || (v.current.forEach((k) => k.remove()), v.current = o.map((k) => {
-      let x = document.createElement("button");
-      return x.type = "button", x.className = "jt-mlpin" + (k.id === g ? " sel" : ""), x.setAttribute("aria-label", k.label), x.innerHTML = se(k.color, k.id === g), x.addEventListener("click", (l) => {
-        l.stopPropagation(), w.current.onPinTap(k.id);
-      }), new c.Marker({ element: x, anchor: "bottom" }).setLngLat([k.lng, k.lat]).addTo(i);
+let s = x.current, v = j.current;
+    !s || !v || (y.current.forEach((u) => u.remove()), y.current = o.map((u) => {
+      let b = document.createElement("button");
+      return b.type = "button", b.className = "jt-mlpin" + (u.id === f ? " sel" : ""), b.setAttribute("aria-label", u.label), b.innerHTML = pe(u.color, u.id === f), b.addEventListener("click", (l) => {
+        l.stopPropagation(), w.current.onPinTap(u.id);
+      }), new v.Marker({ element: b, anchor: "bottom" }).setLngLat([u.lng, u.lat]).addTo(s);
     }));
-  }, [o, g, u]), Y(() => {
-    let i = j.current, c = h.current;
-    if (b.current && b.current.remove(), b.current = null, !i || !c || !s) return;
-    let k = document.createElement("div");
-    k.className = "jt-mlpin temp", k.innerHTML = se("#14213D", !0), b.current = new c.Marker({ element: k, anchor: "bottom" }).setLngLat([s.lng, s.lat]).addTo(i);
-  }, [s, u]), u === "fail" ? /* @__PURE__ */ e(Dn, { ...t }) : /* @__PURE__ */ r("div", { className: "jt-mlwrap", children: [
-    /* @__PURE__ */ e("div", { ref: m, className: "jt-ml", role: "application", "aria-label": "지도. 눌러서 핀을 꽂을 수 있어요" }),
-    (u === "loading" || u === "slow") && /* @__PURE__ */ e("div", { className: "jt-mlmsg", role: "status", children: u === "slow" ? "지도가 느리게 열리고 있어요. 계속 안 열리면 기본 지도로 바꿔 보여 드려요." : "지도 불러오는 중" })
+  }, [o, f, m]), K(() => {
+    let s = x.current, v = j.current;
+    if (h.current && h.current.remove(), h.current = null, !s || !v || !i) return;
+    let u = document.createElement("div");
+    u.className = "jt-mlpin temp", u.innerHTML = pe("#14213D", !0), h.current = new v.Marker({ element: u, anchor: "bottom" }).setLngLat([i.lng, i.lat]).addTo(s);
+  }, [i, m]), m === "fail" ? /* @__PURE__ */ e($n, { ...t }) : /* @__PURE__ */ r("div", { className: "jt-mlwrap", children: [
+    /* @__PURE__ */ e("div", { ref: d, className: "jt-ml", role: "application", "aria-label": "지도. 눌러서 핀을 꽂을 수 있어요" }),
+    (m === "loading" || m === "slow") && /* @__PURE__ */ e("div", { className: "jt-mlmsg", role: "status", children: m === "slow" ? "지도가 느리게 열리고 있어요. 계속 안 열리면 기본 지도로 바꿔 보여 드려요." : "지도 불러오는 중" })
   ] });
 }
-var St = null, ft = "", jt = !1, le = /* @__PURE__ */ new Set();
-function ra(t) {
-  return jt ? Promise.reject(new Error("auth")) : St && ft === t ? St : ft && ft !== t ? Promise.reject(new Error("reload")) : (ft = t, St = new Promise((a, n) => {
+var Ft = null, xt = "", wt = !1, ce = /* @__PURE__ */ new Set();
+function la(t) {
+  return wt ? Promise.reject(new Error("auth")) : Ft && xt === t ? Ft : xt && xt !== t ? Promise.reject(new Error("reload")) : (xt = t, Ft = new Promise((a, n) => {
     window.__jtGmReady = () => a(window.google.maps), window.gm_authFailure = () => {
-      jt = !0, le.forEach((s) => s()), n(new Error("auth"));
+      wt = !0, ce.forEach((i) => i()), n(new Error("auth"));
     };
     let o = document.createElement("script");
     o.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(t) + "&v=weekly&language=ko&region=KR&loading=async&callback=__jtGmReady", o.async = !0, o.onerror = () => {
-      St = null, ft = "", n(new Error("load"));
+      Ft = null, xt = "", n(new Error("load"));
     }, document.head.appendChild(o);
-  }), St);
+  }), Ft);
 }
-var Ln = (t) => !!t && !jt && ft === t && !!(window.google && window.google.maps);
-function Tn(t) {
-  let { view: a, setView: n, pins: o, temp: s, selectedId: g, onTap: f, onPinTap: d, onPoi: m, gkey: j } = t, h = J(null), v = J(null), b = J(null), w = J([]), u = J(null), p = J({});
-  p.current = { onTap: f, onPinTap: d, onPoi: m, setView: n };
-  let [i, c] = C(jt ? "fail" : "loading");
-  Y(() => {
-    let x = !0, l = () => x && c("fail");
-    return le.add(l), ra(j).then(async (M) => {
-      let { Map: I } = await M.importLibrary("maps"), { Marker: O } = await M.importLibrary("marker"), { Size: z, Point: S } = await M.importLibrary("core");
-      if (!x || !h.current) return;
-      b.current = { Marker: O, Size: z, Point: S };
-      let D = new I(h.current, {
+var Bn = (t) => !!t && !wt && xt === t && !!(window.google && window.google.maps);
+function On(t) {
+  let { view: a, setView: n, pins: o, temp: i, selectedId: f, onTap: g, onPinTap: c, onPoi: d, gkey: x } = t, j = J(null), y = J(null), h = J(null), w = J([]), m = J(null), p = J({});
+  p.current = { onTap: g, onPinTap: c, onPoi: d, setView: n };
+  let [s, v] = N(wt ? "fail" : "loading");
+  K(() => {
+    let b = !0, l = () => b && v("fail");
+    return ce.add(l), la(x).then(async (M) => {
+      let { Map: I } = await M.importLibrary("maps"), { Marker: O } = await M.importLibrary("marker"), { Size: S, Point: _ } = await M.importLibrary("core");
+      if (!b || !j.current) return;
+      h.current = { Marker: O, Size: S, Point: _ };
+      let C = new I(j.current, {
         center: { lat: a.lat, lng: a.lng },
         zoom: Math.round(a.z),
         disableDefaultUI: !0,
@@ -83,76 +46,76 @@ function Tn(t) {
         gestureHandling: "greedy",
         clickableIcons: !0
       });
-      D.addListener("click", async (N) => {
-        if (N.placeId) {
-          N.stop();
+      C.addListener("click", async (k) => {
+        if (k.placeId) {
+          k.stop();
           try {
-            let { Place: A } = await M.importLibrary("places"), T = new A({ id: N.placeId });
+            let { Place: F } = await M.importLibrary("places"), T = new F({ id: k.placeId });
             await T.fetchFields({ fields: ["displayName", "location", "formattedAddress", "googleMapsURI"] }), p.current.onPoi({
               name: T.displayName || "",
               lat: T.location.lat(),
               lng: T.location.lng(),
               area: T.formattedAddress || "",
               link: T.googleMapsURI || "",
-              placeId: N.placeId
+              placeId: k.placeId
             });
             return;
           } catch {
           }
         }
-        p.current.onTap(N.latLng.lat(), N.latLng.lng());
-      }), D.addListener("idle", () => {
-        let N = D.getCenter();
-        p.current.setView({ lat: N.lat(), lng: N.lng(), z: D.getZoom() });
-      }), v.current = D, c("ok");
-    }).catch(() => x && c("fail")), () => {
-      x = !1, le.delete(l);
+        p.current.onTap(k.latLng.lat(), k.latLng.lng());
+      }), C.addListener("idle", () => {
+        let k = C.getCenter();
+        p.current.setView({ lat: k.lat(), lng: k.lng(), z: C.getZoom() });
+      }), y.current = C, v("ok");
+    }).catch(() => b && v("fail")), () => {
+      b = !1, ce.delete(l);
     };
-  }, [j]), Y(() => {
-    let x = v.current;
-    if (!x) return;
-    let l = x.getCenter();
-    (Math.abs(l.lat() - a.lat) > 1e-6 || Math.abs(l.lng() - a.lng) > 1e-6) && x.panTo({ lat: a.lat, lng: a.lng }), Math.round(a.z) !== x.getZoom() && x.setZoom(Math.round(a.z));
+  }, [x]), K(() => {
+    let b = y.current;
+    if (!b) return;
+    let l = b.getCenter();
+    (Math.abs(l.lat() - a.lat) > 1e-6 || Math.abs(l.lng() - a.lng) > 1e-6) && b.panTo({ lat: a.lat, lng: a.lng }), Math.round(a.z) !== b.getZoom() && b.setZoom(Math.round(a.z));
   }, [a.lat, a.lng, a.z]);
-  let k = (x, l) => {
-    let M = b.current, I = l ? 34 : 28, O = l ? 44 : 36;
+  let u = (b, l) => {
+    let M = h.current, I = l ? 34 : 28, O = l ? 44 : 36;
     return {
-      url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(se(x, l).replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')),
+      url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(pe(b, l).replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')),
       scaledSize: new M.Size(I, O),
       anchor: new M.Point(I / 2, O)
     };
   };
-  return Y(() => {
-    let x = v.current, l = b.current;
-    !x || !l || (w.current.forEach((M) => M.setMap(null)), w.current = o.map((M) => {
-      let I = new l.Marker({ position: { lat: M.lat, lng: M.lng }, map: x, title: M.label, icon: k(M.color, M.id === g), zIndex: M.id === g ? 10 : 1 });
+  return K(() => {
+    let b = y.current, l = h.current;
+    !b || !l || (w.current.forEach((M) => M.setMap(null)), w.current = o.map((M) => {
+      let I = new l.Marker({ position: { lat: M.lat, lng: M.lng }, map: b, title: M.label, icon: u(M.color, M.id === f), zIndex: M.id === f ? 10 : 1 });
       return I.addListener("click", () => p.current.onPinTap(M.id)), I;
     }));
-  }, [o, g, i]), Y(() => {
-    let x = v.current, l = b.current;
-    u.current && u.current.setMap(null), u.current = null, !(!x || !l || !s) && (u.current = new l.Marker({ position: { lat: s.lat, lng: s.lng }, map: x, icon: k("#14213D", !0), zIndex: 20, clickable: !1 }));
-  }, [s, i]), i === "fail" ? /* @__PURE__ */ e(oa, { ...t }) : /* @__PURE__ */ r("div", { className: "jt-mlwrap", children: [
-    /* @__PURE__ */ e("div", { ref: h, className: "jt-ml", role: "application", "aria-label": "구글 지도. 가게나 명소를 누르면 저장할 수 있어요" }),
-    i === "loading" && /* @__PURE__ */ e("div", { className: "jt-mlmsg", role: "status", children: "구글 지도 불러오는 중" })
+  }, [o, f, s]), K(() => {
+    let b = y.current, l = h.current;
+    m.current && m.current.setMap(null), m.current = null, !(!b || !l || !i) && (m.current = new l.Marker({ position: { lat: i.lat, lng: i.lng }, map: b, icon: u("#14213D", !0), zIndex: 20, clickable: !1 }));
+  }, [i, s]), s === "fail" ? /* @__PURE__ */ e(sa, { ...t }) : /* @__PURE__ */ r("div", { className: "jt-mlwrap", children: [
+    /* @__PURE__ */ e("div", { ref: j, className: "jt-ml", role: "application", "aria-label": "구글 지도. 가게나 명소를 누르면 저장할 수 있어요" }),
+    s === "loading" && /* @__PURE__ */ e("div", { className: "jt-mlmsg", role: "status", children: "구글 지도 불러오는 중" })
   ] });
 }
-function Bn(t) {
-  return t.gkey && !jt ? /* @__PURE__ */ e(Tn, { ...t }) : /* @__PURE__ */ e(oa, { ...t });
+function Un(t) {
+  return t.gkey && !wt ? /* @__PURE__ */ e(On, { ...t }) : /* @__PURE__ */ e(sa, { ...t });
 }
-var He = [
+var Ge = [
   { id: "food", label: "맛집", wish: "맛집", g: ["restaurant"], osm: '["amenity"~"^(restaurant|fast_food)$"]' },
   { id: "cafe", label: "카페", wish: "맛집", g: ["cafe", "bakery"], osm: '["amenity"="cafe"]' },
   { id: "sight", label: "볼거리", wish: "관광", g: ["tourist_attraction", "museum", "park"], osm: '["tourism"~"^(attraction|museum|viewpoint|gallery)$"]' },
   { id: "shop", label: "쇼핑", wish: "쇼핑", g: ["shopping_mall", "department_store", "clothing_store"], osm: '["shop"~"^(mall|department_store|clothes)$"]' },
   { id: "conv", label: "편의점", wish: "기타", g: ["convenience_store"], osm: '["shop"="convenience"]' }
-], On = [500, 1e3, 2e3], oe = (t) => t >= 1e3 ? t / 1e3 + "km" : t + "m";
-function Un(t, a) {
-  let n = (f) => f * Math.PI / 180, o = n(a.lat - t.lat), s = n(a.lng - t.lng), g = Math.sin(o / 2) ** 2 + Math.cos(n(t.lat)) * Math.cos(n(a.lat)) * Math.sin(s / 2) ** 2;
-  return 2 * 6371e3 * Math.asin(Math.sqrt(g));
+], Wn = [500, 1e3, 2e3], ie = (t) => t >= 1e3 ? t / 1e3 + "km" : t + "m";
+function Kn(t, a) {
+  let n = (g) => g * Math.PI / 180, o = n(a.lat - t.lat), i = n(a.lng - t.lng), f = Math.sin(o / 2) ** 2 + Math.cos(n(t.lat)) * Math.cos(n(a.lat)) * Math.sin(i / 2) ** 2;
+  return 2 * 6371e3 * Math.asin(Math.sqrt(f));
 }
-var Kn = (t) => (t < 1e3 ? `${Math.round(t / 10) * 10}m` : `${(t / 1e3).toFixed(1)}km`) + `, 걸어서 ${Math.max(1, Math.round(t / 75))}분`;
-async function Wn(t, a, n, o) {
-  let s = await ra(t), { Place: g, SearchNearbyRankPreference: f } = await s.importLibrary("places"), { places: d } = await g.searchNearby({
+var Hn = (t) => (t < 1e3 ? `${Math.round(t / 10) * 10}m` : `${(t / 1e3).toFixed(1)}km`) + `, 걸어서 ${Math.max(1, Math.round(t / 75))}분`;
+async function Yn(t, a, n, o) {
+  let i = await la(t), { Place: f, SearchNearbyRankPreference: g } = await i.importLibrary("places"), { places: c } = await f.searchNearby({
     fields: [
       "id",
       "displayName",
@@ -168,135 +131,135 @@ async function Wn(t, a, n, o) {
     locationRestriction: { center: a, radius: o },
     includedTypes: n.g,
     maxResultCount: 15,
-    rankPreference: f.POPULARITY,
+    rankPreference: g.POPULARITY,
     language: "ko"
-  }), m = [];
-  for (let j of d || []) {
-    let h;
+  }), d = [];
+  for (let x of c || []) {
+    let j;
     try {
-      h = j.regularOpeningHours ? await j.isOpen() : void 0;
+      j = x.regularOpeningHours ? await x.isOpen() : void 0;
     } catch {
-      h = void 0;
+      j = void 0;
     }
-    m.push({
-      id: j.id,
-      placeId: j.id,
-      name: j.displayName,
-      lat: j.location.lat(),
-      lng: j.location.lng(),
-      type: j.primaryTypeDisplayName || n.label,
-      rating: j.rating,
-      count: j.userRatingCount,
-      addr: j.formattedAddress || "",
-      url: j.googleMapsURI || "",
-      open: h
+    d.push({
+      id: x.id,
+      placeId: x.id,
+      name: x.displayName,
+      lat: x.location.lat(),
+      lng: x.location.lng(),
+      type: x.primaryTypeDisplayName || n.label,
+      rating: x.rating,
+      count: x.userRatingCount,
+      addr: x.formattedAddress || "",
+      url: x.googleMapsURI || "",
+      open: j
     });
   }
-  return m;
+  return d;
 }
-async function Hn(t, a, n) {
-  let o = `[out:json][timeout:20];nwr(around:${n},${t.lat},${t.lng})${a.osm}["name"];out center 40;`, s = await fetch("https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(o));
-  if (!s.ok) throw new Error("osm");
-  return ((await s.json()).elements || []).map((f) => {
-    let d = f.tags || {}, m = d["name:ko"] || d["name:en"] || "";
+async function Jn(t, a, n) {
+  let o = `[out:json][timeout:20];nwr(around:${n},${t.lat},${t.lng})${a.osm}["name"];out center 40;`, i = await fetch("https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(o));
+  if (!i.ok) throw new Error("osm");
+  return ((await i.json()).elements || []).map((g) => {
+    let c = g.tags || {}, d = c["name:ko"] || c["name:en"] || "";
     return {
-      id: "osm" + f.type + f.id,
-      name: m || d.name,
-      sub: m && d.name && d.name !== m ? d.name : "",
-      lat: f.lat != null ? f.lat : f.center && f.center.lat,
-      lng: f.lon != null ? f.lon : f.center && f.center.lon,
+      id: "osm" + g.type + g.id,
+      name: d || c.name,
+      sub: d && c.name && c.name !== d ? c.name : "",
+      lat: g.lat != null ? g.lat : g.center && g.center.lat,
+      lng: g.lon != null ? g.lon : g.center && g.center.lon,
       type: a.label,
       addr: ""
     };
-  }).filter((f) => f.lat && f.name);
+  }).filter((g) => g.lat && g.name);
 }
-function Yn({ settings: t, wish: a, onSave: n }) {
-  let [o, s] = C(He[0]), [g, f] = C(1e3), [d, m] = C(null), [j, h] = C(""), [v, b] = C([]), [w, u] = C(!1), [p, i] = C(""), [c, k] = C(""), [x, l] = C({}), M = () => {
-    m({ lat: xt.lat, lng: xt.lng, here: !1, at: Date.now() }), h("현재 위치를 쓸 수 없어서 오사카 시내 기준으로 보여 드려요. 휴대폰에서 위치 권한을 허용하면 내 위치 기준으로 바뀌어요.");
+function Gn({ settings: t, wish: a, onSave: n }) {
+  let [o, i] = N(Ge[0]), [f, g] = N(1e3), [c, d] = N(null), [x, j] = N(""), [y, h] = N([]), [w, m] = N(!1), [p, s] = N(""), [v, u] = N(""), [b, l] = N({}), M = () => {
+    d({ lat: yt.lat, lng: yt.lng, here: !1, at: Date.now() }), j("현재 위치를 쓸 수 없어서 오사카 시내 기준으로 보여 드려요. 휴대폰에서 위치 권한을 허용하면 내 위치 기준으로 바뀌어요.");
   }, I = () => {
-    if (h("현재 위치를 찾는 중"), !navigator.geolocation) return M();
+    if (j("현재 위치를 찾는 중"), !navigator.geolocation) return M();
     navigator.geolocation.getCurrentPosition(
-      (z) => {
-        m({ lat: z.coords.latitude, lng: z.coords.longitude, here: !0, at: Date.now() }), h("");
+      (S) => {
+        d({ lat: S.coords.latitude, lng: S.coords.longitude, here: !0, at: Date.now() }), j("");
       },
       M,
       { enableHighAccuracy: !0, timeout: 1e4, maximumAge: 6e4 }
     );
   };
-  Y(() => {
+  K(() => {
     I();
-  }, []), Y(() => {
-    if (!d) return;
-    let z = !0;
+  }, []), K(() => {
+    if (!c) return;
+    let S = !0;
     return (async () => {
-      u(!0), i("");
-      let S = null, D = "";
-      if (t.gmapsKey && !jt)
+      m(!0), s("");
+      let _ = null, C = "";
+      if (t.gmapsKey && !wt)
         try {
-          S = await Wn(t.gmapsKey, { lat: d.lat, lng: d.lng }, o, g), D = "google";
+          _ = await Yn(t.gmapsKey, { lat: c.lat, lng: c.lng }, o, f), C = "google";
         } catch {
-          S = null;
+          _ = null;
         }
-      if (!S)
+      if (!_)
         try {
-          S = await Hn(d, o, g), D = "osm";
+          _ = await Jn(c, o, f), C = "osm";
         } catch {
-          z && (b([]), i("주변 장소를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요."), u(!1));
+          S && (h([]), s("주변 장소를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요."), m(!1));
           return;
         }
-      S.forEach((N) => N.dist = Un(d, N)), D === "osm" && S.sort((N, A) => N.dist - A.dist), z && (b(S.slice(0, 20)), k(D), u(!1), S.length || i(`반경 ${oe(g)} 안에서 찾지 못했어요. 범위를 넓혀 보세요.`));
+      _.forEach((k) => k.dist = Kn(c, k)), C === "osm" && _.sort((k, F) => k.dist - F.dist), S && (h(_.slice(0, 20)), u(C), m(!1), _.length || s(`반경 ${ie(f)} 안에서 찾지 못했어요. 범위를 넓혀 보세요.`));
     })(), () => {
-      z = !1;
+      S = !1;
     };
-  }, [d, o, g, t.gmapsKey]);
-  let O = (z) => x[z.id] || a.some((S) => z.placeId && S.placeId === z.placeId || S.name === z.name && $t(S) && Math.abs(S.lat - z.lat) < 5e-4);
+  }, [c, o, f, t.gmapsKey]);
+  let O = (S) => b[S.id] || a.some((_) => S.placeId && _.placeId === S.placeId || _.name === S.name && _t(_) && Math.abs(_.lat - S.lat) < 5e-4);
   return /* @__PURE__ */ r("section", { children: [
     /* @__PURE__ */ r("div", { className: "jt-near-head", children: [
       /* @__PURE__ */ r("span", { children: [
-        /* @__PURE__ */ e(an, { size: 15 }),
-        d ? d.here ? "내 위치 기준" : "오사카 시내 기준" : "위치 확인 중",
+        /* @__PURE__ */ e(on, { size: 15 }),
+        c ? c.here ? "내 위치 기준" : "오사카 시내 기준" : "위치 확인 중",
         ", 반경 ",
-        oe(g)
+        ie(f)
       ] }),
       /* @__PURE__ */ e("button", { type: "button", className: "jt-secondary sm", onClick: I, children: "위치 다시 찾기" })
     ] }),
-    j && /* @__PURE__ */ e("p", { className: "jt-hint jt-near-msg", children: j }),
-    /* @__PURE__ */ e("div", { className: "jt-chips jt-filter", children: He.map((z) => /* @__PURE__ */ e("button", { type: "button", className: "jt-chip" + (o.id === z.id ? " on" : ""), onClick: () => s(z), children: z.label }, z.id)) }),
-    /* @__PURE__ */ e("div", { className: "jt-seg three jt-radius", role: "tablist", "aria-label": "찾는 범위", children: On.map((z) => /* @__PURE__ */ e("button", { role: "tab", "aria-selected": g === z, className: g === z ? "on" : "", onClick: () => f(z), children: oe(z) }, z)) }),
+    x && /* @__PURE__ */ e("p", { className: "jt-hint jt-near-msg", children: x }),
+    /* @__PURE__ */ e("div", { className: "jt-chips jt-filter", children: Ge.map((S) => /* @__PURE__ */ e("button", { type: "button", className: "jt-chip" + (o.id === S.id ? " on" : ""), onClick: () => i(S), children: S.label }, S.id)) }),
+    /* @__PURE__ */ e("div", { className: "jt-seg three jt-radius", role: "tablist", "aria-label": "찾는 범위", children: Wn.map((S) => /* @__PURE__ */ e("button", { role: "tab", "aria-selected": f === S, className: f === S ? "on" : "", onClick: () => g(S), children: ie(S) }, S)) }),
     w && /* @__PURE__ */ r("p", { className: "jt-hint jt-near-msg", children: [
       "주변 ",
       o.label,
       " 찾는 중"
     ] }),
     !w && p && /* @__PURE__ */ e("div", { className: "jt-empty", children: /* @__PURE__ */ e("p", { children: p }) }),
-    !w && v.length > 0 && /* @__PURE__ */ e("ul", { className: "jt-near-list", children: v.map((z) => {
-      let S = O(z);
+    !w && y.length > 0 && /* @__PURE__ */ e("ul", { className: "jt-near-list", children: y.map((S) => {
+      let _ = O(S);
       return /* @__PURE__ */ r("li", { className: "jt-near", children: [
         /* @__PURE__ */ r("div", { className: "jt-near-main", children: [
-          /* @__PURE__ */ e("strong", { children: z.name }),
-          z.sub && /* @__PURE__ */ e("span", { className: "jt-near-sub", children: z.sub }),
+          /* @__PURE__ */ e("strong", { children: S.name }),
+          S.sub && /* @__PURE__ */ e("span", { className: "jt-near-sub", children: S.sub }),
           /* @__PURE__ */ r("div", { className: "jt-near-meta", children: [
-            z.rating != null && /* @__PURE__ */ r("span", { className: "jt-star", children: [
-              /* @__PURE__ */ e(nn, { size: 13, fill: "currentColor" }),
-              z.rating.toFixed(1),
-              z.count ? /* @__PURE__ */ r("em", { children: [
+            S.rating != null && /* @__PURE__ */ r("span", { className: "jt-star", children: [
+              /* @__PURE__ */ e(rn, { size: 13, fill: "currentColor" }),
+              S.rating.toFixed(1),
+              S.count ? /* @__PURE__ */ r("em", { children: [
                 "(",
-                z.count.toLocaleString("ko-KR"),
+                S.count.toLocaleString("ko-KR"),
                 ")"
               ] }) : null
             ] }),
-            /* @__PURE__ */ e("span", { children: z.type }),
-            z.open === !0 && /* @__PURE__ */ e("span", { className: "jt-open", children: "영업 중" }),
-            z.open === !1 && /* @__PURE__ */ e("span", { className: "jt-closed", children: "영업 종료" })
+            /* @__PURE__ */ e("span", { children: S.type }),
+            S.open === !0 && /* @__PURE__ */ e("span", { className: "jt-open", children: "영업 중" }),
+            S.open === !1 && /* @__PURE__ */ e("span", { className: "jt-closed", children: "영업 종료" })
           ] }),
           /* @__PURE__ */ r("div", { className: "jt-near-dist", children: [
-            /* @__PURE__ */ e(on, { size: 12 }),
-            Kn(z.dist)
+            /* @__PURE__ */ e(sn, { size: 12 }),
+            Hn(S.dist)
           ] })
         ] }),
         /* @__PURE__ */ r("div", { className: "jt-near-act", children: [
-          S ? /* @__PURE__ */ r("span", { className: "jt-near-saved", children: [
-            /* @__PURE__ */ e(Ge, { size: 14 }),
+          _ ? /* @__PURE__ */ r("span", { className: "jt-near-saved", children: [
+            /* @__PURE__ */ e(Ze, { size: 14 }),
             "저장됨"
           ] }) : /* @__PURE__ */ e(
             "button",
@@ -305,161 +268,161 @@ function Yn({ settings: t, wish: a, onSave: n }) {
               className: "jt-secondary sm",
               onClick: () => {
                 n({
-                  name: z.name,
+                  name: S.name,
                   cat: o.wish,
-                  area: z.addr || z.sub || "",
-                  link: z.url || "",
-                  memo: z.rating != null ? `구글 평점 ${z.rating.toFixed(1)}${z.count ? ` (${z.count}명)` : ""}` : "",
-                  lat: z.lat,
-                  lng: z.lng,
-                  ...z.placeId ? { placeId: z.placeId } : {}
-                }), l({ ...x, [z.id]: !0 });
+                  area: S.addr || S.sub || "",
+                  link: S.url || "",
+                  memo: S.rating != null ? `구글 평점 ${S.rating.toFixed(1)}${S.count ? ` (${S.count}명)` : ""}` : "",
+                  lat: S.lat,
+                  lng: S.lng,
+                  ...S.placeId ? { placeId: S.placeId } : {}
+                }), l({ ...b, [S.id]: !0 });
               },
               children: "가고 싶은 곳에 저장"
             }
           ),
-          /* @__PURE__ */ r("a", { className: "jt-maplink", href: z.url || Ut({ lat: z.lat, lng: z.lng }), target: "_blank", rel: "noopener noreferrer", children: [
-            /* @__PURE__ */ e(Pt, { size: 13 }),
+          /* @__PURE__ */ r("a", { className: "jt-maplink", href: S.url || Ht({ lat: S.lat, lng: S.lng }), target: "_blank", rel: "noopener noreferrer", children: [
+            /* @__PURE__ */ e(Rt, { size: 13 }),
             "구글맵"
           ] })
         ] })
-      ] }, z.id);
+      ] }, S.id);
     }) }),
-    c && v.length > 0 && /* @__PURE__ */ e("p", { className: "jt-near-src", children: c === "google" ? "장소 정보: Google 지도" : "장소 정보: © OpenStreetMap 기여자" })
+    v && y.length > 0 && /* @__PURE__ */ e("p", { className: "jt-near-src", children: v === "google" ? "장소 정보: Google 지도" : "장소 정보: © OpenStreetMap 기여자" })
   ] });
 }
-function Jn({ settings: t, wish: a, me: n, onSave: o, onLike: s, onPlan: g, onDelete: f, onComment: d, onDelComment: m, onReact: j }) {
-  let h = a.filter($t), [v, b] = C(
-    () => h.length ? {
-      lat: h.reduce((y, L) => y + L.lat, 0) / h.length,
-      lng: h.reduce((y, L) => y + L.lng, 0) / h.length,
-      z: h.length > 1 ? 11 : 15
+function qn({ settings: t, wish: a, me: n, onSave: o, onEdit: i, onLike: f, onPlan: g, onDelete: c, onComment: d, onDelComment: x, onReact: j }) {
+  let y = a.filter(_t), [h, w] = N(
+    () => y.length ? {
+      lat: y.reduce((z, U) => z + U.lat, 0) / y.length,
+      lng: y.reduce((z, U) => z + U.lng, 0) / y.length,
+      z: y.length > 1 ? 11 : 15
     } : { lat: 35.6762, lng: 139.6503, z: 11 }
-  ), [w, u] = C(null), [p, i] = C(null), [c, k] = C(""), [x, l] = C([]), [M, I] = C(!1), [O, z] = C(""), S = a.find((y) => y.id === p), D = h.map((y) => `${y.id}:${y.lat}:${y.lng}:${y.cat}`).join("|"), N = Bt(
-    () => h.map((y) => ({
-      id: y.id,
-      lat: y.lat,
-      lng: y.lng,
-      color: bt[y.cat] || bt.기타,
-      label: y.name
+  ), [m, p] = N(null), [s, v] = N(null), [u, b] = N(""), [l, M] = N([]), [I, O] = N(!1), [S, _] = N(""), C = a.find((z) => z.id === s), k = y.map((z) => `${z.id}:${z.lat}:${z.lng}:${z.cat}`).join("|"), F = Wt(
+    () => y.map((z) => ({
+      id: z.id,
+      lat: z.lat,
+      lng: z.lng,
+      color: jt[z.cat] || jt.기타,
+      label: z.name
     })),
-    [D]
-  ), A = async () => {
-    let y = c.trim();
-    if (y) {
-      if (I(!0), z(""), l([]), Ln(t.gmapsKey))
+    [k]
+  ), T = async () => {
+    let z = u.trim();
+    if (z) {
+      if (O(!0), _(""), M([]), Bn(t.gmapsKey))
         try {
-          let { Place: L } = await window.google.maps.importLibrary("places"), { places: Z } = await L.searchText({
-            textQuery: y,
+          let { Place: U } = await window.google.maps.importLibrary("places"), { places: q } = await U.searchText({
+            textQuery: z,
             fields: ["id", "displayName", "location", "formattedAddress", "googleMapsURI"],
             language: "ko",
             maxResultCount: 6,
-            locationBias: { lat: v.lat, lng: v.lng }
+            locationBias: { lat: h.lat, lng: h.lng }
           });
-          if (Z && Z.length) {
-            l(
-              Z.map((K) => ({
-                lat: K.location.lat(),
-                lng: K.location.lng(),
-                name: K.displayName,
-                area: K.formattedAddress || "",
-                link: K.googleMapsURI || "",
-                placeId: K.id
+          if (q && q.length) {
+            M(
+              q.map((Q) => ({
+                lat: Q.location.lat(),
+                lng: Q.location.lng(),
+                name: Q.displayName,
+                area: Q.formattedAddress || "",
+                link: Q.googleMapsURI || "",
+                placeId: Q.id
               }))
-            ), I(!1);
+            ), O(!1);
             return;
           }
         } catch {
         }
       try {
-        let L = await fetch(
-          "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language=ko&countrycodes=jp&q=" + encodeURIComponent(y)
+        let U = await fetch(
+          "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language=ko&countrycodes=jp&q=" + encodeURIComponent(z)
         );
-        if (!L.ok) throw new Error("search failed");
-        let Z = await L.json();
-        Z.length || z("검색 결과가 없어요. 일본어나 영어로 다시 검색하거나 지도를 직접 눌러 보세요."), l(
-          Z.map((K) => {
-            let Rt = String(K.display_name || "").split(",").map((Ht) => Ht.trim());
+        if (!U.ok) throw new Error("search failed");
+        let q = await U.json();
+        q.length || _("검색 결과가 없어요. 일본어나 영어로 다시 검색하거나 지도를 직접 눌러 보세요."), M(
+          q.map((Q) => {
+            let Lt = String(Q.display_name || "").split(",").map((Tt) => Tt.trim());
             return {
-              lat: Number(K.lat),
-              lng: Number(K.lon),
-              name: K.name || Rt[0] || y,
-              area: Rt.slice(1, 3).join(" ")
+              lat: Number(Q.lat),
+              lng: Number(Q.lon),
+              name: Q.name || Lt[0] || z,
+              area: Lt.slice(1, 3).join(" ")
             };
           })
         );
       } catch {
-        z("검색을 불러오지 못했어요. 지도를 직접 눌러 핀을 꽂아 주세요.");
+        _("검색을 불러오지 못했어요. 지도를 직접 눌러 핀을 꽂아 주세요.");
       }
-      I(!1);
+      O(!1);
     }
-  }, T = (y) => {
-    b({ lat: y.lat, lng: y.lng, z: 16 }), i(null), u({ lat: y.lat, lng: y.lng, name: y.name, cat: "맛집", area: y.area, link: y.link || "", placeId: y.placeId }), l([]);
-  }, q = S && S.likes.includes(n);
+  }, Z = (z) => {
+    w({ lat: z.lat, lng: z.lng, z: 16 }), v(null), p({ lat: z.lat, lng: z.lng, name: z.name, cat: "맛집", area: z.area, link: z.link || "", placeId: z.placeId }), M([]);
+  }, R = C && C.likes.includes(n);
   return /* @__PURE__ */ r("section", { children: [
     /* @__PURE__ */ r("div", { className: "jt-inline jt-mapsearch", children: [
       /* @__PURE__ */ e(
         "input",
         {
-          value: c,
-          onChange: (y) => k(y.target.value),
-          onKeyDown: (y) => y.key === "Enter" && A(),
+          value: u,
+          onChange: (z) => b(z.target.value),
+          onKeyDown: (z) => z.key === "Enter" && T(),
           placeholder: "장소 검색 (예: 센소지, 이치란 시부야)",
           "aria-label": "장소 검색"
         }
       ),
-      /* @__PURE__ */ e("button", { type: "button", className: "jt-secondary", onClick: A, disabled: M, children: M ? "검색 중" : "검색" })
+      /* @__PURE__ */ e("button", { type: "button", className: "jt-secondary", onClick: T, disabled: I, children: I ? "검색 중" : "검색" })
     ] }),
-    O && /* @__PURE__ */ e("p", { className: "jt-hint jt-mapmsg", children: O }),
-    x.length > 0 && /* @__PURE__ */ e("ul", { className: "jt-results", children: x.map((y, L) => /* @__PURE__ */ e("li", { children: /* @__PURE__ */ r("button", { type: "button", onClick: () => T(y), children: [
-      /* @__PURE__ */ e("strong", { children: y.name }),
-      /* @__PURE__ */ e("span", { children: y.area })
-    ] }) }, L)) }),
+    S && /* @__PURE__ */ e("p", { className: "jt-hint jt-mapmsg", children: S }),
+    l.length > 0 && /* @__PURE__ */ e("ul", { className: "jt-results", children: l.map((z, U) => /* @__PURE__ */ e("li", { children: /* @__PURE__ */ r("button", { type: "button", onClick: () => Z(z), children: [
+      /* @__PURE__ */ e("strong", { children: z.name }),
+      /* @__PURE__ */ e("span", { children: z.area })
+    ] }) }, U)) }),
     /* @__PURE__ */ e(
-      Bn,
+      Un,
       {
         gkey: t.gmapsKey,
-        onPoi: (y) => {
-          i(null), u({ ...y, cat: "맛집" });
+        onPoi: (z) => {
+          v(null), p({ ...z, cat: "맛집" });
         },
-        view: v,
-        setView: b,
-        pins: N,
-        temp: w,
-        selectedId: p,
-        onTap: (y, L) => {
-          i(null), u({ lat: Number(y.toFixed(6)), lng: Number(L.toFixed(6)), name: "", cat: "맛집", area: "" });
+        view: h,
+        setView: w,
+        pins: F,
+        temp: m,
+        selectedId: s,
+        onTap: (z, U) => {
+          v(null), p({ lat: Number(z.toFixed(6)), lng: Number(U.toFixed(6)), name: "", cat: "맛집", area: "" });
         },
-        onPinTap: (y) => {
-          u(null), i(y);
+        onPinTap: (z) => {
+          p(null), v(z);
         }
       }
     ),
-    !w && !S && /* @__PURE__ */ r("p", { className: "jt-hint jt-mapmsg", children: [
+    !m && !C && /* @__PURE__ */ r("p", { className: "jt-hint jt-mapmsg", children: [
       "지도를 눌러 핀을 꽂으면 가고 싶은 곳으로 저장돼요. 지금까지 지도에 저장한 곳은 ",
-      h.length,
+      y.length,
       "개예요."
     ] }),
-    w && /* @__PURE__ */ r("div", { className: "jt-mappanel", children: [
+    m && /* @__PURE__ */ r("div", { className: "jt-mappanel", children: [
       /* @__PURE__ */ e("strong", { children: "이 위치를 저장할까요?" }),
       /* @__PURE__ */ e(
         "input",
         {
-          value: w.name,
-          onChange: (y) => u({ ...w, name: y.target.value }),
+          value: m.name,
+          onChange: (z) => p({ ...m, name: z.target.value }),
           placeholder: "장소 이름 (예: 이치란 시부야점)",
           "aria-label": "장소 이름"
         }
       ),
-      /* @__PURE__ */ e("div", { className: "jt-chips", children: me.map((y) => /* @__PURE__ */ e(
+      /* @__PURE__ */ e("div", { className: "jt-chips", children: fe.map((z) => /* @__PURE__ */ e(
         "button",
         {
           type: "button",
-          className: "jt-chip" + (w.cat === y ? " on" : ""),
-          onClick: () => u({ ...w, cat: y }),
-          children: y
+          className: "jt-chip" + (m.cat === z ? " on" : ""),
+          onClick: () => p({ ...m, cat: z }),
+          children: z
         },
-        y
+        z
       )) }),
       /* @__PURE__ */ r("div", { className: "jt-inline", children: [
         /* @__PURE__ */ e(
@@ -467,123 +430,125 @@ function Jn({ settings: t, wish: a, me: n, onSave: o, onLike: s, onPlan: g, onDe
           {
             type: "button",
             className: "jt-primary",
-            disabled: !w.name.trim(),
+            disabled: !m.name.trim(),
             onClick: () => {
               o({
-                name: w.name.trim(),
-                cat: w.cat,
-                area: w.area || "",
-                link: w.link || "",
+                name: m.name.trim(),
+                cat: m.cat,
+                area: m.area || "",
+                link: m.link || "",
                 memo: "",
-                lat: w.lat,
-                lng: w.lng,
-                ...w.placeId ? { placeId: w.placeId } : {}
-              }), u(null);
+                lat: m.lat,
+                lng: m.lng,
+                ...m.placeId ? { placeId: m.placeId } : {}
+              }), p(null);
             },
             children: "가고 싶은 곳에 저장"
           }
         ),
-        /* @__PURE__ */ e("button", { type: "button", className: "jt-secondary", onClick: () => u(null), children: "취소" })
+        /* @__PURE__ */ e("button", { type: "button", className: "jt-secondary", onClick: () => p(null), children: "취소" })
       ] })
     ] }),
-    S && /* @__PURE__ */ r("div", { className: "jt-mappanel", children: [
+    C && /* @__PURE__ */ r("div", { className: "jt-mappanel", children: [
       /* @__PURE__ */ r("div", { className: "jt-wish-top", children: [
-        /* @__PURE__ */ e("span", { className: "jt-tag", style: { background: bt[S.cat] || bt.기타 }, children: S.cat }),
-        /* @__PURE__ */ e("strong", { children: S.name })
+        /* @__PURE__ */ e("span", { className: "jt-tag", style: { background: jt[C.cat] || jt.기타 }, children: C.cat }),
+        /* @__PURE__ */ e("strong", { children: C.name }),
+        /* @__PURE__ */ e("button", { type: "button", className: "jt-icon sm jt-wish-edit", onClick: () => i(C), "aria-label": `${C.name} 수정`, children: /* @__PURE__ */ e(ue, { size: 16 }) })
       ] }),
-      S.area && /* @__PURE__ */ r("div", { className: "jt-meta", children: [
-        /* @__PURE__ */ e(ce, { size: 13 }),
-        S.area
+      C.area && /* @__PURE__ */ r("div", { className: "jt-meta", children: [
+        /* @__PURE__ */ e(me, { size: 13 }),
+        C.area
       ] }),
-      S.memo && /* @__PURE__ */ e("div", { className: "jt-memo", children: S.memo }),
+      C.memo && /* @__PURE__ */ e("div", { className: "jt-memo", children: C.memo }),
       /* @__PURE__ */ r("div", { className: "jt-wish-bottom", children: [
         /* @__PURE__ */ r(
           "button",
           {
             type: "button",
-            className: "jt-like" + (q ? " on" : ""),
-            onClick: () => s(S.id),
-            "aria-pressed": q,
+            className: "jt-like" + (R ? " on" : ""),
+            onClick: () => f(C.id),
+            "aria-pressed": R,
             "aria-label": "가고 싶어요",
             children: [
-              /* @__PURE__ */ e(pe, { size: 16, fill: q ? "currentColor" : "none" }),
+              /* @__PURE__ */ e(de, { size: 16, fill: R ? "currentColor" : "none" }),
               "가고 싶어요 ",
-              S.likes.length
+              C.likes.length
             ]
           }
         ),
-        /* @__PURE__ */ e(Kt, { item: S, me: n, onReact: (y) => j(S.id, y) }),
-        S.planned != null ? /* @__PURE__ */ r("span", { className: "jt-planned", style: { color: X[S.planned % X.length] }, children: [
-          S.planned + 1,
+        /* @__PURE__ */ e(Yt, { item: C, me: n, onReact: (z) => j(C.id, z) }),
+        C.planned != null ? /* @__PURE__ */ r("span", { className: "jt-planned", style: { color: X[C.planned % X.length] }, children: [
+          C.planned + 1,
           "일차 일정에 있어요"
-        ] }) : /* @__PURE__ */ e("button", { type: "button", className: "jt-secondary sm", onClick: () => g(S), children: "일정에 넣기" }),
+        ] }) : /* @__PURE__ */ e("button", { type: "button", className: "jt-secondary sm", onClick: () => g(C), children: "일정에 넣기" }),
         /* @__PURE__ */ r("span", { className: "jt-by grow", children: [
-          /* @__PURE__ */ e(et, { name: S.by, members: t.members, size: 16 }),
-          S.by
+          /* @__PURE__ */ e(at, { name: C.by, members: t.members, size: 16 }),
+          C.by
         ] }),
         /* @__PURE__ */ e(
-          yt,
+          ut,
           {
             onConfirm: () => {
-              f(S.id), i(null);
+              c(C.id), v(null);
             },
             label: ""
           }
         )
       ] }),
-      /* @__PURE__ */ e("div", { className: "jt-maprow", children: /* @__PURE__ */ r("a", { className: "jt-maplink", href: Ut(S), target: "_blank", rel: "noopener noreferrer", children: [
-        /* @__PURE__ */ e(Pt, { size: 14 }),
+      /* @__PURE__ */ e("div", { className: "jt-maprow", children: /* @__PURE__ */ r("a", { className: "jt-maplink", href: Ht(C), target: "_blank", rel: "noopener noreferrer", children: [
+        /* @__PURE__ */ e(Rt, { size: 14 }),
         "구글맵에서 열기"
       ] }) }),
       /* @__PURE__ */ e(
-        Wt,
+        Jt,
         {
-          comments: S.comments || [],
+          comments: C.comments || [],
           me: n,
           members: t.members,
-          onAdd: (y) => d(S.id, y),
-          onDelete: (y) => m(S.id, y)
+          onAdd: (z) => d(C.id, z),
+          onDelete: (z) => x(C.id, z)
         }
       )
     ] })
   ] });
 }
-function Gn(t) {
-  let [a, n] = C("list");
+function Xn(t) {
+  let [a, n] = N("list");
   return /* @__PURE__ */ r("section", { children: [
     /* @__PURE__ */ e("div", { className: "jt-seg three", role: "tablist", children: [
       ["list", "목록"],
       ["map", "지도"],
       ["near", "내 주변"]
-    ].map(([o, s]) => /* @__PURE__ */ e("button", { role: "tab", "aria-selected": a === o, className: a === o ? "on" : "", onClick: () => n(o), children: s }, o)) }),
-    a === "list" && /* @__PURE__ */ e(qn, { ...t }),
-    a === "map" && /* @__PURE__ */ e(Jn, { ...t }),
-    a === "near" && /* @__PURE__ */ e(Yn, { ...t })
+    ].map(([o, i]) => /* @__PURE__ */ e("button", { role: "tab", "aria-selected": a === o, className: a === o ? "on" : "", onClick: () => n(o), children: i }, o)) }),
+    a === "list" && /* @__PURE__ */ e(Zn, { ...t }),
+    a === "map" && /* @__PURE__ */ e(qn, { ...t }),
+    a === "near" && /* @__PURE__ */ e(Gn, { ...t })
   ] });
 }
-function qn({ settings: t, wish: a, me: n, onAdd: o, onLike: s, onPlan: g, onDelete: f, onComment: d, onDelComment: m, onReact: j }) {
-  let [h, v] = C(null), [b, w] = C("전체"), [u, p] = C(null), i = a.filter((c) => b === "전체" || c.cat === b).sort((c, k) => k.likes.length - c.likes.length || k.createdAt - c.createdAt);
+function Zn({ settings: t, wish: a, me: n, onAdd: o, onEdit: i, onLike: f, onPlan: g, onDelete: c, onComment: d, onDelComment: x, onReact: j }) {
+  let [y, h] = N(null), [w, m] = N("전체"), [p, s] = N(null), v = a.filter((u) => w === "전체" || u.cat === w).sort((u, b) => b.likes.length - u.likes.length || b.createdAt - u.createdAt);
   return /* @__PURE__ */ r("section", { children: [
-    /* @__PURE__ */ e("div", { className: "jt-chips jt-filter", children: ["전체", ...me].map((c) => /* @__PURE__ */ e("button", { className: "jt-chip" + (b === c ? " on" : ""), onClick: () => w(c), children: c }, c)) }),
-    i.length === 0 && /* @__PURE__ */ r("div", { className: "jt-empty", children: [
+    /* @__PURE__ */ e("div", { className: "jt-chips jt-filter", children: ["전체", ...fe].map((u) => /* @__PURE__ */ e("button", { className: "jt-chip" + (w === u ? " on" : ""), onClick: () => m(u), children: u }, u)) }),
+    v.length === 0 && /* @__PURE__ */ r("div", { className: "jt-empty", children: [
       /* @__PURE__ */ e("p", { children: "아직 가고 싶은 곳이 없어요." }),
       /* @__PURE__ */ e("p", { children: "먹고 싶은 것, 보고 싶은 곳을 하나씩 올려 보세요." })
     ] }),
-    /* @__PURE__ */ e("ul", { className: "jt-list", children: i.map((c) => {
-      let k = c.likes.includes(n);
+    /* @__PURE__ */ e("ul", { className: "jt-list", children: v.map((u) => {
+      let b = u.likes.includes(n);
       return /* @__PURE__ */ r("li", { className: "jt-wish", children: [
         /* @__PURE__ */ r("div", { className: "jt-wish-top", children: [
-          /* @__PURE__ */ e("span", { className: "jt-tag", style: { background: bt[c.cat] || bt.기타 }, children: c.cat }),
-          /* @__PURE__ */ e("strong", { children: c.name })
+          /* @__PURE__ */ e("span", { className: "jt-tag", style: { background: jt[u.cat] || jt.기타 }, children: u.cat }),
+          /* @__PURE__ */ e("strong", { children: u.name }),
+          /* @__PURE__ */ e("button", { type: "button", className: "jt-icon sm jt-wish-edit", onClick: () => i(u), "aria-label": `${u.name} 수정`, children: /* @__PURE__ */ e(ue, { size: 16 }) })
         ] }),
-        c.area && /* @__PURE__ */ r("div", { className: "jt-meta", children: [
-          /* @__PURE__ */ e(ce, { size: 13 }),
-          c.area
+        u.area && /* @__PURE__ */ r("div", { className: "jt-meta", children: [
+          /* @__PURE__ */ e(me, { size: 13 }),
+          u.area
         ] }),
-        c.memo && /* @__PURE__ */ e("div", { className: "jt-memo", children: c.memo }),
+        u.memo && /* @__PURE__ */ e("div", { className: "jt-memo", children: u.memo }),
         /* @__PURE__ */ r("div", { className: "jt-maprow", children: [
-          /* @__PURE__ */ r("a", { className: "jt-maplink", href: Ut(c), target: "_blank", rel: "noopener noreferrer", children: [
-            /* @__PURE__ */ e(Pt, { size: 14 }),
+          /* @__PURE__ */ r("a", { className: "jt-maplink", href: Ht(u), target: "_blank", rel: "noopener noreferrer", children: [
+            /* @__PURE__ */ e(Rt, { size: 14 }),
             "구글맵에서 열기"
           ] }),
           /* @__PURE__ */ r(
@@ -591,21 +556,21 @@ function qn({ settings: t, wish: a, me: n, onAdd: o, onLike: s, onPlan: g, onDel
             {
               type: "button",
               className: "jt-maplink",
-              onClick: () => p(u === c.id ? null : c.id),
-              "aria-expanded": u === c.id,
+              onClick: () => s(p === u.id ? null : u.id),
+              "aria-expanded": p === u.id,
               children: [
-                /* @__PURE__ */ e($a, { size: 14 }),
-                u === c.id ? "지도 닫기" : "지도 미리보기"
+                /* @__PURE__ */ e(La, { size: 14 }),
+                p === u.id ? "지도 닫기" : "지도 미리보기"
               ]
             }
           )
         ] }),
-        u === c.id && /* @__PURE__ */ r("div", { className: "jt-embed", children: [
+        p === u.id && /* @__PURE__ */ r("div", { className: "jt-embed", children: [
           /* @__PURE__ */ e(
             "iframe",
             {
-              title: `${c.name} 지도`,
-              src: mn(c),
+              title: `${u.name} 지도`,
+              src: gn(u),
               loading: "lazy",
               referrerPolicy: "no-referrer-when-downgrade",
               allowFullScreen: !0
@@ -617,67 +582,67 @@ function qn({ settings: t, wish: a, me: n, onAdd: o, onLike: s, onPlan: g, onDel
           /* @__PURE__ */ r(
             "button",
             {
-              className: "jt-like" + (k ? " on" : ""),
-              onClick: () => s(c.id),
-              "aria-pressed": k,
+              className: "jt-like" + (b ? " on" : ""),
+              onClick: () => f(u.id),
+              "aria-pressed": b,
               "aria-label": "가고 싶어요",
               children: [
-                /* @__PURE__ */ e(pe, { size: 16, fill: k ? "currentColor" : "none" }),
+                /* @__PURE__ */ e(de, { size: 16, fill: b ? "currentColor" : "none" }),
                 "가고 싶어요 ",
-                c.likes.length
+                u.likes.length
               ]
             }
           ),
-          /* @__PURE__ */ e(Kt, { item: c, me: n, onReact: (x) => j(c.id, x) }),
-          c.planned != null ? /* @__PURE__ */ r("span", { className: "jt-planned", style: { color: X[c.planned % X.length] }, children: [
-            c.planned + 1,
+          /* @__PURE__ */ e(Yt, { item: u, me: n, onReact: (l) => j(u.id, l) }),
+          u.planned != null ? /* @__PURE__ */ r("span", { className: "jt-planned", style: { color: X[u.planned % X.length] }, children: [
+            u.planned + 1,
             "일차 일정에 있어요"
-          ] }) : /* @__PURE__ */ e("button", { className: "jt-secondary sm", onClick: () => g(c), children: "일정에 넣기" }),
+          ] }) : /* @__PURE__ */ e("button", { className: "jt-secondary sm", onClick: () => g(u), children: "일정에 넣기" }),
           /* @__PURE__ */ e(
-            ge,
+            be,
             {
-              count: (c.comments || []).length,
-              open: h === c.id,
-              onClick: () => v(h === c.id ? null : c.id)
+              count: (u.comments || []).length,
+              open: y === u.id,
+              onClick: () => h(y === u.id ? null : u.id)
             }
           ),
           /* @__PURE__ */ r("span", { className: "jt-by grow", children: [
-            /* @__PURE__ */ e(et, { name: c.by, members: t.members, size: 16 }),
-            c.by
+            /* @__PURE__ */ e(at, { name: u.by, members: t.members, size: 16 }),
+            u.by
           ] }),
-          /* @__PURE__ */ e(yt, { onConfirm: () => f(c.id), label: "" })
+          /* @__PURE__ */ e(ut, { onConfirm: () => c(u.id), label: "" })
         ] }),
-        h === c.id && /* @__PURE__ */ e(
-          Wt,
+        y === u.id && /* @__PURE__ */ e(
+          Jt,
           {
-            comments: c.comments || [],
+            comments: u.comments || [],
             me: n,
             members: t.members,
-            onAdd: (x) => d(c.id, x),
-            onDelete: (x) => m(c.id, x)
+            onAdd: (l) => d(u.id, l),
+            onDelete: (l) => x(u.id, l)
           }
         )
-      ] }, c.id);
+      ] }, u.id);
     }) })
   ] });
 }
-function Ye({ moves: t, rate: a, me: n }) {
-  return t.length ? /* @__PURE__ */ e("ul", { className: "jt-moves2", children: t.map((o, s) => /* @__PURE__ */ r("li", { className: o.from === n || o.to === n ? "mine" : "", children: [
+function qe({ moves: t, rate: a, me: n }) {
+  return t.length ? /* @__PURE__ */ e("ul", { className: "jt-moves2", children: t.map((o, i) => /* @__PURE__ */ r("li", { className: o.from === n || o.to === n ? "mine" : "", children: [
     /* @__PURE__ */ r("span", { className: "jt-moves-who", children: [
       /* @__PURE__ */ e("b", { children: o.from }),
-      /* @__PURE__ */ e(Xe, { size: 15, "aria-label": "에게" }),
+      /* @__PURE__ */ e(Qe, { size: 15, "aria-label": "에게" }),
       /* @__PURE__ */ e("b", { children: o.to })
     ] }),
     /* @__PURE__ */ r("span", { className: "jt-moves-amt", children: [
-      /* @__PURE__ */ e("strong", { children: H(o.v) }),
-      /* @__PURE__ */ e("em", { children: It(o.v, a) })
+      /* @__PURE__ */ e("strong", { children: Y(o.v) }),
+      /* @__PURE__ */ e("em", { children: Pt(o.v, a) })
     ] })
-  ] }, s)) }) : /* @__PURE__ */ e("p", { className: "jt-hint jt-nomoves", children: "주고받을 돈이 없어요." });
+  ] }, i)) }) : /* @__PURE__ */ e("p", { className: "jt-hint jt-nomoves", children: "주고받을 돈이 없어요." });
 }
-function Xn({ e: t, members: a, rate: n, onEdit: o }) {
-  let { Icon: s, color: g } = re(t.cat);
+function Vn({ e: t, members: a, rate: n, onEdit: o }) {
+  let { Icon: i, color: f } = se(t.cat);
   return /* @__PURE__ */ e("li", { children: /* @__PURE__ */ r("button", { type: "button", className: "jt-spend", onClick: () => o(t), "aria-label": `${t.title} 고치기`, children: [
-    /* @__PURE__ */ e("span", { className: "jt-spend-icon", style: { "--cc": g }, children: /* @__PURE__ */ e(s, { size: 18 }) }),
+    /* @__PURE__ */ e("span", { className: "jt-spend-icon", style: { "--cc": f }, children: /* @__PURE__ */ e(i, { size: 18 }) }),
     /* @__PURE__ */ r("div", { className: "jt-spend-main", children: [
       /* @__PURE__ */ e("div", { className: "jt-spend-name", children: t.title }),
       /* @__PURE__ */ r("div", { className: "jt-meta", children: [
@@ -689,16 +654,65 @@ function Xn({ e: t, members: a, rate: n, onEdit: o }) {
       ] })
     ] }),
     /* @__PURE__ */ r("div", { className: "jt-spend-amt", children: [
-      /* @__PURE__ */ e("strong", { children: H(Number(t.amount) || 0) }),
-      /* @__PURE__ */ e("span", { children: It(Number(t.amount) || 0, n) })
+      /* @__PURE__ */ e("strong", { children: Y(Number(t.amount) || 0) }),
+      /* @__PURE__ */ e("span", { children: Pt(Number(t.amount) || 0, n) })
     ] })
   ] }) });
 }
-var Je = (t) => t > 0.5 ? `받을 돈 ${H(t)}` : t < -0.5 ? `보낼 돈 ${H(-t)}` : "주고받을 돈 없음", Tt = (t) => t > 0.5 ? "plus" : t < -0.5 ? "minus" : "";
-function Zn({ settings: t, spend: a, me: n, onEdit: o }) {
-  let { members: s, rate: g, start: f } = t, [d, m] = C("me"), j = a.reduce((p, i) => p + (Number(i.amount) || 0), 0), h = Bt(() => Le(a, s), [a, s]), v = Bt(() => {
+var Xe = (t) => t > 0.5 ? `받을 돈 ${Y(t)}` : t < -0.5 ? `보낼 돈 ${Y(-t)}` : "주고받을 돈 없음", Ut = (t) => t > 0.5 ? "plus" : t < -0.5 ? "minus" : "";
+function Qn({ settings: t, spend: a, me: n, onEdit: o }) {
+  let { members: i, rate: f, start: g } = t, [c, d] = N("me"), x = a.reduce((p, s) => p + (Number(s.amount) || 0), 0), j = Wt(() => Oe(a, i), [a, i]), y = Wt(() => {
     let p = {};
-    return a.forEach((i) => p[i.cat] = (p[i.cat] || 0) + (Number(i.amount) || 0)), Ze.filter((i) => p[i]).map((i) => ({ c: i, v: p[i] }));
-  }, [a]), b = Bt(() => {
+    return a.forEach((s) => p[s.cat] = (p[s.cat] || 0) + (Number(s.amount) || 0)), ta.filter((s) => p[s]).map((s) => ({ c: s, v: p[s] }));
+  }, [a]), h = Wt(() => {
     let p = {};
-    return a.forEach((i) => (p[i.day] = p[i.day] || []).push(i)), Object.keys(p).map(Number).sort((i, c) => i - c).map((i) => ({
+    return a.forEach((s) => (p[s.day] = p[s.day] || []).push(s)), Object.keys(p).map(Number).sort((s, v) => s - v).map((s) => ({
+      day: s,
+      sum: p[s].reduce((v, u) => v + (Number(u.amount) || 0), 0),
+      items: [...p[s]].sort((v, u) => u.createdAt - v.createdAt),
+      res: Oe(p[s], i)
+    }));
+  }, [a, i]), w = j.net[n] || 0, m = j.moves.filter((p) => p.from === n || p.to === n);
+  return a.length === 0 ? /* @__PURE__ */ r("section", { children: [
+    /* @__PURE__ */ r("div", { className: "jt-total", children: [
+      /* @__PURE__ */ e("span", { children: "지금까지 쓴 돈" }),
+      /* @__PURE__ */ e("strong", { children: Y(0) }),
+      /* @__PURE__ */ e("span", { className: "jt-fx", children: Kt(t) })
+    ] }),
+    /* @__PURE__ */ r("div", { className: "jt-empty", children: [
+      /* @__PURE__ */ e("p", { children: "아직 기록된 경비가 없어요." }),
+      /* @__PURE__ */ e("p", { children: "쓸 때마다 한 줄씩 남기면 누가 누구에게 보낼지 자동으로 계산돼요." })
+    ] })
+  ] }) : /* @__PURE__ */ r("section", { children: [
+    /* @__PURE__ */ r("div", { className: "jt-total", children: [
+      /* @__PURE__ */ e("span", { children: "지금까지 쓴 돈" }),
+      /* @__PURE__ */ e("strong", { children: Y(x) }),
+      /* @__PURE__ */ r("em", { children: [
+        "약 ",
+        Pt(x, f),
+        ", 그중 ",
+        n,
+        "가 쓴 돈 ",
+        Y(j.share[n] || 0)
+      ] }),
+      /* @__PURE__ */ e("span", { className: "jt-fx", children: Kt(t) }),
+      /* @__PURE__ */ e("div", { className: "jt-catbar", "aria-hidden": "true", children: y.map(({ c: p, v: s }) => /* @__PURE__ */ e("i", { style: { flexGrow: s, background: se(p).color } }, p)) }),
+      /* @__PURE__ */ e("ul", { className: "jt-catlegend", children: y.map(({ c: p, v: s }) => /* @__PURE__ */ r("li", { children: [
+        /* @__PURE__ */ e("span", { className: "jt-dot", style: { background: se(p).color } }),
+        p,
+        " ",
+        /* @__PURE__ */ r("b", { children: [
+          Math.round(s / x * 100),
+          "%"
+        ] })
+      ] }, p)) })
+    ] }),
+    j.skipped.length > 0 && /* @__PURE__ */ r("div", { className: "jt-warn", role: "alert", children: [
+      /* @__PURE__ */ r("strong", { children: [
+        "정산에서 빠진 경비가 ",
+        j.skipped.length,
+        "건 있어요"
+      ] }),
+      /* @__PURE__ */ e("p", { children: "낸 사람이나 나눌 사람이 지금 가족 목록에 없어요. 이름을 바꾸거나 뺀 경우에 생겨요. 눌러서 사람을 다시 골라 주세요." }),
+      /* @__PURE__ */ e("ul", { children: j.skipped.map((p) => /* @__PURE__ */ e("li", { children: /* @__PURE__ */ r("button", { type: "button", onClick: () => o(p), children: [
+        /* @__PURE__ */ r("span", { children: [
