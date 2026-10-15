@@ -1,11 +1,4 @@
-return yt = Q, Dt = $, /* @__PURE__ */ a(Sa.Fragment, { children: [
-        gt && /* @__PURE__ */ t("li", { className: "jt-daysep", "aria-label": Q, children: /* @__PURE__ */ t("span", { children: Q }) }),
-        /* @__PURE__ */ a(
-          "li",
-          {
-            id: "msg-" + $.id,
-            className: "jt-msg" + (ot ? " mine" : "") + (wt ? " cont" : "") + (u === $.id ? " flash" : ""),
-            children: [
+children: [
               !ot && /* @__PURE__ */ t("span", { className: "jt-msg-av", children: !wt && /* @__PURE__ */ t(rt, { name: $.by, members: C, size: 30 }) }),
               /* @__PURE__ */ a("div", { className: "jt-msg-col", children: [
                 !ot && !wt && /* @__PURE__ */ t("span", { className: "jt-msg-name", children: $.by }),
@@ -16,7 +9,7 @@ return yt = Q, Dt = $, /* @__PURE__ */ a(Sa.Fragment, { children: [
                       {
                         rows: 2,
                         value: j,
-                        onChange: (tt) => M(tt.target.value),
+                        onChange: (tt) => A(tt.target.value),
                         onKeyDown: (tt) => {
                           tt.key === "Enter" && !tt.shiftKey && !tt.nativeEvent.isComposing && (tt.preventDefault(), _($)), tt.key === "Escape" && I(null);
                         },
@@ -54,7 +47,7 @@ return yt = Q, Dt = $, /* @__PURE__ */ a(Sa.Fragment, { children: [
                   ] })
                 ] }),
                 $.kind === "loc" && /* @__PURE__ */ a("div", { className: "jt-loclinks", children: [
-                  /* @__PURE__ */ a("a", { className: "jt-maplink", href: At({ lat: $.lat, lng: $.lng }), target: "_blank", rel: "noopener noreferrer", children: [
+                  /* @__PURE__ */ a("a", { className: "jt-maplink", href: Mt({ lat: $.lat, lng: $.lng }), target: "_blank", rel: "noopener noreferrer", children: [
                     /* @__PURE__ */ t(Kt, { size: 13 }),
                     "지도에서 보기"
                   ] }),
@@ -184,7 +177,7 @@ function ii() {
   ] });
 }
 function Ye() {
-  let [e, n] = w(!1), [o, i] = w(null), [r, y] = w([]), [x, g] = w([]), [m, h] = w([]), [c, E] = w(null), [b, C] = w("plan"), [N, s] = w(0), [p, k] = w(!1), [z, A] = w(!1), v = H(null), I = H(!1), [j, M] = w(null), [l, R] = w(""), u = H(!1), [f, T] = w(null), [D, X] = w(!1), [Y, _] = w({}), [S, W] = w(!1), [Ft, Wt] = w(null), [be, yt] = w("");
+  let [e, n] = w(!1), [o, i] = w(null), [r, y] = w([]), [x, g] = w([]), [m, h] = w([]), [c, E] = w(null), [b, C] = w("plan"), [N, s] = w(0), [p, k] = w(!1), [z, M] = w(!1), v = H(null), I = H(!1), [j, A] = w(null), [l, R] = w(""), u = H(!1), [f, T] = w(null), [D, X] = w(!1), [Y, _] = w({}), [S, W] = w(!1), [Ft, Wt] = w(null), [be, yt] = w("");
   O(() => {
     (async () => {
       try {
@@ -361,11 +354,11 @@ function Ye() {
     wt(U && U.id ? U : null), i(d), y(F), g(P), h(K);
     try {
       let L = {};
-      (await Me(Se)).forEach(([B, J]) => L[decodeURIComponent(B.slice(Se.length))] = J), _(L);
+      (await Ae(Se)).forEach(([B, J]) => L[decodeURIComponent(B.slice(Se.length))] = J), _(L);
     } catch {
     }
     try {
-      let L = (await Me(ea)).map(([B, J]) => ({ ...J, key: B }));
+      let L = (await Ae(ea)).map(([B, J]) => ({ ...J, key: B }));
       L.sort((B, J) => B.at - J.at), gt((B) => {
         let J = B.filter((et) => et.pending && !L.some((he) => he.id === et.id));
         return [...L, ...J];
@@ -374,7 +367,7 @@ function Ye() {
     }
     try {
       let L = {};
-      (await Me(Ie)).forEach(([B, J]) => L[decodeURIComponent(B.slice(Ie.length))] = J.at || 0), qe((B) => {
+      (await Ae(Ie)).forEach(([B, J]) => L[decodeURIComponent(B.slice(Ie.length))] = J.at || 0), qe((B) => {
         let J = { ...L };
         return Object.keys(B).forEach((et) => J[et] = Math.max(J[et] || 0, B[et] || 0)), J;
       });
@@ -407,16 +400,16 @@ function Ye() {
     let B = await ut(d, L);
     return B || R("저장하지 못했어요. 잠시 후 다시 시도해 주세요."), B;
   }, pa = async (d) => {
-    E(d), A(!1);
+    E(d), M(!1);
     try {
       await window.storage.set("me", d, !1);
     } catch {
     }
   }, da = async (d) => {
     i(d), k(!1), await ut(q.settings, d) || R("설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요."), c && !d.members.includes(c) && E(null);
-  }, st = () => M(null);
+  }, st = () => A(null);
   v.current = () => {
-    j ? M(null) : z ? A(!1) : p && k(!1);
+    j ? A(null) : z ? M(!1) : p && k(!1);
   };
   let xe = !!j || z || p && !!o;
   O(() => {
@@ -479,7 +472,14 @@ function Ye() {
     (P) => F ? P.map((K) => K.id === F ? { ...K, ...d, editedAt: Date.now(), editedBy: c } : K) : [...P, { id: Pt(), by: c, createdAt: Date.now(), ...d }]
   ), va = (d) => it(q.spend, [], h, (F) => F.filter((P) => P.id !== d)), Jt;
   if (!e)
-    Jt = /* @__PURE__ */ t("div", { className: "jt-loading", children: "불러오는 중" });
+    Jt = /* @__PURE__ */ a("div", { className: "jt-loading", role: "status", "aria-live": "polite", children: [
+      /* @__PURE__ */ a("div", { className: "jt-dots", "aria-hidden": "true", children: [
+        /* @__PURE__ */ t("i", {}),
+        /* @__PURE__ */ t("i", {}),
+        /* @__PURE__ */ t("i", {})
+      ] }),
+      "앱 준비 중"
+    ] });
   else if (!o || p)
     Jt = /* @__PURE__ */ t(yo, { initial: o, onSave: da, onCancel: o ? () => k(!1) : null });
   else if (!c || !o.members.includes(c) || z) {
@@ -490,7 +490,7 @@ function Ye() {
         members: o.members,
         onPick: pa,
         current: d ? c : null,
-        onBack: d ? () => A(!1) : null
+        onBack: d ? () => M(!1) : null
       }
     );
   } else {
@@ -499,7 +499,7 @@ function Ye() {
       /* @__PURE__ */ a("header", { className: "jt-head hero" + (D ? " mini" : b === "plan" ? " tall" : ""), children: [
         !D && /* @__PURE__ */ t(ii, {}),
         /* @__PURE__ */ a("div", { className: "jt-head-top", children: [
-          /* @__PURE__ */ a("button", { className: "jt-me", onClick: () => A(!0), "aria-label": "사용자 바꾸기", children: [
+          /* @__PURE__ */ a("button", { className: "jt-me", onClick: () => M(!0), "aria-label": "사용자 바꾸기", children: [
             /* @__PURE__ */ t(rt, { name: c, members: o.members, size: 24 }),
             c
           ] }),
@@ -573,8 +573,8 @@ function Ye() {
             schedule: r,
             day: N,
             setDay: s,
-            onEdit: (B) => M({ type: "plan", item: B, day: B.day }),
-            onAddAt: (B, J) => M({ type: "plan", day: B, preset: { time: J, end: Rt(Math.min(zt(J) + 60, 23 * 60 + 59)) } }),
+            onEdit: (B) => A({ type: "plan", item: B, day: B.day }),
+            onAddAt: (B, J) => A({ type: "plan", day: B, preset: { time: J, end: Rt(Math.min(zt(J) + 60, 23 * 60 + 59)) } }),
             me: c,
             onComment: on.add,
             onDelComment: on.del,
@@ -588,10 +588,10 @@ function Ye() {
             plan: r,
             wish: x,
             me: c,
-            onEdit: (B) => M({ type: "wish", item: B }),
+            onEdit: (B) => A({ type: "wish", item: B }),
             onSave: sn,
             onLike: ba,
-            onPlan: (B) => M({ type: "toPlan", wish: B }),
+            onPlan: (B) => A({ type: "toPlan", wish: B }),
             onDelete: ln,
             onComment: rn.add,
             onDelComment: rn.del,
@@ -604,7 +604,7 @@ function Ye() {
             settings: L,
             spend: m,
             me: c,
-            onEdit: (B) => M({ type: "spend", item: B })
+            onEdit: (B) => A({ type: "spend", item: B })
           }
         ),
         b === "chat" && /* @__PURE__ */ t(
@@ -640,9 +640,9 @@ function Ye() {
       ] }),
       (() => {
         let B = {
-          plan: [`${N + 1}일차 일정 추가`, () => M({ type: "plan", day: N })],
-          wish: ["가고 싶은 곳 추가", () => M({ type: "wish" })],
-          spend: ["경비 추가", () => M({ type: "spend" })]
+          plan: [`${N + 1}일차 일정 추가`, () => A({ type: "plan", day: N })],
+          wish: ["가고 싶은 곳 추가", () => A({ type: "wish" })],
+          spend: ["경비 추가", () => A({ type: "spend" })]
         }[b];
         return B ? /* @__PURE__ */ a("button", { className: "jt-fab", onClick: B[1], children: [
           /* @__PURE__ */ t(Fa, { size: 20, strokeWidth: 2.6 }),
@@ -731,7 +731,7 @@ function Ye() {
               ] }),
               ne(et),
               " (",
-              Mt(et),
+              At(et),
               ")"
             ]
           },
@@ -752,7 +752,15 @@ var Je = `
 .jt button:focus-visible,.jt input:focus-visible,.jt select:focus-visible,.jt textarea:focus-visible,.jt [role=button]:focus-visible,.jt a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .jt h1,.jt h3,.jt h4,.jt p,.jt ul,.jt ol{margin:0;padding:0}
 .jt ul,.jt ol{list-style:none}
-.jt-loading{padding:80px 20px;text-align:center;color:var(--muted)}
+.jt-loading{padding:96px 20px;text-align:center;color:var(--muted);font-size:15px;font-weight:600}
+.jt-dots{display:flex;justify-content:center;gap:9px;height:22px;align-items:flex-end;margin-bottom:14px}
+.jt-dots i{width:10px;height:10px;border-radius:50%;animation:jt-dot 1.1s ease-in-out infinite}
+.jt-dots i:nth-child(1){background:#E8800A}
+.jt-dots i:nth-child(2){background:#D9262E;animation-delay:.15s}
+.jt-dots i:nth-child(3){background:#0A9B6E;animation-delay:.3s}
+@keyframes jt-dot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-10px);opacity:1}}
+@keyframes jt-dotfade{0%,100%{opacity:.35}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.jt-dots i{animation:jt-dotfade 1.4s ease-in-out infinite}}
 .jt-head{background:var(--ink);color:#fff}
 .jt-head-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .jt-head h1{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
@@ -859,10 +867,3 @@ var Je = `
 .jt-comment{display:flex;gap:8px;align-items:flex-start}
 .jt-comment-body{flex:1;min-width:0;background:#F2F4F7;border-radius:10px;padding:6px 10px}
 .jt-comment-body div{display:flex;gap:6px;align-items:baseline}
-.jt-comment-body strong{font-size:13px}
-.jt-comment-body span{font-size:11px;color:var(--muted)}
-.jt-comment-body p{font-size:14px;white-space:pre-wrap;word-break:break-word}
-.jt-comment .jt-del{padding:4px}
-.jt-comment-input{margin-top:10px}
-.jt-comment-input input{padding:9px 12px}
-.jt-send{flex:0 0 auto;width:42px;border:0;border-radius:10px;background:var(--ink);color:#fff !important;display:grid;place-items:center}
