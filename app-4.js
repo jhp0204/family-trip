@@ -1,5 +1,4 @@
-ft && /* @__PURE__ */ t("li", { className: "jt-daysep", "aria-label": Q, children: /* @__PURE__ */ t("span", { children: Q }) }),
-        /* @__PURE__ */ o(
+/* @__PURE__ */ o(
           "li",
           {
             id: "msg-" + $.id,
@@ -501,7 +500,7 @@ function Ye() {
             c
           ] }),
           F && /* @__PURE__ */ o("strong", { className: "jt-mini-title", children: [
-            n.title,
+            /* @__PURE__ */ t("span", { className: "jt-mini-name", children: n.title }),
             D > 0 && /* @__PURE__ */ o("em", { children: [
               "D-",
               D
@@ -818,7 +817,7 @@ var Je = `
 .jt-sheet-head h3{font-size:18px;font-weight:800}
 .jt-daypick{display:flex;flex-direction:column;gap:8px}
 .jt-daypick button{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--rule);border-radius:12px;padding:10px 14px;font-weight:700;text-align:left}
-.jt-daypick .jt-list{display:flex;flex-direction:column;gap:10px}
+.jt-list{display:flex;flex-direction:column;gap:10px}
 .jt-wish{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:10px 12px}
 .jt-wish-top{display:flex;align-items:center;gap:8px}
 .jt-wish-top strong{font-size:16px}
@@ -853,3 +852,5 @@ var Je = `
 .jt-comments{margin-top:12px;border-top:1px solid var(--rule);padding-top:10px}
 .jt-comments ul{display:flex;flex-direction:column;gap:10px}
 .jt-nocomment{margin:0 0 4px}
+.jt-comment{display:flex;gap:8px;align-items:flex-start}
+.jt-comment-body{flex:1;min-width:0;background:#F2F4F7;border-radius:10px;padding:6px 10px}
