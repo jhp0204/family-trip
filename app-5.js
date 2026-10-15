@@ -1,4 +1,3 @@
-.jt-moves li em{grid-column:2;font-style:normal;font-size:12px;color:var(--muted);text-align:right}
 .jt-person{background:#fff;border:1px solid var(--rule);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:12px}
 .jt-person-main{display:flex;flex-direction:column;flex:1;min-width:0}
 .jt-person-main span{font-size:12px;color:var(--muted)}
@@ -356,7 +355,9 @@
 .jt-mini-title{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .jt-mini-title em{font-style:normal;flex:0 0 auto;background:#fff;color:var(--ink);font-size:12px;font-weight:800;padding:1px 8px;border-radius:999px}
 /* 가족 위치 */
-.jt-nav{grid-template-columns:repeat(4,1fr)}
+.jt-nav{grid-template-columns:repeat(5,1fr)}
+.jt-nav button{font-size:11px;letter-spacing:-.02em}
+.jt-nav-ic{width:46px;position:relative}
 .jt-share{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border-left:6px solid var(--rule)}
 .jt-share.on{border-left-color:#0A9B6E}
 .jt-share-text{flex:1;display:flex;flex-direction:column;gap:2px}
@@ -405,65 +406,96 @@
 .jt-helplist li{background:#fff;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:3px;border-left:4px solid #0A9B6E}
 .jt-helplist b{font-size:15px}
 .jt-helplist span{font-size:14px;line-height:1.55;color:#33405C}
+/* 채팅 */
+.jt-badge{position:absolute;top:-4px;right:2px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#D9262E;color:#fff;font-size:11px;font-weight:800;line-height:18px;text-align:center;box-shadow:0 0 0 2px #fff;font-style:normal}
+.jt-chat{padding-bottom:70px}
+.jt-msgs{display:flex;flex-direction:column;gap:4px}
+.jt-daysep{display:flex;justify-content:center;margin:12px 0 6px}
+.jt-daysep span{background:rgba(20,33,61,.08);color:#33405C;font-size:12px;font-weight:700;padding:3px 12px;border-radius:999px}
+.jt-msg{display:flex;gap:8px;align-items:flex-start;margin-top:6px}
+.jt-msg.cont{margin-top:0}
+.jt-msg.mine{justify-content:flex-end}
+.jt-msg-av{width:30px;flex:0 0 30px}
+.jt-msg-col{display:flex;flex-direction:column;max-width:78%;min-width:0}
+.jt-msg.mine .jt-msg-col{align-items:flex-end}
+.jt-msg-name{font-size:12px;font-weight:700;color:#33405C;margin:0 0 3px 2px}
+.jt-msg-row{display:flex;align-items:flex-end;gap:5px}
+.jt-msg.mine .jt-msg-row{flex-direction:row-reverse}
+.jt-bubble{border:0;text-align:left;background:#fff;color:var(--ink);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:15px;line-height:1.45;min-width:0;cursor:default}
+.jt-msg.mine .jt-bubble{background:var(--ink);color:#fff;border-radius:16px 16px 4px 16px;cursor:pointer}
+.jt-msg.cont .jt-bubble{border-radius:16px}
+.jt-msg-text{white-space:pre-wrap;word-break:break-word}
+.jt-msg-text a{color:inherit;text-decoration:underline;word-break:break-all}
+.jt-msg-time{font-size:10.5px;color:var(--muted);flex:0 0 auto;font-variant-numeric:tabular-nums;padding-bottom:2px}
+.jt-bubble.loc{background:#EEF6F1;color:#0A7D58}
+.jt-msg.mine .jt-bubble.loc{background:#0A9B6E;color:#fff}
+.jt-locmsg{display:inline-flex;align-items:center;gap:6px;font-weight:700}
+.jt-loclinks{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
+.jt-msg-del{margin-top:4px}
+.jt-chatbar{position:fixed;z-index:15;left:50%;transform:translateX(-50%);width:min(100%,520px);bottom:calc(62px + env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:8px;padding:8px 12px;background:rgba(241,243,246,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid rgba(20,33,61,.06)}
+.jt .jt-chatbar textarea{flex:1;resize:none;max-height:120px;min-height:42px;padding:10px 12px;border-radius:20px;font-size:15px;line-height:1.35}
+.jt-chatbar .jt-send{height:42px;border-radius:50%;width:42px}
+.jt-chat-loc{flex:0 0 auto;width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:#0A7D58;display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px var(--rule)}
+.jt-chat-loc:disabled{opacity:.5}
 `;
 
 // src/main.jsx
-import { jsx as X, jsxs as Dt } from "react/jsx-runtime";
-var Na = `rules_version = '2';
+import { jsx as X, jsxs as $t } from "react/jsx-runtime";
+var Ra = `rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /trips/{trip}/{document=**} {
       allow read, write: if trip.size() >= 12;
     }
   }
-}`, Do = (t) => {
+}`, Vo = (t) => {
   let a = t && (t.code || t.message) || "";
   return a.includes("permission") ? "Firebase 보안 규칙이 막고 있어요. 아래 규칙을 Firestore '규칙' 탭에 붙여넣고 '게시'를 눌러 주세요." : a.includes("timeout") ? "Firebase에 연결되지 않았어요. 인터넷 연결과 Firestore 데이터베이스를 만들었는지 확인해 주세요." : a.includes("api-key") || a.includes("invalid") ? "설정값이 맞지 않아요. Firebase 콘솔에서 firebaseConfig 부분을 다시 복사해 주세요." : "연결하지 못했어요. 설정값과 인터넷 연결을 확인해 주세요. (" + a + ")";
 };
-function Po({ onDone: t }) {
-  let [a, n] = kt("join"), [r, l] = kt(""), [x, g] = kt(""), [p, d] = kt(!1), [h, v] = kt(""), [k, c] = kt(!1), z = async (u, A) => {
+function Zo({ onDone: t }) {
+  let [a, n] = Ct("join"), [r, s] = Ct(""), [j, f] = Ct(""), [p, d] = Ct(!1), [b, v] = Ct(""), [N, c] = Ct(!1), z = async (u, A) => {
     d(!0), v("");
     try {
-      fe(u, A), await qe(), We(u, A), t();
+      ve(u, A), await na(), Ze(u, A), t();
     } catch (m) {
-      v(Do(m)), d(!1);
+      v(Vo(m)), d(!1);
     }
-  }, f = () => {
-    let u = Ge(r);
+  }, g = () => {
+    let u = aa(r);
     if (!u) {
       v("설정값을 찾지 못했어요. apiKey, projectId, appId가 들어 있는 firebaseConfig 부분 전체를 붙여넣어 주세요.");
       return;
     }
-    z(u, Je());
-  }, s = () => {
-    let u = ge(x);
+    z(u, ea());
+  }, l = () => {
+    let u = je(j);
     if (!u) {
       v("초대 링크가 아니에요. 가족에게 받은 주소 전체를 붙여넣어 주세요.");
       return;
     }
     z(u.c, u.t);
   };
-  return /* @__PURE__ */ Dt("div", { className: "jt", children: [
-    /* @__PURE__ */ X("style", { children: Ie }),
-    /* @__PURE__ */ Dt("div", { className: "jt-setup", children: [
+  return /* @__PURE__ */ $t("div", { className: "jt", children: [
+    /* @__PURE__ */ X("style", { children: _e }),
+    /* @__PURE__ */ $t("div", { className: "jt-setup", children: [
       /* @__PURE__ */ X("h1", { children: "가족 여행 앱" }),
-      /* @__PURE__ */ Dt("div", { className: "jt-seg", role: "tablist", children: [
+      /* @__PURE__ */ $t("div", { className: "jt-seg", role: "tablist", children: [
         /* @__PURE__ */ X("button", { role: "tab", "aria-selected": a === "join", className: a === "join" ? "on" : "", onClick: () => n("join"), children: "초대받았어요" }),
         /* @__PURE__ */ X("button", { role: "tab", "aria-selected": a === "new", className: a === "new" ? "on" : "", onClick: () => n("new"), children: "처음 만들어요" })
       ] }),
-      a === "join" ? /* @__PURE__ */ Dt("div", { className: "jt-form", children: [
+      a === "join" ? /* @__PURE__ */ $t("div", { className: "jt-form", children: [
         /* @__PURE__ */ X("p", { className: "jt-lead", children: "가족에게 받은 초대 링크를 누르면 바로 들어와요. 홈 화면 아이콘으로 열었는데 이 화면이 보이면, 초대 링크를 아래에 붙여넣어 주세요." }),
-        /* @__PURE__ */ X("textarea", { rows: 3, value: x, onChange: (u) => g(u.target.value), placeholder: "https://…#j=…", "aria-label": "초대 링크" }),
-        h && /* @__PURE__ */ X("p", { className: "jt-warn-inline", children: h }),
-        /* @__PURE__ */ X("button", { className: "jt-primary", disabled: p || !x.trim(), onClick: s, children: p ? "연결 중" : "여행에 들어가기" })
-      ] }) : /* @__PURE__ */ Dt("div", { className: "jt-form", children: [
+        /* @__PURE__ */ X("textarea", { rows: 3, value: j, onChange: (u) => f(u.target.value), placeholder: "https://…#j=…", "aria-label": "초대 링크" }),
+        b && /* @__PURE__ */ X("p", { className: "jt-warn-inline", children: b }),
+        /* @__PURE__ */ X("button", { className: "jt-primary", disabled: p || !j.trim(), onClick: l, children: p ? "연결 중" : "여행에 들어가기" })
+      ] }) : /* @__PURE__ */ $t("div", { className: "jt-form", children: [
         /* @__PURE__ */ X("p", { className: "jt-lead", children: "가족 중 한 명만 한 번 하면 돼요. Firebase 프로젝트의 웹 앱 설정값(firebaseConfig)을 붙여넣어 주세요." }),
         /* @__PURE__ */ X(
           "textarea",
           {
             rows: 7,
             value: r,
-            onChange: (u) => l(u.target.value),
+            onChange: (u) => s(u.target.value),
             placeholder: `const firebaseConfig = {
   apiKey: "…",
   authDomain: "…",
@@ -474,9 +506,9 @@ function Po({ onDone: t }) {
             spellCheck: !1
           }
         ),
-        /* @__PURE__ */ Dt("div", { className: "jt-field", children: [
+        /* @__PURE__ */ $t("div", { className: "jt-field", children: [
           /* @__PURE__ */ X("span", { children: "Firestore 보안 규칙 (규칙 탭에 붙여넣기)" }),
-          /* @__PURE__ */ X("pre", { className: "jt-rules", children: Na }),
+          /* @__PURE__ */ X("pre", { className: "jt-rules", children: Ra }),
           /* @__PURE__ */ X(
             "button",
             {
@@ -484,35 +516,35 @@ function Po({ onDone: t }) {
               className: "jt-secondary",
               onClick: async () => {
                 try {
-                  await navigator.clipboard.writeText(Na), c(!0);
+                  await navigator.clipboard.writeText(Ra), c(!0);
                 } catch {
                   c(!1);
                 }
               },
-              children: k ? "규칙을 복사했어요" : "규칙 복사"
+              children: N ? "규칙을 복사했어요" : "규칙 복사"
             }
           )
         ] }),
-        h && /* @__PURE__ */ X("p", { className: "jt-warn-inline", children: h }),
-        /* @__PURE__ */ X("button", { className: "jt-primary", disabled: p || !r.trim(), onClick: f, children: p ? "연결 확인 중" : "연결하고 여행 만들기" })
+        b && /* @__PURE__ */ X("p", { className: "jt-warn-inline", children: b }),
+        /* @__PURE__ */ X("button", { className: "jt-primary", disabled: p || !r.trim(), onClick: g, children: p ? "연결 확인 중" : "연결하고 여행 만들기" })
       ] })
     ] }),
     /* @__PURE__ */ X("style", { children: ".jt-lead{font-size:14px;color:#33405C}.jt-rules{margin:0;font-size:11.5px;line-height:1.5;background:#fff;border-radius:10px;padding:10px 12px;overflow-x:auto;white-space:pre}.jt .jt-setup .jt-seg{margin-bottom:16px}" })
   ] });
 }
-function $o() {
-  let [t, a] = kt(() => {
-    let n = Ke();
+function Qo() {
+  let [t, a] = Ct(() => {
+    let n = Ve();
     if (!n) return !1;
     try {
-      return fe(n.c, n.t), !0;
+      return ve(n.c, n.t), !0;
     } catch {
       return !1;
     }
   });
-  return Io(() => {
+  return qo(() => {
     "serviceWorker" in navigator && location.protocol === "https:" && navigator.serviceWorker.register("./sw.js").catch(() => {
     });
-  }, []), t ? /* @__PURE__ */ X(Ae, {}) : /* @__PURE__ */ X(Po, { onDone: () => a(!0) });
+  }, []), t ? /* @__PURE__ */ X(Re, {}) : /* @__PURE__ */ X(Zo, { onDone: () => a(!0) });
 }
-Fo(document.getElementById("root")).render(/* @__PURE__ */ X($o, {}));
+Xo(document.getElementById("root")).render(/* @__PURE__ */ X(Qo, {}));
