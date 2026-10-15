@@ -1,0 +1,16 @@
+{
+  "name": "가족 일본여행",
+  "short_name": "가족여행",
+  "display": "standalone",
+  "background_color": "#F1F3F6",
+  "theme_color": "#14213D",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
