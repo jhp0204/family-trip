@@ -1,72 +1,67 @@
-children: [
-              !ot && /* @__PURE__ */ t("span", { className: "jt-msg-av", children: !wt && /* @__PURE__ */ t(rt, { name: $.by, members: C, size: 30 }) }),
-              /* @__PURE__ */ a("div", { className: "jt-msg-col", children: [
-                !ot && !wt && /* @__PURE__ */ t("span", { className: "jt-msg-name", children: $.by }),
-                /* @__PURE__ */ a("div", { className: "jt-msg-row", children: [
-                  v === $.id ? /* @__PURE__ */ a("div", { className: "jt-msg-editbox", children: [
+l === T.id ? /* @__PURE__ */ a("div", { className: "jt-msg-editbox", children: [
                     /* @__PURE__ */ t(
                       "textarea",
                       {
                         rows: 2,
-                        value: j,
-                        onChange: (tt) => A(tt.target.value),
+                        value: k,
+                        onChange: (tt) => M(tt.target.value),
                         onKeyDown: (tt) => {
-                          tt.key === "Enter" && !tt.shiftKey && !tt.nativeEvent.isComposing && (tt.preventDefault(), _($)), tt.key === "Escape" && I(null);
+                          tt.key === "Enter" && !tt.shiftKey && !tt.nativeEvent.isComposing && (tt.preventDefault(), _(T)), tt.key === "Escape" && S(null);
                         },
                         "aria-label": "메시지 수정",
                         autoFocus: !0
                       }
                     ),
                     /* @__PURE__ */ a("div", { className: "jt-msg-editact", children: [
-                      /* @__PURE__ */ t("button", { type: "button", className: "jt-ghost sm", onClick: () => I(null), children: "취소" }),
-                      /* @__PURE__ */ t("button", { type: "button", className: "jt-secondary sm", onClick: () => _($), disabled: !j.trim(), children: "저장" })
+                      /* @__PURE__ */ t("button", { type: "button", className: "jt-ghost sm", onClick: () => S(null), children: "취소" }),
+                      /* @__PURE__ */ t("button", { type: "button", className: "jt-secondary sm", onClick: () => _(T), disabled: !k.trim(), children: "저장" })
                     ] })
                   ] }) : /* @__PURE__ */ t(
                     "button",
                     {
                       type: "button",
-                      className: "jt-bubble" + ($.kind === "loc" ? " loc" : "") + (r && r.id === $.id ? " pinned" : ""),
-                      onClick: () => k(p === $.id ? null : $.id),
-                      "aria-label": ot ? "내 메시지, 누르면 메뉴" : "누르면 공지 메뉴",
-                      "aria-expanded": p === $.id,
-                      children: $.kind === "loc" ? /* @__PURE__ */ a("span", { className: "jt-locmsg", children: [
+                      className: "jt-bubble" + (T.kind === "loc" ? " loc" : "") + (s && s.id === T.id ? " pinned" : ""),
+                      onClick: () => y(N === T.id ? null : T.id),
+                      "aria-label": at ? "내 메시지, 누르면 메뉴" : "누르면 공지 메뉴",
+                      "aria-expanded": N === T.id,
+                      children: T.kind === "loc" ? /* @__PURE__ */ a("span", { className: "jt-locmsg", children: [
                         /* @__PURE__ */ t(Et, { size: 16 }),
-                        ot ? "내 위치를 보냈어요" : `${$.by}의 현재 위치`
-                      ] }) : /* @__PURE__ */ t("span", { className: "jt-msg-text", children: Tn($.text) })
+                        at ? "내 위치를 보냈어요" : `${T.by}의 현재 위치`
+                      ] }) : /* @__PURE__ */ t("span", { className: "jt-msg-text", children: Hn(T.text) })
                     }
                   ),
                   /* @__PURE__ */ a("span", { className: "jt-msg-meta", children: [
                     (() => {
-                      let tt = C.filter((Ht) => Ht !== $.by && (i[Ht] || 0) < $.at);
+                      let tt = A.filter((wt) => wt !== T.by && (i[wt] || 0) < T.at);
                       return tt.length > 0 ? /* @__PURE__ */ t("b", { className: "jt-unread", title: `안 읽음: ${tt.join(", ")}`, "aria-label": `${tt.length}명 안 읽음`, children: tt.length }) : null;
                     })(),
                     /* @__PURE__ */ a("time", { className: "jt-msg-time", children: [
-                      $.editedAt ? "수정됨 " : "",
-                      Qo($.at)
+                      T.editedAt ? "수정됨 " : "",
+                      ci(T.at)
                     ] })
                   ] })
                 ] }),
-                $.kind === "loc" && /* @__PURE__ */ a("div", { className: "jt-loclinks", children: [
-                  /* @__PURE__ */ a("a", { className: "jt-maplink", href: Mt({ lat: $.lat, lng: $.lng }), target: "_blank", rel: "noopener noreferrer", children: [
+                T.kind === "loc" && /* @__PURE__ */ a("div", { className: "jt-loclinks", children: [
+                  /* @__PURE__ */ a("a", { className: "jt-maplink", href: Mt({ lat: T.lat, lng: T.lng }), target: "_blank", rel: "noopener noreferrer", children: [
                     /* @__PURE__ */ t(Kt, { size: 13 }),
                     "지도에서 보기"
                   ] }),
-                  !ot && /* @__PURE__ */ a("a", { className: "jt-maplink", href: ta($), target: "_blank", rel: "noopener noreferrer", children: [
+                  !at && /* @__PURE__ */ a("a", { className: "jt-maplink", href: la(T), target: "_blank", rel: "noopener noreferrer", children: [
                     /* @__PURE__ */ t(vt, { size: 13 }),
                     "길 찾기"
                   ] })
                 ] }),
-                p === $.id && v !== $.id && /* @__PURE__ */ a("div", { className: "jt-msg-menu", children: [
-                  r && r.id === $.id ? /* @__PURE__ */ a(
+                N === T.id && l !== T.id && /* @__PURE__ */ a("div", { className: "jt-msg-menu", children: [
+                  s && s.id === T.id ? /* @__PURE__ */ a(
                     "button",
                     {
                       type: "button",
                       className: "jt-like",
                       onClick: () => {
-                        h(), k(null);
+                        j(), y(null);
                       },
                       children: [
-                        /* @__PURE__ */ t(wn, { size: 14 }),
+                        /* @__PURE__ */ t(Mn, { size: 14 }),
                         "공지 해제"
                       ]
                     }
@@ -76,23 +71,23 @@ children: [
                       type: "button",
                       className: "jt-like",
                       onClick: () => {
-                        m($), k(null), R(!1);
+                        d(T), y(null), $(!1);
                       },
                       children: [
-                        /* @__PURE__ */ t(Ja, { size: 14 }),
+                        /* @__PURE__ */ t(no, { size: 14 }),
                         "공지로 등록"
                       ]
                     }
                   ),
-                  ot && $.kind !== "loc" && /* @__PURE__ */ a("button", { type: "button", className: "jt-like", onClick: () => Y($), children: [
-                    /* @__PURE__ */ t(fe, { size: 14 }),
+                  at && T.kind !== "loc" && /* @__PURE__ */ a("button", { type: "button", className: "jt-like", onClick: () => J(T), children: [
+                    /* @__PURE__ */ t(be, { size: 14 }),
                     "수정"
                   ] }),
-                  ot && /* @__PURE__ */ t(
-                    St,
+                  at && /* @__PURE__ */ t(
+                    Ft,
                     {
                       onConfirm: () => {
-                        x($), k(null);
+                        g(T), y(null);
                       },
                       label: "삭제"
                     }
@@ -102,25 +97,25 @@ children: [
             ]
           }
         )
-      ] }, $.id);
+      ] }, T.id);
     }) }),
-    /* @__PURE__ */ t("div", { ref: S }),
+    /* @__PURE__ */ t("div", { ref: F }),
     /* @__PURE__ */ a("div", { className: "jt-chatbar", children: [
-      /* @__PURE__ */ t("button", { type: "button", className: "jt-chat-loc", onClick: be, disabled: z, "aria-label": "내 위치 보내기", title: "내 위치 보내기", children: /* @__PURE__ */ t(Et, { size: 20 }) }),
+      /* @__PURE__ */ t("button", { type: "button", className: "jt-chat-loc", onClick: he, disabled: C, "aria-label": "내 위치 보내기", title: "내 위치 보내기", children: /* @__PURE__ */ t(Et, { size: 20 }) }),
       /* @__PURE__ */ t(
         "textarea",
         {
           rows: 1,
-          value: N,
-          onChange: ($) => s($.target.value),
-          onKeyDown: ($) => {
-            $.key === "Enter" && !$.shiftKey && !$.nativeEvent.isComposing && ($.preventDefault(), Wt());
+          value: v,
+          onChange: (T) => E(T.target.value),
+          onKeyDown: (T) => {
+            T.key === "Enter" && !T.shiftKey && !T.nativeEvent.isComposing && (T.preventDefault(), oe());
           },
-          placeholder: z ? "위치 찾는 중" : "메시지 보내기",
+          placeholder: C ? "위치 찾는 중" : "메시지 보내기",
           "aria-label": "메시지 내용"
         }
       ),
-      /* @__PURE__ */ t("button", { type: "button", className: "jt-send", onClick: Wt, disabled: !N.trim(), "aria-label": "보내기", children: /* @__PURE__ */ t(Bn, { size: 18 }) })
+      /* @__PURE__ */ t("button", { type: "button", className: "jt-send", onClick: oe, disabled: !v.trim(), "aria-label": "보내기", children: /* @__PURE__ */ t(Jn, { size: 18 }) })
     ] })
   ] });
 }
@@ -132,133 +127,138 @@ var $t = [
   { f: "Torii path with lantern at Fushimi Inari Taisha Shrine, Kyoto, Japan.jpg", t: "교토 후시미 이나리 신사", by: "Basile Morin", lic: "CC BY-SA", pos: "50% 45%" },
   { f: "Osaka Castle Outer Moat and Osaka Business Park, November 2016.jpg", t: "오사카성 해자와 시내", by: "Martin Falbisoner", lic: "CC BY-SA 4.0", pos: "50% 55%" },
   { f: "Umeda Sky Building, Osaka, November 2016 -02.jpg", t: "공중정원 에스컬레이터", by: "Wikimedia Commons", lic: "CC BY-SA", pos: "50% 50%" }
-], ni = (e) => "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(e) + "?width=1280", ai = (e) => "https://commons.wikimedia.org/wiki/File:" + encodeURIComponent(e.replace(/ /g, "_")), oi = 7e3;
-function ii() {
-  let [e, n] = w(0), [o, i] = w({}), r = H(o);
-  if (r.current = o, O(() => {
-    let g = setInterval(() => {
-      n((m) => {
-        let h = m;
-        for (let c = 0; c < $t.length && (h = (h + 1) % $t.length, !!r.current[h]); c++)
+], mi = (e) => "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(e) + "?width=1280", ui = (e) => "https://commons.wikimedia.org/wiki/File:" + encodeURIComponent(e.replace(/ /g, "_")), fi = 7e3;
+function gi() {
+  let [e, n] = w(0), [o, i] = w({}), s = Y(o);
+  if (s.current = o, K(() => {
+    let f = setInterval(() => {
+      n((d) => {
+        let j = d;
+        for (let b = 0; b < $t.length && (j = (j + 1) % $t.length, !!s.current[j]); b++)
           ;
-        return h;
+        return j;
       });
-    }, oi);
-    return () => clearInterval(g);
-  }, []), $t.every((g, m) => o[m])) return null;
-  let x = $t[e];
-  return /* @__PURE__ */ a(pt, { children: [
+    }, fi);
+    return () => clearInterval(f);
+  }, []), $t.every((f, d) => o[d])) return null;
+  let g = $t[e];
+  return /* @__PURE__ */ a(dt, { children: [
     /* @__PURE__ */ a("div", { className: "jt-hero", "aria-hidden": "true", children: [
-      $t.map((g, m) => /* @__PURE__ */ t(
+      $t.map((f, d) => /* @__PURE__ */ t(
         "img",
         {
-          src: ni(g.f),
+          src: mi(f.f),
           alt: "",
-          className: m === e ? "on" : "",
-          style: { objectPosition: g.pos },
-          loading: m === 0 ? "eager" : "lazy",
-          onError: () => i((h) => ({ ...h, [m]: !0 }))
+          className: d === e ? "on" : "",
+          style: { objectPosition: f.pos },
+          loading: d === 0 ? "eager" : "lazy",
+          onError: () => i((j) => ({ ...j, [d]: !0 }))
         },
-        g.f
+        f.f
       )),
       /* @__PURE__ */ t("div", { className: "jt-hero-shade" })
     ] }),
     /* @__PURE__ */ a("div", { className: "jt-hero-foot", children: [
-      /* @__PURE__ */ t("div", { className: "jt-hero-dots", "aria-hidden": "true", children: $t.map((g, m) => /* @__PURE__ */ t("i", { className: m === e ? "on" : "" }, g.f)) }),
-      /* @__PURE__ */ a("a", { className: "jt-hero-cap", href: ai(x.f), target: "_blank", rel: "noopener noreferrer", children: [
-        x.t,
+      /* @__PURE__ */ t("div", { className: "jt-hero-dots", "aria-hidden": "true", children: $t.map((f, d) => /* @__PURE__ */ t("i", { className: d === e ? "on" : "" }, f.f)) }),
+      /* @__PURE__ */ a("a", { className: "jt-hero-cap", href: ui(g.f), target: "_blank", rel: "noopener noreferrer", children: [
+        g.t,
         ", 사진 ",
-        x.by,
+        g.by,
         " (",
-        x.lic,
+        g.lic,
         ")"
       ] })
     ] })
   ] });
 }
-function Ye() {
-  let [e, n] = w(!1), [o, i] = w(null), [r, y] = w([]), [x, g] = w([]), [m, h] = w([]), [c, E] = w(null), [b, C] = w("plan"), [N, s] = w(0), [p, k] = w(!1), [z, M] = w(!1), v = H(null), I = H(!1), [j, A] = w(null), [l, R] = w(""), u = H(!1), [f, T] = w(null), [D, X] = w(!1), [Y, _] = w({}), [S, W] = w(!1), [Ft, Wt] = w(null), [be, yt] = w("");
-  O(() => {
+function Ze() {
+  let [e, n] = w(!1), [o, i] = w(null), [s, h] = w([]), [g, f] = w([]), [d, j] = w([]), [b, z] = w(null), [x, A] = w("plan"), [v, E] = w({ wish: "list", spend: "me" }), N = Y(!1), [y, C] = w(0), [r, l] = w(!1), [S, k] = w(!1), [M, p] = w(!1);
+  K(() => {
+    let m = setTimeout(() => p(!0), 8e3);
+    return () => clearTimeout(m);
+  }, []);
+  let $ = Y(null), u = Y(!1), [c, D] = w(null), [R, V] = w(""), J = Y(!1), [_, F] = w(null), [W, Dt] = w(!1), [oe, he] = w({}), [lt, yt] = w(!1), [T, Q] = w(null), [ie, at] = w("");
+  K(() => {
     (async () => {
       try {
-        let d = await window.storage.get("hdr", !1);
-        d && d.value === "min" && X(!0);
+        let m = await window.storage.get("hdr", !1);
+        m && m.value === "min" && Dt(!0);
       } catch {
       }
       try {
-        let d = await window.storage.get("locshare", !1);
-        d && d.value === "on" && W(!0), (!d || !d.value) && $(!0);
+        let m = await window.storage.get("locshare", !1);
+        m && m.value === "on" && yt(!0), (!m || !m.value) && tt(!0);
       } catch {
-        $(!0);
+        tt(!0);
       }
     })();
   }, []);
-  let [Dt, $] = w(!1), [Q, gt] = w([]), [ot, wt] = w(null), [tt, Ht] = w(0), [Xe, qe] = w({}), [Ge, Ve] = w(
+  let [Wt, tt] = w(!1), [wt, Ht] = w([]), [je, ve] = w(null), [tn, en] = w(0), [nn, an] = w({}), [on, sn] = w(
     () => typeof Notification < "u" && "setAppBadge" in navigator ? Notification.permission : "unsupported"
   );
-  O(() => {
+  K(() => {
     (async () => {
       try {
-        let d = await window.storage.get("chatread", !1);
-        d && d.value && Ht(Number(d.value) || 0);
+        let m = await window.storage.get("chatread", !1);
+        m && m.value && en(Number(m.value) || 0);
       } catch {
       }
     })();
   }, []);
-  let Ze = async (d) => {
-    let F = { id: Pt(), by: c, at: Date.now(), ...d }, P = Fe(F);
-    gt((U) => [...U, { ...F, key: P, pending: !0 }]), await ut(P, F) || (gt((U) => U.filter((L) => L.id !== F.id)), bt("메시지를 보내지 못했어요. 인터넷 연결을 확인하고 다시 보내 주세요."));
-  }, aa = async (d, F) => {
-    let P = { id: d.id, by: d.by, at: d.at, kind: d.kind, text: F, editedAt: Date.now() };
-    gt((U) => U.map((L) => L.id === d.id ? { ...L, text: F, editedAt: P.editedAt } : L)), await ut(d.key || Fe(d), P) || bt("메시지를 고치지 못했어요. 인터넷 연결을 확인해 주세요.");
-  }, oa = async (d) => {
-    let F = { id: d.id, by: d.by, kind: d.kind || "text", text: d.text || "", lat: d.lat, lng: d.lng, pinnedBy: c, pinnedAt: Date.now() };
-    wt(F);
-    let P = await ut(q.notice, F);
+  let rn = async (m) => {
+    let I = { id: Pt(), by: b, at: Date.now(), ...m }, P = _e(I);
+    Ht((U) => [...U, { ...I, key: P, pending: !0 }]), await gt(P, I) || (Ht((U) => U.filter((L) => L.id !== I.id)), bt("메시지를 보내지 못했어요. 인터넷 연결을 확인하고 다시 보내 주세요."));
+  }, da = async (m, I) => {
+    let P = { id: m.id, by: m.by, at: m.at, kind: m.kind, text: I, editedAt: Date.now() };
+    Ht((U) => U.map((L) => L.id === m.id ? { ...L, text: I, editedAt: P.editedAt } : L)), await gt(m.key || _e(m), P) || bt("메시지를 고치지 못했어요. 인터넷 연결을 확인해 주세요.");
+  }, ma = async (m) => {
+    let I = { id: m.id, by: m.by, kind: m.kind || "text", text: m.text || "", lat: m.lat, lng: m.lng, pinnedBy: b, pinnedAt: Date.now() };
+    ve(I);
+    let P = await gt(X.notice, I);
     bt(P ? "공지로 등록했어요. 채팅 맨 위에 고정돼요." : "공지를 등록하지 못했어요.");
-  }, Qe = async () => {
-    wt(null);
+  }, ln = async () => {
+    ve(null);
     try {
-      await window.storage.delete(q.notice, !0);
+      await window.storage.delete(X.notice, !0);
     } catch {
     }
     bt("공지를 해제했어요.");
-  }, ia = async (d) => {
-    ot && ot.id === d.id && Qe(), gt((F) => F.filter((P) => P.id !== d.id));
+  }, ua = async (m) => {
+    je && je.id === m.id && ln(), Ht((I) => I.filter((P) => P.id !== m.id));
     try {
-      await window.storage.delete(d.key || Fe(d), !0);
+      await window.storage.delete(m.key || _e(m), !0);
     } catch {
     }
-  }, ra = async () => {
-    let d = Ft;
-    if (d || (d = await new Promise((F) => {
-      if (!navigator.geolocation) return F(null);
+  }, fa = async () => {
+    let m = T;
+    if (m || (m = await new Promise((I) => {
+      if (!navigator.geolocation) return I(null);
       navigator.geolocation.getCurrentPosition(
-        (P) => F({ lat: P.coords.latitude, lng: P.coords.longitude }),
-        () => F(null),
+        (P) => I({ lat: P.coords.latitude, lng: P.coords.longitude }),
+        () => I(null),
         { enableHighAccuracy: !0, timeout: 15e3, maximumAge: 6e4 }
       );
-    })), !d) {
+    })), !m) {
       bt("위치를 찾지 못했어요. 휴대폰 설정에서 위치 권한을 허용해 주세요.");
       return;
     }
-    await Ze({ kind: "loc", lat: d.lat, lng: d.lng, text: "" });
-  }, ie = Q.reduce((d, F) => F.by !== c && F.at > d ? F.at : d, 0), Yt = Q.reduce((d, F) => F.at > d ? F.at : d, 0), kt = Q.filter((d) => d.by !== c && d.at > tt).length, [tn, sa] = w(() => document.visibilityState === "visible");
-  O(() => {
-    let d = () => sa(document.visibilityState === "visible");
-    return document.addEventListener("visibilitychange", d), () => document.removeEventListener("visibilitychange", d);
-  }, []), O(() => {
-    if (!(b !== "chat" || !tn || !c || !Yt)) {
-      if (ie > tt) {
-        Ht(ie);
+    await rn({ kind: "loc", lat: m.lat, lng: m.lng, text: "" });
+  }, se = wt.reduce((m, I) => I.by !== b && I.at > m ? I.at : m, 0), Yt = wt.reduce((m, I) => I.at > m ? I.at : m, 0), kt = wt.filter((m) => m.by !== b && m.at > tn).length, [cn, ga] = w(() => document.visibilityState === "visible");
+  K(() => {
+    let m = () => ga(document.visibilityState === "visible");
+    return document.addEventListener("visibilitychange", m), () => document.removeEventListener("visibilitychange", m);
+  }, []), K(() => {
+    if (!(x !== "chat" || !cn || !b || !Yt)) {
+      if (se > tn) {
+        en(se);
         try {
-          window.storage.set("chatread", String(ie), !1);
+          window.storage.set("chatread", String(se), !1);
         } catch {
         }
       }
-      (Xe[c] || 0) < Yt && (qe((d) => ({ ...d, [c]: Yt })), ut(Ie + encodeURIComponent(c), { at: Yt }));
+      (nn[b] || 0) < Yt && (an((m) => ({ ...m, [b]: Yt })), gt(Re + encodeURIComponent(b), { at: Yt }));
     }
-  }, [b, tn, Yt, ie, c]), O(() => {
+  }, [x, cn, Yt, se, b]), K(() => {
     if ("setAppBadge" in navigator)
       try {
         kt > 0 ? navigator.setAppBadge(kt).catch(() => {
@@ -266,244 +266,259 @@ function Ye() {
         });
       } catch {
       }
-  }, [kt, Ge]);
-  let la = async () => {
+  }, [kt, on]);
+  let ba = async () => {
     try {
-      let d = await Notification.requestPermission();
-      Ve(d), bt(d === "granted" ? "앱 아이콘에 안 읽은 메시지 수가 표시돼요." : "허용하지 않아서 아이콘 숫자는 표시되지 않아요.");
+      let m = await Notification.requestPermission();
+      sn(m), bt(m === "granted" ? "앱 아이콘에 안 읽은 메시지 수가 표시돼요." : "허용하지 않아서 아이콘 숫자는 표시되지 않아요.");
     } catch {
-      Ve("denied");
+      sn("denied");
     }
   }, [re, bt] = w("");
-  O(() => {
+  K(() => {
     if (!re) return;
-    let d = setTimeout(() => bt(""), 2600);
-    return () => clearTimeout(d);
+    let m = setTimeout(() => bt(""), 2600);
+    return () => clearTimeout(m);
   }, [re]);
-  let se = (d, F) => {
-    W(d), $(!1), d || yt(""), F || bt(d ? "위치 공유를 켰어요. 앱이 열려 있는 동안만 공유돼요." : "위치 공유를 껐어요. 가족 지도에서 내 위치가 사라져요.");
+  let le = (m, I) => {
+    yt(m), tt(!1), m || at(""), I || bt(m ? "위치 공유를 켰어요. 앱이 열려 있는 동안만 공유돼요." : "위치 공유를 껐어요. 가족 지도에서 내 위치가 사라져요.");
     try {
-      window.storage.set("locshare", d ? "on" : "off", !1);
+      window.storage.set("locshare", m ? "on" : "off", !1);
     } catch {
     }
-  }, en = () => se(!S);
-  O(() => {
-    if (!S || !c || !o) return;
-    let d = Se + encodeURIComponent(c), F = null, P = null, K = 0, U = (lt) => {
-      P = lt, K = Date.now(), Wt(lt), ut(d, { ...lt, at: Date.now(), online: !0 });
+  }, pn = () => le(!lt);
+  K(() => {
+    if (!lt || !b || !o) return;
+    let m = Te + encodeURIComponent(b), I = null, P = null, O = 0, U = (pt) => {
+      P = pt, O = Date.now(), Q(pt), gt(m, { ...pt, at: Date.now(), online: !0 });
     }, L = () => {
-      if (F == null) {
+      if (I == null) {
         if (!navigator.geolocation) {
-          yt("이 기기에서는 위치를 쓸 수 없어요.");
+          at("이 기기에서는 위치를 쓸 수 없어요.");
           return;
         }
-        F = navigator.geolocation.watchPosition(
-          (lt) => {
-            let je = { lat: lt.coords.latitude, lng: lt.coords.longitude, acc: Math.round(lt.coords.accuracy) };
-            yt(""), !P || ue(P, je) > 25 || Date.now() - K > 6e4 ? U(je) : Wt(je);
+        I = navigator.geolocation.watchPosition(
+          (pt) => {
+            let Ne = { lat: pt.coords.latitude, lng: pt.coords.longitude, acc: Math.round(pt.coords.accuracy) };
+            at(""), !P || ge(P, Ne) > 25 || Date.now() - O > 6e4 ? U(Ne) : Q(Ne);
           },
-          (lt) => yt(
-            lt.code === 1 ? "위치 권한이 꺼져 있어요. 휴대폰 설정에서 이 앱(또는 브라우저)의 위치 권한을 허용해 주세요." : "위치를 찾지 못했어요. 잠시 후 다시 시도할게요."
+          (pt) => at(
+            pt.code === 1 ? "위치 권한이 꺼져 있어요. 휴대폰 설정에서 이 앱(또는 브라우저)의 위치 권한을 허용해 주세요." : "위치를 찾지 못했어요. 잠시 후 다시 시도할게요."
           ),
           { enableHighAccuracy: !0, maximumAge: 3e4, timeout: 2e4 }
         );
       }
-    }, B = (lt) => {
-      F != null && navigator.geolocation.clearWatch(F), F = null, lt && ut(d, { online: !1, at: Date.now() });
-    }, J = () => document.visibilityState === "visible" ? L() : B(!0), et = () => B(!0), he = setInterval(() => {
+    }, B = (pt) => {
+      I != null && navigator.geolocation.clearWatch(I), I = null, pt && gt(m, { online: !1, at: Date.now() });
+    }, H = () => document.visibilityState === "visible" ? L() : B(!0), nt = () => B(!0), ke = setInterval(() => {
       document.visibilityState === "visible" && P && U(P);
     }, 6e4);
-    return document.visibilityState === "visible" && L(), document.addEventListener("visibilitychange", J), window.addEventListener("pagehide", et), () => {
-      clearInterval(he), document.removeEventListener("visibilitychange", J), window.removeEventListener("pagehide", et), B(!0);
+    return document.visibilityState === "visible" && L(), document.addEventListener("visibilitychange", H), window.addEventListener("pagehide", nt), () => {
+      clearInterval(ke), document.removeEventListener("visibilitychange", H), window.removeEventListener("pagehide", nt), B(!0);
     };
-  }, [S, c, !!o]);
-  let ca = () => {
-    let d = !D;
-    X(d);
+  }, [lt, b, !!o]), K(() => {
+    if (N.current)
+      try {
+        window.storage.set("ui", JSON.stringify({ tab: x, ...v }), !1);
+      } catch {
+      }
+  }, [x, v]);
+  let xa = () => {
+    let m = !W;
+    Dt(m);
     try {
-      window.storage.set("hdr", d ? "min" : "max", !1);
+      window.storage.set("hdr", m ? "min" : "max", !1);
     } catch {
     }
   };
-  O(() => {
-    let d = !0, F = async () => {
-      let K = await jo();
-      if (d)
-        if (K) {
-          let U = { ...K, at: Date.now() };
-          T(U), ut(q.fx, U);
+  K(() => {
+    let m = !0, I = async () => {
+      let O = await Ao();
+      if (m)
+        if (O) {
+          let U = { ...O, at: Date.now() };
+          F(U), gt(X.fx, U);
         } else {
-          let U = await ht(q.fx, null);
-          d && U && U.rate > 0 && T({ ...U, cached: !0 });
+          let U = await ht(X.fx, null);
+          m && U && U.rate > 0 && F({ ...U, cached: !0 });
         }
     };
-    F();
-    let P = setInterval(F, 3 * 36e5);
+    I();
+    let P = setInterval(I, 3 * 36e5);
     return () => {
-      d = !1, clearInterval(P);
+      m = !1, clearInterval(P);
     };
   }, []);
-  let le = Ia(async () => {
-    let [d, F, P, K, U] = await Promise.all([
-      ht(q.settings, null),
-      ht(q.plan, []),
-      ht(q.wish, []),
-      ht(q.spend, []),
-      ht(q.notice, null)
+  let ce = _a(async () => {
+    let [m, I, P, O, U] = await Promise.all([
+      ht(X.settings, null),
+      ht(X.plan, []),
+      ht(X.wish, []),
+      ht(X.spend, []),
+      ht(X.notice, null)
     ]);
-    wt(U && U.id ? U : null), i(d), y(F), g(P), h(K);
+    ve(U && U.id ? U : null), i(m), h(I), f(P), j(O);
     try {
       let L = {};
-      (await Ae(Se)).forEach(([B, J]) => L[decodeURIComponent(B.slice(Se.length))] = J), _(L);
+      (await Pe(Te)).forEach(([B, H]) => L[decodeURIComponent(B.slice(Te.length))] = H), he(L);
     } catch {
     }
     try {
-      let L = (await Ae(ea)).map(([B, J]) => ({ ...J, key: B }));
-      L.sort((B, J) => B.at - J.at), gt((B) => {
-        let J = B.filter((et) => et.pending && !L.some((he) => he.id === et.id));
-        return [...L, ...J];
+      let L = (await Pe(ca)).map(([B, H]) => ({ ...H, key: B }));
+      L.sort((B, H) => B.at - H.at), Ht((B) => {
+        let H = B.filter((nt) => nt.pending && !L.some((ke) => ke.id === nt.id));
+        return [...L, ...H];
       });
     } catch {
     }
     try {
       let L = {};
-      (await Ae(Ie)).forEach(([B, J]) => L[decodeURIComponent(B.slice(Ie.length))] = J.at || 0), qe((B) => {
-        let J = { ...L };
-        return Object.keys(B).forEach((et) => J[et] = Math.max(J[et] || 0, B[et] || 0)), J;
+      (await Pe(Re)).forEach(([B, H]) => L[decodeURIComponent(B.slice(Re.length))] = H.at || 0), an((B) => {
+        let H = { ...L };
+        return Object.keys(B).forEach((nt) => H[nt] = Math.max(H[nt] || 0, B[nt] || 0)), H;
       });
     } catch {
     }
     n(!0);
   }, []);
-  O(() => {
+  K(() => {
     (async () => {
       try {
         let P = await window.storage.get("me", !1);
-        P && P.value && E(P.value);
+        P && P.value && z(P.value);
       } catch {
       }
-      await le();
+      try {
+        let P = await window.storage.get("ui", !1), O = P && P.value ? JSON.parse(P.value) : null;
+        O && (["plan", "wish", "spend", "family", "chat"].includes(O.tab) && A(O.tab), E((U) => ({
+          wish: ["list", "map", "near"].includes(O.wish) ? O.wish : U.wish,
+          spend: ["me", "day", "all"].includes(O.spend) ? O.spend : U.spend
+        })));
+      } catch {
+      }
+      N.current = !0, await ce();
     })();
-    let d = window.storage.onChange ? window.storage.onChange(le) : null, F = setInterval(le, d ? 6e4 : 1e4);
+    let m = window.storage.onChange ? window.storage.onChange(ce) : null, I = setInterval(ce, m ? 6e4 : 1e4);
     return () => {
-      clearInterval(F), d && d();
+      clearInterval(I), m && m();
     };
-  }, [le]), O(() => {
-    if (!o || u.current) return;
-    u.current = !0;
-    let d = Math.round((Ct(ct(/* @__PURE__ */ new Date())) - Ct(o.start)) / 864e5);
-    d >= 0 && d < o.days && s(d);
+  }, [ce]), K(() => {
+    if (!o || J.current) return;
+    J.current = !0;
+    let m = Math.round((Ct(st(/* @__PURE__ */ new Date())) - Ct(o.start)) / 864e5);
+    m >= 0 && m < o.days && C(m);
   }, [o]);
-  let it = async (d, F, P, K) => {
-    let U = await ht(d, F), L = K(U);
+  let it = async (m, I, P, O) => {
+    let U = await ht(m, I), L = O(U);
     P(L);
-    let B = await ut(d, L);
-    return B || R("저장하지 못했어요. 잠시 후 다시 시도해 주세요."), B;
-  }, pa = async (d) => {
-    E(d), M(!1);
+    let B = await gt(m, L);
+    return B || V("저장하지 못했어요. 잠시 후 다시 시도해 주세요."), B;
+  }, ha = async (m) => {
+    z(m), k(!1);
     try {
-      await window.storage.set("me", d, !1);
+      await window.storage.set("me", m, !1);
     } catch {
     }
-  }, da = async (d) => {
-    i(d), k(!1), await ut(q.settings, d) || R("설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요."), c && !d.members.includes(c) && E(null);
-  }, st = () => A(null);
-  v.current = () => {
-    j ? A(null) : z ? M(!1) : p && k(!1);
+  }, ja = async (m) => {
+    i(m), l(!1), await gt(X.settings, m) || V("설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요."), b && !m.members.includes(b) && z(null);
+  }, ct = () => D(null);
+  $.current = () => {
+    c ? D(null) : S ? k(!1) : r && l(!1);
   };
-  let xe = !!j || z || p && !!o;
-  O(() => {
-    xe && !I.current ? (history.pushState({ jtOverlay: !0 }, ""), I.current = !0) : !xe && I.current && (I.current = !1, history.state && history.state.jtOverlay && history.back());
-  }, [xe]), O(() => {
-    let d = () => {
-      I.current && (I.current = !1, v.current && v.current());
+  let ye = !!c || S || r && !!o;
+  K(() => {
+    ye && !u.current ? (history.pushState({ jtOverlay: !0 }, ""), u.current = !0) : !ye && u.current && (u.current = !1, history.state && history.state.jtOverlay && history.back());
+  }, [ye]), K(() => {
+    let m = () => {
+      u.current && (u.current = !1, $.current && $.current());
     };
-    return window.addEventListener("popstate", d), () => window.removeEventListener("popstate", d);
+    return window.addEventListener("popstate", m), () => window.removeEventListener("popstate", m);
   }, []);
-  let nn = (d, F) => ({
-    add: (P, K) => it(
-      d,
+  let dn = (m, I) => ({
+    add: (P, O) => it(
+      m,
       [],
-      F,
+      I,
       (U) => U.map(
-        (L) => L.id === P ? { ...L, comments: [...L.comments || [], { id: Pt(), by: c, text: K, createdAt: Date.now() }] } : L
+        (L) => L.id === P ? { ...L, comments: [...L.comments || [], { id: Pt(), by: b, text: O, createdAt: Date.now() }] } : L
       )
     ),
-    del: (P, K) => it(
-      d,
+    del: (P, O) => it(
+      m,
       [],
-      F,
-      (U) => U.map((L) => L.id === P ? { ...L, comments: (L.comments || []).filter((B) => B.id !== K) } : L)
+      I,
+      (U) => U.map((L) => L.id === P ? { ...L, comments: (L.comments || []).filter((B) => B.id !== O) } : L)
     )
-  }), an = (d, F) => (P, K) => it(d, [], F, (U) => U.map((L) => L.id === P ? vo(L, K, c) : L)), ma = an(q.plan, y), ua = an(q.wish, g), on = nn(q.plan, y), rn = nn(q.wish, g), fa = (d, F, P) => it(
-    q.plan,
+  }), mn = (m, I) => (P, O) => it(m, [], I, (U) => U.map((L) => L.id === P ? So(L, O, b) : L)), va = mn(X.plan, h), ya = mn(X.wish, f), un = dn(X.plan, h), fn = dn(X.wish, f), wa = (m, I, P) => it(
+    X.plan,
     [],
-    y,
-    (K) => F ? K.map((U) => U.id === F ? { ...U, ...d } : U) : [...K, { id: Pt(), day: P, by: c, ...d }]
-  ), ga = (d) => it(q.plan, [], y, (F) => F.filter((P) => P.id !== d)), sn = (d) => it(q.wish, [], g, (F) => [...F, { id: Pt(), by: c, likes: [c], createdAt: Date.now(), ...d }]), ba = (d) => it(
-    q.wish,
+    h,
+    (O) => I ? O.map((U) => U.id === I ? { ...U, ...m } : U) : [...O, { id: Pt(), day: P, by: b, ...m }]
+  ), ka = (m) => it(X.plan, [], h, (I) => I.filter((P) => P.id !== m)), gn = (m) => it(X.wish, [], f, (I) => [...I, { id: Pt(), by: b, likes: [b], createdAt: Date.now(), ...m }]), Na = (m) => it(
+    X.wish,
     [],
-    g,
-    (F) => F.map(
-      (P) => P.id === d ? { ...P, likes: P.likes.includes(c) ? P.likes.filter((K) => K !== c) : [...P.likes, c] } : P
+    f,
+    (I) => I.map(
+      (P) => P.id === m ? { ...P, likes: P.likes.includes(b) ? P.likes.filter((O) => O !== b) : [...P.likes, b] } : P
     )
-  ), ln = (d) => it(q.wish, [], g, (F) => F.filter((P) => P.id !== d)), xa = (d, F) => it(q.wish, [], g, (P) => P.map((K) => K.id === d ? { ...K, ...F, editedAt: Date.now() } : K)), ha = async (d, F) => {
-    await it(q.plan, [], y, (P) => [
+  ), bn = (m) => it(X.wish, [], f, (I) => I.filter((P) => P.id !== m)), Ca = (m, I) => it(X.wish, [], f, (P) => P.map((O) => O.id === m ? { ...O, ...I, editedAt: Date.now() } : O)), za = async (m, I) => {
+    await it(X.plan, [], h, (P) => [
       ...P,
       {
         id: Pt(),
-        day: F,
-        by: c,
+        day: I,
+        by: b,
         time: "",
-        title: d.name,
-        wishId: d.id,
-        place: d.area || "",
-        link: d.link || "",
-        memo: d.memo || "",
-        comments: d.comments || [],
-        reactions: d.reactions || {},
-        ...dt(d) ? { lat: d.lat, lng: d.lng } : {}
+        title: m.name,
+        wishId: m.id,
+        place: m.area || "",
+        link: m.link || "",
+        memo: m.memo || "",
+        comments: m.comments || [],
+        reactions: m.reactions || {},
+        ...ut(m) ? { lat: m.lat, lng: m.lng } : {}
       }
-    ]), s(F);
-  }, ja = (d, F) => it(
-    q.spend,
+    ]), C(I);
+  }, Ea = (m, I) => it(
+    X.spend,
     [],
-    h,
-    (P) => F ? P.map((K) => K.id === F ? { ...K, ...d, editedAt: Date.now(), editedBy: c } : K) : [...P, { id: Pt(), by: c, createdAt: Date.now(), ...d }]
-  ), va = (d) => it(q.spend, [], h, (F) => F.filter((P) => P.id !== d)), Jt;
-  if (!e)
+    j,
+    (P) => I ? P.map((O) => O.id === I ? { ...O, ...m, editedAt: Date.now(), editedBy: b } : O) : [...P, { id: Pt(), by: b, createdAt: Date.now(), ...m }]
+  ), Aa = (m) => it(X.spend, [], j, (I) => I.filter((P) => P.id !== m)), Jt, we = e && !o && window.storage && window.storage.isSynced && !window.storage.isSynced();
+  if (!e || we)
     Jt = /* @__PURE__ */ a("div", { className: "jt-loading", role: "status", "aria-live": "polite", children: [
       /* @__PURE__ */ a("div", { className: "jt-dots", "aria-hidden": "true", children: [
         /* @__PURE__ */ t("i", {}),
         /* @__PURE__ */ t("i", {}),
         /* @__PURE__ */ t("i", {})
       ] }),
-      "앱 준비 중"
+      we ? "여행 정보 받는 중" : "앱 준비 중",
+      we && M && /* @__PURE__ */ t("p", { className: "jt-loading-sub", children: "인터넷 연결이 느린 것 같아요. 연결되면 자동으로 열려요." })
     ] });
-  else if (!o || p)
-    Jt = /* @__PURE__ */ t(yo, { initial: o, onSave: da, onCancel: o ? () => k(!1) : null });
-  else if (!c || !o.members.includes(c) || z) {
-    let d = c && o.members.includes(c);
+  else if (!o || r)
+    Jt = /* @__PURE__ */ t(Mo, { initial: o, onSave: ja, onCancel: o ? () => l(!1) : null });
+  else if (!b || !o.members.includes(b) || S) {
+    let m = b && o.members.includes(b);
     Jt = /* @__PURE__ */ t(
-      No,
+      Po,
       {
         members: o.members,
-        onPick: pa,
-        current: d ? c : null,
-        onBack: d ? () => M(!1) : null
+        onPick: ha,
+        current: m ? b : null,
+        onBack: m ? () => k(!1) : null
       }
     );
   } else {
-    let d = ft(o.start, 0), F = ft(o.start, o.days - 1), P = Math.round((Ct(o.start) - Ct(ct(/* @__PURE__ */ new Date()))) / 864e5), K = Math.round((Ct(ct(/* @__PURE__ */ new Date())) - Ct(o.start)) / 864e5), U = K >= 0 && K < o.days ? K : N, L = f ? { ...o, rate: f.rate, fx: f } : o;
-    Jt = /* @__PURE__ */ a(pt, { children: [
-      /* @__PURE__ */ a("header", { className: "jt-head hero" + (D ? " mini" : b === "plan" ? " tall" : ""), children: [
-        !D && /* @__PURE__ */ t(ii, {}),
+    let m = mt(o.start, 0), I = mt(o.start, o.days - 1), P = Math.round((Ct(o.start) - Ct(st(/* @__PURE__ */ new Date()))) / 864e5), O = Math.round((Ct(st(/* @__PURE__ */ new Date())) - Ct(o.start)) / 864e5), U = O >= 0 && O < o.days ? O : y, L = _ ? { ...o, rate: _.rate, fx: _ } : o;
+    Jt = /* @__PURE__ */ a(dt, { children: [
+      /* @__PURE__ */ a("header", { className: "jt-head hero" + (W ? " mini" : x === "plan" ? " tall" : ""), children: [
+        !W && /* @__PURE__ */ t(gi, {}),
         /* @__PURE__ */ a("div", { className: "jt-head-top", children: [
-          /* @__PURE__ */ a("button", { className: "jt-me", onClick: () => M(!0), "aria-label": "사용자 바꾸기", children: [
-            /* @__PURE__ */ t(rt, { name: c, members: o.members, size: 24 }),
-            c
+          /* @__PURE__ */ a("button", { className: "jt-me", onClick: () => k(!0), "aria-label": "사용자 바꾸기", children: [
+            /* @__PURE__ */ t(rt, { name: b, members: o.members, size: 24 }),
+            b
           ] }),
-          D && /* @__PURE__ */ a("strong", { className: "jt-mini-title", children: [
+          W && /* @__PURE__ */ a("strong", { className: "jt-mini-title", children: [
             /* @__PURE__ */ t("span", { className: "jt-mini-name", children: o.title }),
             P > 0 && /* @__PURE__ */ a("em", { children: [
               "D-",
@@ -515,11 +530,11 @@ function Ye() {
             /* @__PURE__ */ a(
               "button",
               {
-                className: "jt-icon light jt-locbtn" + (S ? " on" : ""),
-                onClick: en,
-                "aria-pressed": S,
-                "aria-label": S ? "위치 공유 끄기 (지금 켜짐)" : "위치 공유 켜기 (지금 꺼짐)",
-                title: S ? "위치 공유 켜짐" : "위치 공유 꺼짐",
+                className: "jt-icon light jt-locbtn" + (lt ? " on" : ""),
+                onClick: pn,
+                "aria-pressed": lt,
+                "aria-label": lt ? "위치 공유 끄기 (지금 켜짐)" : "위치 공유 켜기 (지금 꺼짐)",
+                title: lt ? "위치 공유 켜짐" : "위치 공유 꺼짐",
                 children: [
                   /* @__PURE__ */ t(Et, { size: 19 }),
                   /* @__PURE__ */ t("i", { "aria-hidden": "true" })
@@ -530,26 +545,26 @@ function Ye() {
               "button",
               {
                 className: "jt-icon light",
-                onClick: ca,
-                "aria-label": D ? "상단 크게 보기" : "상단 줄이기",
-                "aria-expanded": !D,
-                children: D ? /* @__PURE__ */ t(Lt, { size: 20 }) : /* @__PURE__ */ t(Ln, { size: 20 })
+                onClick: xa,
+                "aria-label": W ? "상단 크게 보기" : "상단 줄이기",
+                "aria-expanded": !W,
+                children: W ? /* @__PURE__ */ t(At, { size: 20 }) : /* @__PURE__ */ t(Vn, { size: 20 })
               }
             ),
-            /* @__PURE__ */ t("button", { className: "jt-icon light", onClick: () => k(!0), "aria-label": "여행 설정", children: /* @__PURE__ */ t(Pa, { size: 20 }) })
+            /* @__PURE__ */ t("button", { className: "jt-icon light", onClick: () => l(!0), "aria-label": "여행 설정", children: /* @__PURE__ */ t(Oa, { size: 20 }) })
           ] })
         ] }),
-        !D && /* @__PURE__ */ a(pt, { children: [
+        !W && /* @__PURE__ */ a(dt, { children: [
           /* @__PURE__ */ t("h1", { children: o.title }),
           /* @__PURE__ */ a("div", { className: "jt-head-sub", children: [
             /* @__PURE__ */ a("span", { children: [
-              d.getMonth() + 1,
+              m.getMonth() + 1,
               "월 ",
-              d.getDate(),
+              m.getDate(),
               "일 – ",
-              F.getMonth() + 1,
+              I.getMonth() + 1,
               "월 ",
-              F.getDate(),
+              I.getDate(),
               "일"
             ] }),
             P > 0 && /* @__PURE__ */ a("span", { className: "jt-dday", children: [
@@ -561,191 +576,196 @@ function Ye() {
           ] })
         ] })
       ] }),
-      l && /* @__PURE__ */ a("div", { className: "jt-error", role: "alert", children: [
-        l,
-        /* @__PURE__ */ t("button", { onClick: () => R(""), "aria-label": "닫기", children: /* @__PURE__ */ t(_e, { size: 16 }) })
+      R && /* @__PURE__ */ a("div", { className: "jt-error", role: "alert", children: [
+        R,
+        /* @__PURE__ */ t("button", { onClick: () => V(""), "aria-label": "닫기", children: /* @__PURE__ */ t(We, { size: 16 }) })
       ] }),
       /* @__PURE__ */ a("main", { className: "jt-main", children: [
-        b === "plan" && /* @__PURE__ */ t(
-          Fo,
+        x === "plan" && /* @__PURE__ */ t(
+          Ko,
           {
             settings: L,
-            schedule: r,
-            day: N,
-            setDay: s,
-            onEdit: (B) => A({ type: "plan", item: B, day: B.day }),
-            onAddAt: (B, J) => A({ type: "plan", day: B, preset: { time: J, end: Rt(Math.min(zt(J) + 60, 23 * 60 + 59)) } }),
-            me: c,
-            onComment: on.add,
-            onDelComment: on.del,
-            onReact: ma
+            schedule: s,
+            day: y,
+            setDay: C,
+            onEdit: (B) => D({ type: "plan", item: B, day: B.day }),
+            onAddAt: (B, H) => D({ type: "plan", day: B, preset: { time: H, end: Tt(Math.min(zt(H) + 60, 23 * 60 + 59)) } }),
+            me: b,
+            onComment: un.add,
+            onDelComment: un.del,
+            onReact: va
           }
         ),
-        b === "wish" && /* @__PURE__ */ t(
-          Ho,
-          {
-            settings: L,
-            plan: r,
-            wish: x,
-            me: c,
-            onEdit: (B) => A({ type: "wish", item: B }),
-            onSave: sn,
-            onLike: ba,
-            onPlan: (B) => A({ type: "toPlan", wish: B }),
-            onDelete: ln,
-            onComment: rn.add,
-            onDelComment: rn.del,
-            onReact: ua
-          }
-        ),
-        b === "spend" && /* @__PURE__ */ t(
-          Xo,
-          {
-            settings: L,
-            spend: m,
-            me: c,
-            onEdit: (B) => A({ type: "spend", item: B })
-          }
-        ),
-        b === "chat" && /* @__PURE__ */ t(
+        x === "wish" && /* @__PURE__ */ t(
           ei,
           {
             settings: L,
-            me: c,
-            msgs: Q,
-            reads: Xe,
-            notice: ot,
-            onEdit: aa,
-            onPin: oa,
-            onUnpin: Qe,
-            badgeAsk: Ge === "default",
-            onBadgeAsk: la,
-            onSend: (B) => Ze({ kind: "text", text: B }),
-            onDelete: ia,
-            onSendLoc: ra
+            view: v.wish,
+            setView: (B) => E((H) => ({ ...H, wish: B })),
+            plan: s,
+            wish: g,
+            me: b,
+            onEdit: (B) => D({ type: "wish", item: B }),
+            onSave: gn,
+            onLike: Na,
+            onPlan: (B) => D({ type: "toPlan", wish: B }),
+            onDelete: bn,
+            onComment: fn.add,
+            onDelComment: fn.del,
+            onReact: ya
           }
         ),
-        b === "family" && /* @__PURE__ */ t(
-          Zo,
+        x === "spend" && /* @__PURE__ */ t(
+          oi,
           {
             settings: L,
-            me: c,
-            locs: Y,
-            shareOn: S,
-            onToggle: en,
-            myPos: Ft,
-            geoErr: be
+            spend: d,
+            me: b,
+            view: v.spend,
+            setView: (B) => E((H) => ({ ...H, spend: B })),
+            onEdit: (B) => D({ type: "spend", item: B })
+          }
+        ),
+        x === "chat" && /* @__PURE__ */ t(
+          di,
+          {
+            settings: L,
+            me: b,
+            msgs: wt,
+            reads: nn,
+            notice: je,
+            onEdit: da,
+            onPin: ma,
+            onUnpin: ln,
+            badgeAsk: on === "default",
+            onBadgeAsk: ba,
+            onSend: (B) => rn({ kind: "text", text: B }),
+            onDelete: ua,
+            onSendLoc: fa
+          }
+        ),
+        x === "family" && /* @__PURE__ */ t(
+          li,
+          {
+            settings: L,
+            me: b,
+            locs: oe,
+            shareOn: lt,
+            onToggle: pn,
+            myPos: T,
+            geoErr: ie
           }
         )
       ] }),
       (() => {
         let B = {
-          plan: [`${N + 1}일차 일정 추가`, () => A({ type: "plan", day: N })],
-          wish: ["가고 싶은 곳 추가", () => A({ type: "wish" })],
-          spend: ["경비 추가", () => A({ type: "spend" })]
-        }[b];
+          plan: [`${y + 1}일차 일정 추가`, () => D({ type: "plan", day: y })],
+          wish: ["가고 싶은 곳 추가", () => D({ type: "wish" })],
+          spend: ["경비 추가", () => D({ type: "spend" })]
+        }[x];
         return B ? /* @__PURE__ */ a("button", { className: "jt-fab", onClick: B[1], children: [
-          /* @__PURE__ */ t(Fa, { size: 20, strokeWidth: 2.6 }),
+          /* @__PURE__ */ t(Ba, { size: 20, strokeWidth: 2.6 }),
           B[0]
         ] }) : null;
       })(),
       /* @__PURE__ */ t("nav", { className: "jt-nav", "aria-label": "메뉴", children: [
-        ["plan", "일정", $a],
-        ["wish", "가고 싶은 곳", Be],
-        ["spend", "경비", Ra],
-        ["family", "위치 공유", Oa],
-        ["chat", "채팅", Wa]
-      ].map(([B, J, et]) => /* @__PURE__ */ a("button", { className: b === B ? "on" : "", onClick: () => C(B), "aria-current": b === B, children: [
+        ["plan", "일정", Ka],
+        ["wish", "가고 싶은 곳", He],
+        ["spend", "경비", Ua],
+        ["family", "위치 공유", Va],
+        ["chat", "채팅", Ga]
+      ].map(([B, H, nt]) => /* @__PURE__ */ a("button", { className: x === B ? "on" : "", onClick: () => A(B), "aria-current": x === B, children: [
         /* @__PURE__ */ a("span", { className: "jt-nav-ic", children: [
-          /* @__PURE__ */ t(et, { size: 21 }),
-          B === "chat" && kt > 0 && b !== "chat" && /* @__PURE__ */ t("b", { className: "jt-badge", "aria-label": `안 읽은 메시지 ${kt}개`, children: kt > 99 ? "99+" : kt })
+          /* @__PURE__ */ t(nt, { size: 21 }),
+          B === "chat" && kt > 0 && x !== "chat" && /* @__PURE__ */ t("b", { className: "jt-badge", "aria-label": `안 읽은 메시지 ${kt}개`, children: kt > 99 ? "99+" : kt })
         ] }),
-        J
+        H
       ] }, B)) }),
-      j?.type === "plan" && /* @__PURE__ */ t(Tt, { title: j.item ? "일정 수정" : `${j.day + 1}일차 일정 추가`, onClose: st, children: /* @__PURE__ */ t(
-        Co,
+      c?.type === "plan" && /* @__PURE__ */ t(Rt, { title: c.item ? "일정 수정" : `${c.day + 1}일차 일정 추가`, onClose: ct, children: /* @__PURE__ */ t(
+        $o,
         {
-          initial: j.item,
-          preset: j.preset,
+          initial: c.item,
+          preset: c.preset,
           gkey: o.gmapsKey,
-          dayItems: r.filter((B) => B.day === j.day && B.id !== j.item?.id),
+          dayItems: s.filter((B) => B.day === c.day && B.id !== c.item?.id),
           onSave: (B) => {
-            fa(B, j.item?.id, j.day), st();
+            wa(B, c.item?.id, c.day), ct();
           },
           onDelete: () => {
-            ga(j.item.id), st();
+            ka(c.item.id), ct();
           }
         }
       ) }),
-      j?.type === "wish" && /* @__PURE__ */ t(Tt, { title: j.item ? "가고 싶은 곳 수정" : "가고 싶은 곳 추가", onClose: st, children: /* @__PURE__ */ t(
-        zo,
+      c?.type === "wish" && /* @__PURE__ */ t(Rt, { title: c.item ? "가고 싶은 곳 수정" : "가고 싶은 곳 추가", onClose: ct, children: /* @__PURE__ */ t(
+        To,
         {
-          initial: j.item,
+          initial: c.item,
           onSave: (B) => {
-            j.item ? xa(j.item.id, B) : sn(B), st();
+            c.item ? Ca(c.item.id, B) : gn(B), ct();
           },
           onDelete: () => {
-            ln(j.item.id), st();
+            bn(c.item.id), ct();
           }
         }
       ) }),
-      j?.type === "spend" && /* @__PURE__ */ t(Tt, { title: j.item ? "경비 수정" : "경비 기록", onClose: st, children: /* @__PURE__ */ t(
-        Eo,
+      c?.type === "spend" && /* @__PURE__ */ t(Rt, { title: c.item ? "경비 수정" : "경비 기록", onClose: ct, children: /* @__PURE__ */ t(
+        Ro,
         {
           settings: L,
-          me: c,
+          me: b,
           defaultDay: U,
-          initial: j.item,
+          initial: c.item,
           onSave: (B) => {
-            ja(B, j.item?.id), st();
+            Ea(B, c.item?.id), ct();
           },
           onDelete: () => {
-            va(j.item.id), st();
+            Aa(c.item.id), ct();
           }
         }
       ) }),
-      Dt && !j && /* @__PURE__ */ t(Tt, { title: "가족과 위치를 공유할까요?", onClose: () => se(!1, !0), children: /* @__PURE__ */ a("div", { className: "jt-form", children: [
+      Wt && !c && /* @__PURE__ */ t(Rt, { title: "가족과 위치를 공유할까요?", onClose: () => le(!1, !0), children: /* @__PURE__ */ a("div", { className: "jt-form", children: [
         /* @__PURE__ */ a("p", { className: "jt-ask", children: [
           "켜 두면 ",
           /* @__PURE__ */ t("b", { children: "앱이 열려 있는 동안만" }),
           " 내 위치가 가족 지도에 보여요. 앱을 닫거나 화면이 꺼지면 바로 사라져요."
         ] }),
         /* @__PURE__ */ t("p", { className: "jt-hint jt-ask-hint", children: '언제든 위쪽 위치 버튼이나 "위치 공유" 탭에서 켜고 끌 수 있어요.' }),
-        /* @__PURE__ */ t("button", { className: "jt-primary", onClick: () => se(!0), children: "위치 공유 켜기" }),
-        /* @__PURE__ */ t("button", { className: "jt-ghost", onClick: () => se(!1, !0), children: "나중에 할게요" })
+        /* @__PURE__ */ t("button", { className: "jt-primary", onClick: () => le(!0), children: "위치 공유 켜기" }),
+        /* @__PURE__ */ t("button", { className: "jt-ghost", onClick: () => le(!1, !0), children: "나중에 할게요" })
       ] }) }),
       re && /* @__PURE__ */ t("div", { className: "jt-toast", role: "status", children: re }),
-      j?.type === "toPlan" && /* @__PURE__ */ t(Tt, { title: `"${j.wish.name}" 몇째 날에 갈까요?`, onClose: st, children: /* @__PURE__ */ t("div", { className: "jt-daypick", children: Array.from({ length: o.days }, (B, J) => {
-        let et = ft(o.start, J);
+      c?.type === "toPlan" && /* @__PURE__ */ t(Rt, { title: `"${c.wish.name}" 몇째 날에 갈까요?`, onClose: ct, children: /* @__PURE__ */ t("div", { className: "jt-daypick", children: Array.from({ length: o.days }, (B, H) => {
+        let nt = mt(o.start, H);
         return /* @__PURE__ */ a(
           "button",
           {
-            style: { "--lc": V[J % V.length] },
+            style: { "--lc": G[H % G.length] },
             onClick: () => {
-              ha(j.wish, J), st(), C("plan");
+              za(c.wish, H), ct(), A("plan");
             },
             children: [
               /* @__PURE__ */ a("span", { className: "jt-daychip", children: [
-                J + 1,
+                H + 1,
                 "일차"
               ] }),
-              ne(et),
+              Lt(nt),
               " (",
-              At(et),
+              St(nt),
               ")"
             ]
           },
-          J
+          H
         );
       }) }) })
     ] });
   }
   return /* @__PURE__ */ a("div", { className: "jt", children: [
-    /* @__PURE__ */ t("style", { children: Je }),
+    /* @__PURE__ */ t("style", { children: Qe }),
+    /* @__PURE__ */ t(Do, {}),
     Jt
   ] });
 }
-var Je = `
+var Qe = `
 .jt{--ink:#14213D;--muted:#66718A;--rule:#DCE1EA;--card:#fff;--blue:#0C86AE;font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;max-width:520px;margin:0 auto;display:flex;flex-direction:column;position:relative;font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%;--paper:#F1F3F6;--soft:#E7EAF0}
 .jt *{box-sizing:border-box}
 :where(.jt) button{font:inherit;color:inherit;cursor:pointer}
@@ -753,6 +773,7 @@ var Je = `
 .jt h1,.jt h3,.jt h4,.jt p,.jt ul,.jt ol{margin:0;padding:0}
 .jt ul,.jt ol{list-style:none}
 .jt-loading{padding:96px 20px;text-align:center;color:var(--muted);font-size:15px;font-weight:600}
+.jt-loading-sub{margin-top:10px;font-size:13px;font-weight:500}
 .jt-dots{display:flex;justify-content:center;gap:9px;height:22px;align-items:flex-end;margin-bottom:14px}
 .jt-dots i{width:10px;height:10px;border-radius:50%;animation:jt-dot 1.1s ease-in-out infinite}
 .jt-dots i:nth-child(1){background:#E8800A}
@@ -867,3 +888,6 @@ var Je = `
 .jt-comment{display:flex;gap:8px;align-items:flex-start}
 .jt-comment-body{flex:1;min-width:0;background:#F2F4F7;border-radius:10px;padding:6px 10px}
 .jt-comment-body div{display:flex;gap:6px;align-items:baseline}
+.jt-comment-body strong{font-size:13px}
+.jt-comment-body span{font-size:11px;color:var(--muted)}
+.jt-comment-body p{font-size:14px;white-space:pre-wrap;word-break:break-word}
