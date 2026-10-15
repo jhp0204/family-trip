@@ -1,5 +1,3 @@
-.jt-comment{display:flex;gap:8px;align-items:flex-start}
-.jt-comment-body{flex:1;min-width:0;background:#F2F4F7;border-radius:10px;padding:6px 10px}
 .jt-comment-body div{display:flex;gap:6px;align-items:baseline}
 .jt-comment-body strong{font-size:13px}
 .jt-comment-body span{font-size:11px;color:var(--muted)}
@@ -246,7 +244,8 @@
 .jt-head.hero.mini{min-height:0;padding:10px 14px;border-radius:0 0 16px 16px}
 .jt-head.hero.mini .jt-head-top{margin-bottom:0;gap:10px}
 .jt-head.hero.mini .jt-me,.jt-head.hero.mini .jt-icon.light{background:rgba(255,255,255,.12)}
-.jt-mini-title{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jt-mini-title{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;color:#fff;white-space:nowrap}
+.jt-mini-name{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .jt-mini-title em{font-style:normal;flex:0 0 auto;background:#fff;color:var(--ink);font-size:12px;font-weight:800;padding:1px 8px;border-radius:999px}
 .jt-nav button{padding:8px 2px 8px;font-size:11px;letter-spacing:-.02em}
 .jt-nav-ic{width:46px;position:relative}
