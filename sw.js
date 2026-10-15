@@ -1,5 +1,5 @@
 // 앱 화면과 부품을 기기에 보관해서 인터넷이 약해도 열리게 함 (항상 최신 버전을 먼저 시도)
-const CACHE = "fjt-v29";
+const CACHE = "fjt-v31";
 const CDN = ["esm.sh", "www.gstatic.com", "unpkg.com"];
 self.addEventListener("install", (e) => {
   self.skipWaiting();
