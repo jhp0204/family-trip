@@ -1,19 +1,3 @@
-.jt-spend-main{min-width:0;flex:1}
-.jt-spend-amt{display:flex;flex-direction:column;align-items:flex-end;text-align:right;flex:0 0 auto}
-.jt-spend-amt strong{font-variant-numeric:tabular-nums}
-.jt-spend-amt span{font-size:12px;color:var(--muted)}
-.jt-moves{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
-.jt-moves li{background:#fff;border:1px solid var(--rule);border-left:5px solid var(--ink);border-radius:10px;padding:12px;display:grid;grid-template-columns:1fr auto;align-items:baseline;column-gap:10px}
-.jt-moves li strong{font-size:18px;font-variant-numeric:tabular-nums}
-.jt-moves li em{grid-column:2;font-style:normal;font-size:12px;color:var(--muted);text-align:right}
-.jt-person-main{display:flex;flex-direction:column;flex:1;min-width:0}
-.jt-person-main span{font-size:12px;color:var(--muted)}
-.jt-net{font-weight:700;color:var(--muted);text-align:right;font-size:13px;line-height:1.3;white-space:nowrap;font-variant-numeric:tabular-nums}
-.jt-net.plus{color:#0A7D58}
-.jt-net.minus{color:#B42318}
-.jt-comments{margin-top:12px;border-top:1px solid var(--rule);padding-top:10px}
-.jt-comments ul{display:flex;flex-direction:column;gap:10px}
-.jt-nocomment{margin:0 0 4px}
 .jt-comment{display:flex;gap:8px;align-items:flex-start}
 .jt-comment-body{flex:1;min-width:0;background:#F2F4F7;border-radius:10px;padding:6px 10px}
 .jt-comment-body div{display:flex;gap:6px;align-items:baseline}
@@ -56,7 +40,7 @@
 .jt-mappanel .jt-primary{padding:11px;font-size:15px}
 .jt-mappanel .jt-maprow{margin-top:0}
 @media (prefers-reduced-motion:reduce){.jt-sheet{animation:none}
-.jt-day-dot{transition:none}}
+}
 .jt-main{flex:1;padding:16px 16px 150px}
 .jt-head{padding:12px 20px 22px;border-radius:0 0 22px 22px}
 .jt-card,.jt-wish,.jt-total,.jt-mappanel,.jt-results,.jt-who-btn,.jt-daypick button{border-color:transparent;border-radius:16px}
@@ -126,7 +110,6 @@
 .jt-daynet .jt-net{grid-column:3;grid-row:1/span 2}
 .jt-daycard{background:#fff;border-radius:16px;padding:12px 0 0;margin-bottom:14px;overflow:hidden}
 .jt-daycard h4{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;padding:0 14px 8px}
-.jt-day-dot.sm{opacity:1;width:26px;height:26px;font-size:13px}
 .jt-daycard .jt-moves2{margin:0 14px 10px}
 .jt-daycard .jt-nomoves{margin:0 14px 10px}
 .jt-daycard .jt-spend-list{border-radius:0;border-top:1px solid var(--soft)}
@@ -414,11 +397,24 @@
 .jt-whopop li{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
 .jt-whopop p{font-size:13px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.jt-whopop{animation:none}}
+/* 날짜 선택: DAY 카드 */
+.jt-day{position:relative;flex:1 0 80px;min-width:80px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:9px 10px 10px;border:0;border-radius:14px;background:#fff;text-align:left;box-shadow:inset 0 3px 0 var(--lc);transition:background .15s,box-shadow .15s,transform .15s}
+.jt-day-no{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--lc)}
+.jt-day-today{position:absolute;top:-8px;right:8px;box-shadow:0 0 0 2px var(--paper);font-style:normal;letter-spacing:0;font-size:10.5px;font-weight:800;background:var(--lc);color:#fff;border-radius:999px;padding:0 6px;line-height:16px}
+.jt-day-date{font-size:16px;white-space:nowrap;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.25}
+.jt-day-date em{font-style:normal;font-size:13px;font-weight:700;color:var(--muted)}
+.jt-day-count{font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
+.jt-day.active{background:var(--lc);box-shadow:0 6px 14px color-mix(in srgb,var(--lc) 35%,transparent);transform:translateY(-1px)}
+.jt-day.active .jt-day-no,.jt-day.active .jt-day-date,.jt-day.active .jt-day-date em{color:#fff}
+.jt-day.active .jt-day-count{color:rgba(255,255,255,.85)}
+.jt-day.active .jt-day-today{background:#fff;color:var(--lc)}
+.jt-daychip{flex:0 0 auto;display:inline-flex;align-items:center;background:var(--lc);color:#fff;font-size:12px;font-weight:800;letter-spacing:.03em;border-radius:999px;padding:2px 9px;line-height:18px}
+@media (prefers-reduced-motion:reduce){.jt-day{transition:none}.jt-day.active{transform:none}}
 `;
 
 // src/main.jsx
 import { jsx as Z, jsxs as Kt } from "react/jsx-runtime";
-var na = `rules_version = '2';
+var en = `rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /trips/{trip}/{document=**} {
@@ -426,43 +422,43 @@ service cloud.firestore {
     }
   }
 }`, ri = (e) => {
-  let n = e && (e.code || e.message) || "";
-  return n.includes("permission") ? "Firebase 보안 규칙이 막고 있어요. 아래 규칙을 Firestore '규칙' 탭에 붙여넣고 '게시'를 눌러 주세요." : n.includes("timeout") ? "Firebase에 연결되지 않았어요. 인터넷 연결과 Firestore 데이터베이스를 만들었는지 확인해 주세요." : n.includes("api-key") || n.includes("invalid") ? "설정값이 맞지 않아요. Firebase 콘솔에서 firebaseConfig 부분을 다시 복사해 주세요." : "연결하지 못했어요. 설정값과 인터넷 연결을 확인해 주세요. (" + n + ")";
+  let a = e && (e.code || e.message) || "";
+  return a.includes("permission") ? "Firebase 보안 규칙이 막고 있어요. 아래 규칙을 Firestore '규칙' 탭에 붙여넣고 '게시'를 눌러 주세요." : a.includes("timeout") ? "Firebase에 연결되지 않았어요. 인터넷 연결과 Firestore 데이터베이스를 만들었는지 확인해 주세요." : a.includes("api-key") || a.includes("invalid") ? "설정값이 맞지 않아요. Firebase 콘솔에서 firebaseConfig 부분을 다시 복사해 주세요." : "연결하지 못했어요. 설정값과 인터넷 연결을 확인해 주세요. (" + a + ")";
 };
 function si({ onDone: e }) {
-  let [n, a] = At("join"), [i, r] = At(""), [v, x] = At(""), [b, u] = At(!1), [y, l] = At(""), [M, f] = At(!1), z = async (c, N) => {
-    u(!0), l("");
+  let [a, n] = It("join"), [i, r] = It(""), [v, x] = It(""), [b, u] = It(!1), [y, c] = It(""), [M, f] = It(!1), z = async (p, N) => {
+    u(!0), c("");
     try {
-      Ce(c, N), await yn(), bn(c, N), e();
+      ze(p, N), await va(), fa(p, N), e();
     } catch (E) {
-      l(ri(E)), u(!1);
+      c(ri(E)), u(!1);
     }
   }, C = () => {
-    let c = vn(i);
-    if (!c) {
-      l("설정값을 찾지 못했어요. apiKey, projectId, appId가 들어 있는 firebaseConfig 부분 전체를 붙여넣어 주세요.");
+    let p = ja(i);
+    if (!p) {
+      c("설정값을 찾지 못했어요. apiKey, projectId, appId가 들어 있는 firebaseConfig 부분 전체를 붙여넣어 주세요.");
       return;
     }
-    z(c, jn());
+    z(p, ha());
   }, s = () => {
-    let c = Ne(v);
-    if (!c) {
-      l("초대 링크가 아니에요. 가족에게 받은 주소 전체를 붙여넣어 주세요.");
+    let p = Ce(v);
+    if (!p) {
+      c("초대 링크가 아니에요. 가족에게 받은 주소 전체를 붙여넣어 주세요.");
       return;
     }
-    z(c.c, c.t);
+    z(p.c, p.t);
   };
   return /* @__PURE__ */ Kt("div", { className: "jt", children: [
     /* @__PURE__ */ Z("style", { children: Je }),
     /* @__PURE__ */ Kt("div", { className: "jt-setup", children: [
       /* @__PURE__ */ Z("h1", { children: "가족 여행 앱" }),
       /* @__PURE__ */ Kt("div", { className: "jt-seg", role: "tablist", children: [
-        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": n === "join", className: n === "join" ? "on" : "", onClick: () => a("join"), children: "초대받았어요" }),
-        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": n === "new", className: n === "new" ? "on" : "", onClick: () => a("new"), children: "처음 만들어요" })
+        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": a === "join", className: a === "join" ? "on" : "", onClick: () => n("join"), children: "초대받았어요" }),
+        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": a === "new", className: a === "new" ? "on" : "", onClick: () => n("new"), children: "처음 만들어요" })
       ] }),
-      n === "join" ? /* @__PURE__ */ Kt("div", { className: "jt-form", children: [
+      a === "join" ? /* @__PURE__ */ Kt("div", { className: "jt-form", children: [
         /* @__PURE__ */ Z("p", { className: "jt-lead", children: "가족에게 받은 초대 링크를 누르면 바로 들어와요. 홈 화면 아이콘으로 열었는데 이 화면이 보이면, 초대 링크를 아래에 붙여넣어 주세요." }),
-        /* @__PURE__ */ Z("textarea", { rows: 3, value: v, onChange: (c) => x(c.target.value), placeholder: "https://…#j=…", "aria-label": "초대 링크" }),
+        /* @__PURE__ */ Z("textarea", { rows: 3, value: v, onChange: (p) => x(p.target.value), placeholder: "https://…#j=…", "aria-label": "초대 링크" }),
         y && /* @__PURE__ */ Z("p", { className: "jt-warn-inline", children: y }),
         /* @__PURE__ */ Z("button", { className: "jt-primary", disabled: b || !v.trim(), onClick: s, children: b ? "연결 중" : "여행에 들어가기" })
       ] }) : /* @__PURE__ */ Kt("div", { className: "jt-form", children: [
@@ -472,7 +468,7 @@ function si({ onDone: e }) {
           {
             rows: 7,
             value: i,
-            onChange: (c) => r(c.target.value),
+            onChange: (p) => r(p.target.value),
             placeholder: `const firebaseConfig = {
   apiKey: "…",
   authDomain: "…",
@@ -485,7 +481,7 @@ function si({ onDone: e }) {
         ),
         /* @__PURE__ */ Kt("div", { className: "jt-field", children: [
           /* @__PURE__ */ Z("span", { children: "Firestore 보안 규칙 (규칙 탭에 붙여넣기)" }),
-          /* @__PURE__ */ Z("pre", { className: "jt-rules", children: na }),
+          /* @__PURE__ */ Z("pre", { className: "jt-rules", children: en }),
           /* @__PURE__ */ Z(
             "button",
             {
@@ -493,7 +489,7 @@ function si({ onDone: e }) {
               className: "jt-secondary",
               onClick: async () => {
                 try {
-                  await navigator.clipboard.writeText(na), f(!0);
+                  await navigator.clipboard.writeText(en), f(!0);
                 } catch {
                   f(!1);
                 }
@@ -510,11 +506,11 @@ function si({ onDone: e }) {
   ] });
 }
 function li() {
-  let [e, n] = At(() => {
-    let a = fn();
-    if (!a) return !1;
+  let [e, a] = It(() => {
+    let n = ga();
+    if (!n) return !1;
     try {
-      return Ce(a.c, a.t), !0;
+      return ze(n.c, n.t), !0;
     } catch {
       return !1;
     }
@@ -522,6 +518,6 @@ function li() {
   return oi(() => {
     "serviceWorker" in navigator && location.protocol === "https:" && navigator.serviceWorker.register("./sw.js").catch(() => {
     });
-  }, []), e ? /* @__PURE__ */ Z(Ye, {}) : /* @__PURE__ */ Z(si, { onDone: () => n(!0) });
+  }, []), e ? /* @__PURE__ */ Z(Ye, {}) : /* @__PURE__ */ Z(si, { onDone: () => a(!0) });
 }
 ii(document.getElementById("root")).render(/* @__PURE__ */ Z(li, {}));
