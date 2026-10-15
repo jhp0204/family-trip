@@ -832,3 +832,4 @@ function Qo({ settings: e, me: a, msgs: n, reads: i, notice: r, onSend: v, onDel
     /* @__PURE__ */ t("ol", { className: "jt-msgs", children: n.map(($) => {
       let Q = Zo($.at), ft = Q !== yt, ot = $.by === a, wt = !ft && Dt && Dt.by === $.by && $.at - Dt.at < 5 * 6e4;
       return yt = Q, Dt = $, /* @__PURE__ */ o(Sn.Fragment, { children: [
+        ft && /* @__PURE__ */ t("li", { className: "jt-daysep", "aria-label": Q, children: /* @__PURE__ */ t("span", { children: Q }) }),
