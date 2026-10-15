@@ -1,411 +1,574 @@
-let [f, y] = N(!1), [d, g] = N(""), s = (t.likes || []).includes(n), w = t.photos || [], b = t.urls || [], p = t.comments || [], i = w.slice(0, 4), m = () => {
-    let k = d.trim();
-    k && (u(t.id, k), g(""));
-  };
-  return /* @__PURE__ */ o("li", { className: "jt-post", children: [
-    /* @__PURE__ */ o("div", { className: "jt-post-head", children: [
-      /* @__PURE__ */ e(V, { name: t.by, members: a, size: 34 }),
-      /* @__PURE__ */ o("div", { className: "jt-post-who", children: [
-        /* @__PURE__ */ e("strong", { children: t.by }),
-        /* @__PURE__ */ o("span", { children: [
-          he(t.createdAt),
-          t.editedAt ? ", 수정됨" : ""
+day: i,
+      sum: p[i].reduce((c, k) => c + (Number(k.amount) || 0), 0),
+      items: [...p[i]].sort((c, k) => k.createdAt - c.createdAt),
+      res: Le(p[i], s)
+    }));
+  }, [a, s]), w = h.net[n] || 0, u = h.moves.filter((p) => p.from === n || p.to === n);
+  return a.length === 0 ? /* @__PURE__ */ r("section", { children: [
+    /* @__PURE__ */ r("div", { className: "jt-total", children: [
+      /* @__PURE__ */ e("span", { children: "지금까지 쓴 돈" }),
+      /* @__PURE__ */ e("strong", { children: H(0) }),
+      /* @__PURE__ */ e("span", { className: "jt-fx", children: Ot(t) })
+    ] }),
+    /* @__PURE__ */ r("div", { className: "jt-empty", children: [
+      /* @__PURE__ */ e("p", { children: "아직 기록된 경비가 없어요." }),
+      /* @__PURE__ */ e("p", { children: "쓸 때마다 한 줄씩 남기면 누가 누구에게 보낼지 자동으로 계산돼요." })
+    ] })
+  ] }) : /* @__PURE__ */ r("section", { children: [
+    /* @__PURE__ */ r("div", { className: "jt-total", children: [
+      /* @__PURE__ */ e("span", { children: "지금까지 쓴 돈" }),
+      /* @__PURE__ */ e("strong", { children: H(j) }),
+      /* @__PURE__ */ r("em", { children: [
+        "약 ",
+        It(j, g),
+        ", 그중 ",
+        n,
+        "가 쓴 돈 ",
+        H(h.share[n] || 0)
+      ] }),
+      /* @__PURE__ */ e("span", { className: "jt-fx", children: Ot(t) }),
+      /* @__PURE__ */ e("div", { className: "jt-catbar", "aria-hidden": "true", children: v.map(({ c: p, v: i }) => /* @__PURE__ */ e("i", { style: { flexGrow: i, background: re(p).color } }, p)) }),
+      /* @__PURE__ */ e("ul", { className: "jt-catlegend", children: v.map(({ c: p, v: i }) => /* @__PURE__ */ r("li", { children: [
+        /* @__PURE__ */ e("span", { className: "jt-dot", style: { background: re(p).color } }),
+        p,
+        " ",
+        /* @__PURE__ */ r("b", { children: [
+          Math.round(i / j * 100),
+          "%"
+        ] })
+      ] }, p)) })
+    ] }),
+    h.skipped.length > 0 && /* @__PURE__ */ r("div", { className: "jt-warn", role: "alert", children: [
+      /* @__PURE__ */ r("strong", { children: [
+        "정산에서 빠진 경비가 ",
+        h.skipped.length,
+        "건 있어요"
+      ] }),
+      /* @__PURE__ */ e("p", { children: "낸 사람이나 나눌 사람이 지금 가족 목록에 없어요. 이름을 바꾸거나 뺀 경우에 생겨요. 눌러서 사람을 다시 골라 주세요." }),
+      /* @__PURE__ */ e("ul", { children: h.skipped.map((p) => /* @__PURE__ */ e("li", { children: /* @__PURE__ */ r("button", { type: "button", onClick: () => o(p), children: [
+        /* @__PURE__ */ r("span", { children: [
+          p.title,
+          " ",
+          /* @__PURE__ */ r("em", { children: [
+            "(",
+            p.payer,
+            " 냄)"
+          ] })
+        ] }),
+        /* @__PURE__ */ e("b", { children: H(Number(p.amount) || 0) })
+      ] }) }, p.id)) })
+    ] }),
+    /* @__PURE__ */ e("div", { className: "jt-seg three", role: "tablist", "aria-label": "정산 보기", children: [
+      ["me", "나의 정산"],
+      ["day", "요일별 정산"],
+      ["all", "전체 정산"]
+    ].map(([p, i]) => /* @__PURE__ */ e("button", { role: "tab", "aria-selected": d === p, className: d === p ? "on" : "", onClick: () => m(p), children: i }, p)) }),
+    d === "me" && /* @__PURE__ */ r(pt, { children: [
+      /* @__PURE__ */ r("div", { className: "jt-mybal " + (Tt(w) || "even"), children: [
+        /* @__PURE__ */ r("div", { className: "jt-mybal-top", children: [
+          /* @__PURE__ */ e(et, { name: n, members: s, size: 32 }),
+          /* @__PURE__ */ r("div", { children: [
+            /* @__PURE__ */ r("span", { children: [
+              "여행 전체 기준, ",
+              n,
+              "는"
+            ] }),
+            /* @__PURE__ */ e("strong", { children: w > 0.5 ? `${H(w)} 받으면 돼요` : w < -0.5 ? `${H(-w)} 보내면 돼요` : "주고받을 돈이 없어요" })
+          ] })
+        ] }),
+        u.length > 0 && /* @__PURE__ */ e("ul", { className: "jt-moves", children: u.map((p, i) => /* @__PURE__ */ r("li", { children: [
+          /* @__PURE__ */ e("span", { children: p.from === n ? /* @__PURE__ */ r(pt, { children: [
+            /* @__PURE__ */ e("b", { children: p.to }),
+            "에게 보내기"
+          ] }) : /* @__PURE__ */ r(pt, { children: [
+            /* @__PURE__ */ e("b", { children: p.from }),
+            "에게 받기"
+          ] }) }),
+          /* @__PURE__ */ r("span", { className: "jt-moves-amt", children: [
+            /* @__PURE__ */ e("strong", { children: H(p.v) }),
+            /* @__PURE__ */ e("em", { children: It(p.v, g) })
+          ] })
+        ] }, i)) }),
+        /* @__PURE__ */ r("div", { className: "jt-calc", children: [
+          /* @__PURE__ */ r("div", { children: [
+            /* @__PURE__ */ e("span", { children: "내가 결제한 돈" }),
+            /* @__PURE__ */ e("b", { children: H(h.paid[n] || 0) })
+          ] }),
+          /* @__PURE__ */ r("div", { children: [
+            /* @__PURE__ */ e("span", { children: "내가 쓴 돈 (나눠 계산한 내 부담)" }),
+            /* @__PURE__ */ r("b", { children: [
+              "− ",
+              H(h.share[n] || 0)
+            ] })
+          ] }),
+          /* @__PURE__ */ r("div", { className: "sum", children: [
+            /* @__PURE__ */ e("span", { children: w > 0.5 ? "더 결제했으니 받을 돈" : w < -0.5 ? "덜 결제했으니 보낼 돈" : "결과" }),
+            /* @__PURE__ */ e("b", { className: Tt(w), children: w > 0.5 ? H(w) : w < -0.5 ? H(-w) : "주고받을 돈 없음" })
+          ] })
         ] })
       ] }),
-      t.by === n && /* @__PURE__ */ e("button", { className: "jt-icon sm", onClick: () => r(t), "aria-label": "내 글 고치기", children: /* @__PURE__ */ e(ba, { size: 17 }) })
-    ] }),
-    t.text && /* @__PURE__ */ e(Ya, { text: t.text }),
-    w.length > 0 && /* @__PURE__ */ e("div", { className: "jt-gallery n" + Math.min(w.length, 4), children: i.map((k, F) => /* @__PURE__ */ o("div", { className: "jt-gallery-cell", children: [
-      /* @__PURE__ */ e(ae, { id: k, onClick: () => c(w, F) }),
-      F === 3 && w.length > 4 && /* @__PURE__ */ o("span", { className: "jt-more", children: [
-        "+",
-        w.length - 4
-      ] })
-    ] }, k)) }),
-    b.length > 0 && /* @__PURE__ */ e("div", { className: "jt-links", children: b.map((k) => /* @__PURE__ */ e(_e, { url: k }, k)) }),
-    /* @__PURE__ */ o("div", { className: "jt-post-foot", children: [
-      /* @__PURE__ */ o(
-        "button",
-        {
-          className: "jt-like" + (s ? " on" : ""),
-          onClick: () => l(t.id),
-          "aria-pressed": s,
-          "aria-label": "좋아요",
-          children: [
-            /* @__PURE__ */ e($t, { size: 16, fill: s ? "currentColor" : "none" }),
-            (t.likes || []).length
-          ]
-        }
-      ),
-      /* @__PURE__ */ o("button", { className: "jt-like" + (f ? " open" : ""), onClick: () => y(!f), "aria-expanded": f, children: [
-        /* @__PURE__ */ e(Ae, { size: 16 }),
-        "댓글 ",
-        p.length
-      ] })
-    ] }),
-    f && /* @__PURE__ */ o("div", { className: "jt-comments", children: [
-      p.length === 0 && /* @__PURE__ */ e("p", { className: "jt-hint jt-nocomment", children: "첫 댓글을 남겨 보세요." }),
-      /* @__PURE__ */ e("ul", { children: p.map((k) => /* @__PURE__ */ o("li", { className: "jt-comment", children: [
-        /* @__PURE__ */ e(V, { name: k.by, members: a, size: 24 }),
-        /* @__PURE__ */ o("div", { className: "jt-comment-body", children: [
-          /* @__PURE__ */ o("div", { children: [
-            /* @__PURE__ */ e("strong", { children: k.by }),
-            /* @__PURE__ */ e("span", { children: he(k.createdAt) })
+      /* @__PURE__ */ e("h4", { className: "jt-subhead", children: "날짜마다 나는" }),
+      /* @__PURE__ */ e("ul", { className: "jt-daynet", children: b.map((p) => {
+        let i = nt(f, p.day), c = p.res.net[n] || 0;
+        return /* @__PURE__ */ r("li", { style: { "--lc": X[p.day % X.length] }, children: [
+          /* @__PURE__ */ e("span", { className: "jt-pip" }),
+          /* @__PURE__ */ r("span", { className: "jt-daynet-label", children: [
+            p.day + 1,
+            "일차 ",
+            At(i),
+            " (",
+            Ft(i),
+            ")"
           ] }),
-          /* @__PURE__ */ e("p", { children: k.text })
+          /* @__PURE__ */ r("span", { className: "jt-daynet-sub", children: [
+            "결제 ",
+            H(p.res.paid[n] || 0),
+            ", 내가 쓴 돈 ",
+            H(p.res.share[n] || 0)
+          ] }),
+          /* @__PURE__ */ e("b", { className: "jt-net " + Tt(c), children: Je(c) })
+        ] }, p.day);
+      }) }),
+      /* @__PURE__ */ e("p", { className: "jt-explain", children: "결제한 돈이 내가 쓴 돈보다 많으면 받을 돈, 적으면 보낼 돈이에요. 날짜별로 받을 돈과 보낼 돈을 서로 빼고 더하면 위의 결과와 같아요." })
+    ] }),
+    d === "day" && /* @__PURE__ */ r(pt, { children: [
+      /* @__PURE__ */ e("p", { className: "jt-hint jt-listhint", children: "하루씩 따로 계산한 결과예요. 그날그날 정산하고 싶을 때 쓰세요. 항목을 누르면 고칠 수 있어요." }),
+      b.map((p) => {
+        let i = nt(f, p.day);
+        return /* @__PURE__ */ r("div", { className: "jt-daycard", style: { "--lc": X[p.day % X.length] }, children: [
+          /* @__PURE__ */ r("h4", { children: [
+            /* @__PURE__ */ e("span", { className: "jt-day-dot sm", children: p.day + 1 }),
+            At(i),
+            " (",
+            Ft(i),
+            ")",
+            /* @__PURE__ */ e("span", { className: "jt-group-sum", children: H(p.sum) })
+          ] }),
+          /* @__PURE__ */ e(Ye, { moves: p.res.moves, rate: g, me: n }),
+          /* @__PURE__ */ e("ul", { className: "jt-spend-list", children: p.items.map((c) => /* @__PURE__ */ e(Xn, { e: c, members: s, rate: g, onEdit: o }, c.id)) })
+        ] }, p.day);
+      })
+    ] }),
+    d === "all" && /* @__PURE__ */ r(pt, { children: [
+      /* @__PURE__ */ r("div", { className: "jt-allcard", children: [
+        /* @__PURE__ */ e("h4", { children: "여행 전체를 합쳐서 보내면 될 돈" }),
+        /* @__PURE__ */ e(Ye, { moves: h.moves, rate: g, me: n }),
+        /* @__PURE__ */ e("p", { className: "jt-explain", children: "모든 날의 경비를 합친 뒤 송금 횟수가 가장 적도록 묶었어요. 그래서 요일별 정산을 하나씩 더한 것보다 송금이 적어요. 각자 주고받는 총액은 같아요." })
+      ] }),
+      /* @__PURE__ */ e("h4", { className: "jt-subhead", children: "사람별 계산" }),
+      /* @__PURE__ */ e("ul", { className: "jt-people card", children: s.map((p) => /* @__PURE__ */ r("li", { children: [
+        /* @__PURE__ */ e(et, { name: p, members: s, size: 28 }),
+        /* @__PURE__ */ r("div", { className: "jt-person-main", children: [
+          /* @__PURE__ */ e("strong", { children: p }),
+          /* @__PURE__ */ r("span", { children: [
+            "결제 ",
+            H(h.paid[p]),
+            ", 쓴 돈 ",
+            H(h.share[p])
+          ] })
         ] }),
-        k.by === n && /* @__PURE__ */ e(ht, { onConfirm: () => x(t.id, k.id), label: "" })
-      ] }, k.id)) }),
-      /* @__PURE__ */ o("div", { className: "jt-inline jt-comment-input", children: [
-        /* @__PURE__ */ e(
-          "input",
-          {
-            value: d,
-            onChange: (k) => g(k.target.value),
-            onKeyDown: (k) => k.key === "Enter" && !k.nativeEvent.isComposing && m(),
-            placeholder: "댓글 달기",
-            "aria-label": "댓글 내용"
-          }
-        ),
-        /* @__PURE__ */ e("button", { type: "button", className: "jt-send", onClick: m, disabled: !d.trim(), "aria-label": "댓글 보내기", children: /* @__PURE__ */ e(xa, { size: 18 }) })
-      ] })
+        /* @__PURE__ */ e("div", { className: "jt-net " + Tt(h.net[p]), children: Je(h.net[p]) })
+      ] }, p)) })
     ] })
   ] });
 }
-function un({ settings: t, board: n, me: a, ...r }) {
-  let [l, u] = N(null), x = [...n].sort((c, f) => f.createdAt - c.createdAt);
-  return /* @__PURE__ */ o("section", { children: [
-    x.length === 0 ? /* @__PURE__ */ o("div", { className: "jt-empty", children: [
-      /* @__PURE__ */ e("p", { children: "아직 올라온 글이 없어요." }),
-      /* @__PURE__ */ e("p", { children: "여행 사진, 맛집 링크, 전달할 말을 올려 보세요. 글과 사진은 가족 모두에게 보여요." })
-    ] }) : /* @__PURE__ */ e("ul", { className: "jt-posts", children: x.map((c) => /* @__PURE__ */ e(
-      mn,
-      {
-        post: c,
-        me: a,
-        members: t.members,
-        onOpenPhoto: (f, y) => u({ photos: f, index: y }),
-        ...r
-      },
-      c.id
-    )) }),
-    l && /* @__PURE__ */ e(Ha, { photos: l.photos, index: l.index, onClose: () => u(null) })
-  ] });
-}
-function ne() {
-  let [t, n] = N(!1), [a, r] = N(null), [l, u] = N([]), [x, c] = N([]), [f, y] = N([]), [d, g] = N([]), [s, w] = N(null), [b, p] = N("plan"), [i, m] = N(0), [k, F] = N(!1), [h, I] = N(null), [E, K] = N(""), J = ft(!1), [L, j] = N(null);
-  Z(() => {
-    let z = !0, M = async () => {
-      let A = await Ka();
-      if (z)
-        if (A) {
-          let P = { ...A, at: Date.now() };
-          j(P), St(T.fx, P);
-        } else {
-          let P = await ot(T.fx, null);
-          z && P && P.rate > 0 && j({ ...P, cached: !0 });
-        }
-    };
-    M();
-    let C = setInterval(M, 3 * 36e5);
-    return () => {
-      z = !1, clearInterval(C);
-    };
-  }, []);
-  let v = ia(async () => {
-    let [z, M, C, A, P] = await Promise.all([
-      ot(T.settings, null),
-      ot(T.plan, []),
-      ot(T.wish, []),
-      ot(T.spend, []),
-      ot(T.board, [])
-    ]);
-    r(z), u(M), c(C), y(A), g(P), n(!0);
-  }, []);
-  Z(() => {
-    (async () => {
-      try {
-        let C = await window.storage.get("me", !1);
-        C && C.value && w(C.value);
-      } catch {
-      }
-      await v();
-    })();
-    let z = window.storage.onChange ? window.storage.onChange(v) : null, M = setInterval(v, z ? 6e4 : 1e4);
-    return () => {
-      clearInterval(M), z && z();
-    };
-  }, [v]), Z(() => {
-    if (!a || J.current) return;
-    J.current = !0;
-    let z = Math.round((pt(tt(/* @__PURE__ */ new Date())) - pt(a.start)) / 864e5);
-    z >= 0 && z < a.days && m(z);
-  }, [a]);
-  let S = async (z, M, C, A) => {
-    let P = await ot(z, M), G = A(P);
-    C(G);
-    let $ = await St(z, G);
-    return $ || K("저장하지 못했어요. 잠시 후 다시 시도해 주세요."), $;
-  }, _ = async (z) => {
-    w(z);
-    try {
-      await window.storage.set("me", z, !1);
-    } catch {
-    }
-  }, H = async (z) => {
-    r(z), F(!1), await St(T.settings, z) || K("설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요."), s && !z.members.includes(s) && w(null);
-  }, D = () => I(null), O = (z, M, C) => S(
-    T.plan,
-    [],
-    u,
-    (A) => M ? A.map((P) => P.id === M ? { ...P, ...z } : P) : [...A, { id: lt(), day: C, by: s, ...z }]
-  ), dt = (z) => S(T.plan, [], u, (M) => M.filter((C) => C.id !== z)), Q = (z) => S(T.wish, [], c, (M) => [...M, { id: lt(), by: s, likes: [s], createdAt: Date.now(), ...z }]), Be = (z) => S(
-    T.wish,
-    [],
-    c,
-    (M) => M.map(
-      (C) => C.id === z ? { ...C, likes: C.likes.includes(s) ? C.likes.filter((A) => A !== s) : [...C.likes, s] } : C
-    )
-  ), Le = (z) => S(T.wish, [], c, (M) => M.filter((C) => C.id !== z)), We = async (z, M) => {
-    await S(T.plan, [], u, (C) => [
-      ...C,
-      {
-        id: lt(),
-        day: M,
-        by: s,
-        time: "",
-        title: z.name,
-        place: z.area || "",
-        link: z.link || "",
-        memo: z.memo || "",
-        ..._t(z) ? { lat: z.lat, lng: z.lng } : {}
-      }
-    ]), await S(T.wish, [], c, (C) => C.map((A) => A.id === z.id ? { ...A, planned: M } : A)), m(M);
-  }, Oe = (z, M) => S(
-    T.spend,
-    [],
-    y,
-    (C) => M ? C.map((A) => A.id === M ? { ...A, ...z, editedAt: Date.now(), editedBy: s } : A) : [...C, { id: lt(), by: s, createdAt: Date.now(), ...z }]
-  ), Ue = (z) => S(T.spend, [], y, (M) => M.filter((C) => C.id !== z)), Ke = async ({ text: z, urls: M, photos: C }, A) => {
-    for (let R of C.filter((X) => X.data)) {
-      if (!await St(Vt(R.id), R.data)) return !1;
-      st.set(R.id, R.data);
-    }
-    let P = C.map((R) => R.id), G = [], $ = await S(T.board, [], g, (R) => A ? R.map((X) => X.id !== A ? X : (G = (X.photos || []).filter((qe) => !P.includes(qe)), { ...X, text: z, urls: M, photos: P, editedAt: Date.now() })) : [{ id: lt(), by: s, createdAt: Date.now(), text: z, urls: M, photos: P, likes: [], comments: [] }, ...R]);
-    return $ && G.forEach(we), $;
-  }, He = async (z) => {
-    let M = [];
-    await S(T.board, [], g, (A) => (M = A.find((P) => P.id === z)?.photos || [], A.filter((P) => P.id !== z))) && M.forEach(we);
-  }, Ye = (z) => S(
-    T.board,
-    [],
-    g,
-    (M) => M.map((C) => {
-      if (C.id !== z) return C;
-      let A = C.likes || [];
-      return { ...C, likes: A.includes(s) ? A.filter((P) => P !== s) : [...A, s] };
-    })
-  ), Je = (z, M) => S(
-    T.board,
-    [],
-    g,
-    (C) => C.map(
-      (A) => A.id === z ? { ...A, comments: [...A.comments || [], { id: lt(), by: s, text: M, createdAt: Date.now() }] } : A
-    )
-  ), Xe = (z, M) => S(
-    T.board,
-    [],
-    g,
-    (C) => C.map((A) => A.id === z ? { ...A, comments: (A.comments || []).filter((P) => P.id !== M) } : A)
-  ), vt;
-  if (!t)
-    vt = /* @__PURE__ */ e("div", { className: "jt-loading", children: "불러오는 중" });
-  else if (!a || k)
-    vt = /* @__PURE__ */ e(Ja, { initial: a, onSave: H, onCancel: a ? () => F(!1) : null });
-  else if (!s || !a.members.includes(s))
-    vt = /* @__PURE__ */ e(qa, { members: a.members, onPick: _ });
-  else {
-    let z = et(a.start, 0), M = et(a.start, a.days - 1), C = Math.round((pt(a.start) - pt(tt(/* @__PURE__ */ new Date()))) / 864e5), A = Math.round((pt(tt(/* @__PURE__ */ new Date())) - pt(a.start)) / 864e5), P = A >= 0 && A < a.days ? A : i, G = L ? { ...a, rate: L.rate, fx: L } : a;
-    vt = /* @__PURE__ */ o(it, { children: [
-      /* @__PURE__ */ o("header", { className: "jt-head", children: [
-        /* @__PURE__ */ o("div", { className: "jt-head-top", children: [
-          /* @__PURE__ */ o("button", { className: "jt-me", onClick: () => w(null), "aria-label": "사용자 바꾸기", children: [
-            /* @__PURE__ */ e(V, { name: s, members: a.members, size: 24 }),
-            s
-          ] }),
-          /* @__PURE__ */ e("button", { className: "jt-icon light", onClick: () => F(!0), "aria-label": "여행 설정", children: /* @__PURE__ */ e(pa, { size: 20 }) })
-        ] }),
-        /* @__PURE__ */ e("h1", { children: a.title }),
-        /* @__PURE__ */ o("div", { className: "jt-head-sub", children: [
-          /* @__PURE__ */ o("span", { children: [
-            z.getMonth() + 1,
-            "월 ",
-            z.getDate(),
-            "일 – ",
-            M.getMonth() + 1,
-            "월 ",
-            M.getDate(),
-            "일"
-          ] }),
-          C > 0 && /* @__PURE__ */ o("span", { className: "jt-dday", children: [
-            "출발까지 ",
-            C,
-            "일"
-          ] }),
-          C === 0 && /* @__PURE__ */ e("span", { className: "jt-dday", children: "오늘 출발!" })
+function Vn({ post: t, me: a, members: n, onEdit: o, onLike: s, onComment: g, onDelComment: f, onOpenPhoto: d }) {
+  let [m, j] = C(!1), h = t.photos || [], v = t.urls || [], b = t.comments || [], w = h.slice(0, 4);
+  return /* @__PURE__ */ r("li", { className: "jt-post", children: [
+    /* @__PURE__ */ r("div", { className: "jt-post-head", children: [
+      /* @__PURE__ */ e(et, { name: t.by, members: n, size: 34 }),
+      /* @__PURE__ */ r("div", { className: "jt-post-who", children: [
+        /* @__PURE__ */ e("strong", { children: t.by }),
+        /* @__PURE__ */ r("span", { children: [
+          Ve(t.createdAt),
+          t.editedAt ? ", 수정됨" : ""
         ] })
       ] }),
-      E && /* @__PURE__ */ o("div", { className: "jt-error", role: "alert", children: [
-        E,
-        /* @__PURE__ */ e("button", { onClick: () => K(""), "aria-label": "닫기", children: /* @__PURE__ */ e(bt, { size: 16 }) })
+      t.by === a && /* @__PURE__ */ e("button", { className: "jt-icon sm", onClick: () => o(t), "aria-label": "내 글 고치기", children: /* @__PURE__ */ e(Ta, { size: 17 }) })
+    ] }),
+    t.text && /* @__PURE__ */ e(jn, { text: t.text }),
+    h.length > 0 && /* @__PURE__ */ e("div", { className: "jt-gallery n" + Math.min(h.length, 4), children: w.map((u, p) => /* @__PURE__ */ r("div", { className: "jt-gallery-cell", children: [
+      /* @__PURE__ */ e(ue, { id: u, onClick: () => d(h, p) }),
+      p === 3 && h.length > 4 && /* @__PURE__ */ r("span", { className: "jt-more", children: [
+        "+",
+        h.length - 4
+      ] })
+    ] }, u)) }),
+    v.length > 0 && /* @__PURE__ */ e("div", { className: "jt-links", children: v.map((u) => /* @__PURE__ */ e(aa, { url: u }, u)) }),
+    /* @__PURE__ */ r("div", { className: "jt-post-foot", children: [
+      /* @__PURE__ */ e(Kt, { item: t, me: a, boardLikes: !0, onReact: (u) => s(t.id, u) }),
+      /* @__PURE__ */ e(ge, { count: b.length, open: m, onClick: () => j(!m) })
+    ] }),
+    m && /* @__PURE__ */ e(
+      Wt,
+      {
+        comments: b,
+        me: a,
+        members: n,
+        onAdd: (u) => g(t.id, u),
+        onDelete: (u) => f(t.id, u)
+      }
+    )
+  ] });
+}
+function Qn({ settings: t, board: a, me: n, ...o }) {
+  let [s, g] = C(null), f = [...a].sort((d, m) => m.createdAt - d.createdAt);
+  return /* @__PURE__ */ r("section", { children: [
+    f.length === 0 ? /* @__PURE__ */ r("div", { className: "jt-empty", children: [
+      /* @__PURE__ */ e("p", { children: "아직 올라온 글이 없어요." }),
+      /* @__PURE__ */ e("p", { children: "여행 사진, 맛집 링크, 전달할 말을 올려 보세요. 글과 사진은 가족 모두에게 보여요." })
+    ] }) : /* @__PURE__ */ e("ul", { className: "jt-posts", children: f.map((d) => /* @__PURE__ */ e(
+      Vn,
+      {
+        post: d,
+        me: n,
+        members: t.members,
+        onOpenPhoto: (m, j) => g({ photos: m, index: j }),
+        ...o
+      },
+      d.id
+    )) }),
+    s && /* @__PURE__ */ e(xn, { photos: s.photos, index: s.index, onClose: () => g(null) })
+  ] });
+}
+function fe() {
+  let [t, a] = C(!1), [n, o] = C(null), [s, g] = C([]), [f, d] = C([]), [m, j] = C([]), [h, v] = C([]), [b, w] = C(null), [u, p] = C("plan"), [i, c] = C(0), [k, x] = C(!1), [l, M] = C(null), [I, O] = C(""), z = J(!1), [S, D] = C(null);
+  Y(() => {
+    let E = !0, P = async () => {
+      let $ = await hn();
+      if (E)
+        if ($) {
+          let _ = { ...$, at: Date.now() };
+          D(_), _t(B.fx, _);
+        } else {
+          let _ = await st(B.fx, null);
+          E && _ && _.rate > 0 && D({ ..._, cached: !0 });
+        }
+    };
+    P();
+    let F = setInterval(P, 3 * 36e5);
+    return () => {
+      E = !1, clearInterval(F);
+    };
+  }, []);
+  let N = Sa(async () => {
+    let [E, P, F, $, _] = await Promise.all([
+      st(B.settings, null),
+      st(B.plan, []),
+      st(B.wish, []),
+      st(B.spend, []),
+      st(B.board, [])
+    ]);
+    o(E), g(P), d(F), j($), v(_), a(!0);
+  }, []);
+  Y(() => {
+    (async () => {
+      try {
+        let F = await window.storage.get("me", !1);
+        F && F.value && w(F.value);
+      } catch {
+      }
+      await N();
+    })();
+    let E = window.storage.onChange ? window.storage.onChange(N) : null, P = setInterval(N, E ? 6e4 : 1e4);
+    return () => {
+      clearInterval(P), E && E();
+    };
+  }, [N]), Y(() => {
+    if (!n || z.current) return;
+    z.current = !0;
+    let E = Math.round((dt(at(/* @__PURE__ */ new Date())) - dt(n.start)) / 864e5);
+    E >= 0 && E < n.days && c(E);
+  }, [n]);
+  let A = async (E, P, F, $) => {
+    let _ = await st(E, P), U = $(_);
+    F(U);
+    let R = await _t(E, U);
+    return R || O("저장하지 못했어요. 잠시 후 다시 시도해 주세요."), R;
+  }, T = async (E) => {
+    w(E);
+    try {
+      await window.storage.set("me", E, !1);
+    } catch {
+    }
+  }, q = async (E) => {
+    o(E), x(!1), await _t(B.settings, E) || O("설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요."), b && !E.members.includes(b) && w(null);
+  }, y = () => M(null), L = (E, P) => ({
+    add: (F, $) => A(
+      E,
+      [],
+      P,
+      (_) => _.map(
+        (U) => U.id === F ? { ...U, comments: [...U.comments || [], { id: it(), by: b, text: $, createdAt: Date.now() }] } : U
+      )
+    ),
+    del: (F, $) => A(
+      E,
+      [],
+      P,
+      (_) => _.map((U) => U.id === F ? { ...U, comments: (U.comments || []).filter((R) => R.id !== $) } : U)
+    )
+  }), Z = (E, P, F = !1) => ($, _) => A(E, [], P, (U) => U.map((R) => R.id === $ ? vn(R, _, b, F) : R)), K = Z(B.plan, g), Rt = Z(B.wish, d), Ht = Z(B.board, v, !0), he = L(B.plan, g), xe = L(B.wish, d), sa = (E, P, F) => A(
+    B.plan,
+    [],
+    g,
+    ($) => P ? $.map((_) => _.id === P ? { ..._, ...E } : _) : [...$, { id: it(), day: F, by: b, ...E }]
+  ), la = (E) => A(B.plan, [], g, (P) => P.filter((F) => F.id !== E)), je = (E) => A(B.wish, [], d, (P) => [...P, { id: it(), by: b, likes: [b], createdAt: Date.now(), ...E }]), pa = (E) => A(
+    B.wish,
+    [],
+    d,
+    (P) => P.map(
+      (F) => F.id === E ? { ...F, likes: F.likes.includes(b) ? F.likes.filter(($) => $ !== b) : [...F.likes, b] } : F
+    )
+  ), ca = (E) => A(B.wish, [], d, (P) => P.filter((F) => F.id !== E)), da = async (E, P) => {
+    await A(B.plan, [], g, (F) => [
+      ...F,
+      {
+        id: it(),
+        day: P,
+        by: b,
+        time: "",
+        title: E.name,
+        place: E.area || "",
+        link: E.link || "",
+        memo: E.memo || "",
+        comments: E.comments || [],
+        reactions: E.reactions || {},
+        ...$t(E) ? { lat: E.lat, lng: E.lng } : {}
+      }
+    ]), await A(B.wish, [], d, (F) => F.map(($) => $.id === E.id ? { ...$, planned: P } : $)), c(P);
+  }, ma = (E, P) => A(
+    B.spend,
+    [],
+    j,
+    (F) => P ? F.map(($) => $.id === P ? { ...$, ...E, editedAt: Date.now(), editedBy: b } : $) : [...F, { id: it(), by: b, createdAt: Date.now(), ...E }]
+  ), ua = (E) => A(B.spend, [], j, (P) => P.filter((F) => F.id !== E)), ga = async ({ text: E, urls: P, photos: F }, $) => {
+    for (let W of F.filter((Q) => Q.data)) {
+      if (!await _t(de(W.id), W.data)) return !1;
+      ct.set(W.id, W.data);
+    }
+    let _ = F.map((W) => W.id), U = [], R = await A(B.board, [], v, (W) => $ ? W.map((Q) => Q.id !== $ ? Q : (U = (Q.photos || []).filter((xa) => !_.includes(xa)), { ...Q, text: E, urls: P, photos: _, editedAt: Date.now() })) : [{ id: it(), by: b, createdAt: Date.now(), text: E, urls: P, photos: _, likes: [], comments: [] }, ...W]);
+    return R && U.forEach(Re), R;
+  }, fa = async (E) => {
+    let P = [];
+    await A(B.board, [], v, ($) => (P = $.find((_) => _.id === E)?.photos || [], $.filter((_) => _.id !== E))) && P.forEach(Re);
+  }, ro = (E) => A(
+    B.board,
+    [],
+    v,
+    (P) => P.map((F) => {
+      if (F.id !== E) return F;
+      let $ = F.likes || [];
+      return { ...F, likes: $.includes(b) ? $.filter((_) => _ !== b) : [...$, b] };
+    })
+  ), ba = (E, P) => A(
+    B.board,
+    [],
+    v,
+    (F) => F.map(
+      ($) => $.id === E ? { ...$, comments: [...$.comments || [], { id: it(), by: b, text: P, createdAt: Date.now() }] } : $
+    )
+  ), ha = (E, P) => A(
+    B.board,
+    [],
+    v,
+    (F) => F.map(($) => $.id === E ? { ...$, comments: ($.comments || []).filter((_) => _.id !== P) } : $)
+  ), kt;
+  if (!t)
+    kt = /* @__PURE__ */ e("div", { className: "jt-loading", children: "불러오는 중" });
+  else if (!n || k)
+    kt = /* @__PURE__ */ e(yn, { initial: n, onSave: q, onCancel: n ? () => x(!1) : null });
+  else if (!b || !n.members.includes(b))
+    kt = /* @__PURE__ */ e(kn, { members: n.members, onPick: T });
+  else {
+    let E = nt(n.start, 0), P = nt(n.start, n.days - 1), F = Math.round((dt(n.start) - dt(at(/* @__PURE__ */ new Date()))) / 864e5), $ = Math.round((dt(at(/* @__PURE__ */ new Date())) - dt(n.start)) / 864e5), _ = $ >= 0 && $ < n.days ? $ : i, U = S ? { ...n, rate: S.rate, fx: S } : n;
+    kt = /* @__PURE__ */ r(pt, { children: [
+      /* @__PURE__ */ r("header", { className: "jt-head", children: [
+        /* @__PURE__ */ r("div", { className: "jt-head-top", children: [
+          /* @__PURE__ */ r("button", { className: "jt-me", onClick: () => w(null), "aria-label": "사용자 바꾸기", children: [
+            /* @__PURE__ */ e(et, { name: b, members: n.members, size: 24 }),
+            b
+          ] }),
+          /* @__PURE__ */ e("button", { className: "jt-icon light", onClick: () => x(!0), "aria-label": "여행 설정", children: /* @__PURE__ */ e(Ia, { size: 20 }) })
+        ] }),
+        /* @__PURE__ */ e("h1", { children: n.title }),
+        /* @__PURE__ */ r("div", { className: "jt-head-sub", children: [
+          /* @__PURE__ */ r("span", { children: [
+            E.getMonth() + 1,
+            "월 ",
+            E.getDate(),
+            "일 – ",
+            P.getMonth() + 1,
+            "월 ",
+            P.getDate(),
+            "일"
+          ] }),
+          F > 0 && /* @__PURE__ */ r("span", { className: "jt-dday", children: [
+            "출발까지 ",
+            F,
+            "일"
+          ] }),
+          F === 0 && /* @__PURE__ */ e("span", { className: "jt-dday", children: "오늘 출발!" })
+        ] })
       ] }),
-      /* @__PURE__ */ o("main", { className: "jt-main", children: [
-        b === "plan" && /* @__PURE__ */ e(
-          on,
+      I && /* @__PURE__ */ r("div", { className: "jt-error", role: "alert", children: [
+        I,
+        /* @__PURE__ */ e("button", { onClick: () => O(""), "aria-label": "닫기", children: /* @__PURE__ */ e(vt, { size: 16 }) })
+      ] }),
+      /* @__PURE__ */ r("main", { className: "jt-main", children: [
+        u === "plan" && /* @__PURE__ */ e(
+          In,
           {
-            settings: G,
-            schedule: l,
+            settings: U,
+            schedule: s,
             day: i,
-            setDay: m,
-            onAdd: () => I({ type: "plan", day: i }),
-            onEdit: ($) => I({ type: "plan", item: $, day: $.day })
+            setDay: c,
+            onAdd: () => M({ type: "plan", day: i }),
+            onEdit: (R) => M({ type: "plan", item: R, day: R.day }),
+            me: b,
+            onComment: he.add,
+            onDelComment: he.del,
+            onReact: K
           }
         ),
-        b === "wish" && /* @__PURE__ */ e(
-          ln,
+        u === "wish" && /* @__PURE__ */ e(
+          Gn,
           {
-            settings: G,
-            wish: x,
-            me: s,
-            onAdd: () => I({ type: "wish" }),
-            onSave: Q,
-            onLike: Be,
-            onPlan: ($) => I({ type: "toPlan", wish: $ }),
-            onDelete: Le
+            settings: U,
+            wish: f,
+            me: b,
+            onAdd: () => M({ type: "wish" }),
+            onSave: je,
+            onLike: pa,
+            onPlan: (R) => M({ type: "toPlan", wish: R }),
+            onDelete: ca,
+            onComment: xe.add,
+            onDelComment: xe.del,
+            onReact: Rt
           }
         ),
-        b === "spend" && /* @__PURE__ */ e(
-          dn,
+        u === "spend" && /* @__PURE__ */ e(
+          Zn,
           {
-            settings: G,
-            spend: f,
-            me: s,
-            onEdit: ($) => I({ type: "spend", item: $ })
+            settings: U,
+            spend: m,
+            me: b,
+            onEdit: (R) => M({ type: "spend", item: R })
           }
         ),
-        b === "board" && /* @__PURE__ */ e(
-          un,
+        u === "board" && /* @__PURE__ */ e(
+          Qn,
           {
-            settings: G,
-            board: d,
-            me: s,
-            onEdit: ($) => I({ type: "post", item: $ }),
-            onLike: Ye,
-            onComment: Je,
-            onDelComment: Xe
+            settings: U,
+            board: h,
+            me: b,
+            onEdit: (R) => M({ type: "post", item: R }),
+            onLike: Ht,
+            onComment: ba,
+            onDelComment: ha
           }
         )
       ] }),
       (() => {
-        let $ = {
-          plan: [`${i + 1}일차 일정 추가`, () => I({ type: "plan", day: i })],
-          wish: ["가고 싶은 곳 추가", () => I({ type: "wish" })],
-          spend: ["경비 추가", () => I({ type: "spend" })],
-          board: ["글쓰기", () => I({ type: "post" })]
-        }[b];
-        return /* @__PURE__ */ o("button", { className: "jt-fab", onClick: $[1], children: [
-          /* @__PURE__ */ e(sa, { size: 20, strokeWidth: 2.6 }),
-          $[0]
+        let R = {
+          plan: [`${i + 1}일차 일정 추가`, () => M({ type: "plan", day: i })],
+          wish: ["가고 싶은 곳 추가", () => M({ type: "wish" })],
+          spend: ["경비 추가", () => M({ type: "spend" })],
+          board: ["글쓰기", () => M({ type: "post" })]
+        }[u];
+        return /* @__PURE__ */ r("button", { className: "jt-fab", onClick: R[1], children: [
+          /* @__PURE__ */ e(Aa, { size: 20, strokeWidth: 2.6 }),
+          R[0]
         ] });
       })(),
       /* @__PURE__ */ e("nav", { className: "jt-nav", "aria-label": "메뉴", children: [
-        ["plan", "일정", ca],
-        ["wish", "가고 싶은 곳", $t],
-        ["spend", "경비", da],
-        ["board", "게시판", Ae]
-      ].map(([$, R, X]) => /* @__PURE__ */ o("button", { className: b === $ ? "on" : "", onClick: () => p($), "aria-current": b === $, children: [
-        /* @__PURE__ */ e("span", { className: "jt-nav-ic", children: /* @__PURE__ */ e(X, { size: 21 }) }),
-        R
-      ] }, $)) }),
-      h?.type === "plan" && /* @__PURE__ */ e(Nt, { title: h.item ? "일정 수정" : `${h.day + 1}일차 일정 추가`, onClose: D, children: /* @__PURE__ */ e(
-        Ga,
+        ["plan", "일정", Da],
+        ["wish", "가고 싶은 곳", pe],
+        ["spend", "경비", Pa],
+        ["board", "게시판", qe]
+      ].map(([R, W, Q]) => /* @__PURE__ */ r("button", { className: u === R ? "on" : "", onClick: () => p(R), "aria-current": u === R, children: [
+        /* @__PURE__ */ e("span", { className: "jt-nav-ic", children: /* @__PURE__ */ e(Q, { size: 21 }) }),
+        W
+      ] }, R)) }),
+      l?.type === "plan" && /* @__PURE__ */ e(Et, { title: l.item ? "일정 수정" : `${l.day + 1}일차 일정 추가`, onClose: y, children: /* @__PURE__ */ e(
+        Nn,
         {
-          initial: h.item,
-          dayItems: l.filter(($) => $.day === h.day && $.id !== h.item?.id),
-          onSave: ($) => {
-            O($, h.item?.id, h.day), D();
+          initial: l.item,
+          dayItems: s.filter((R) => R.day === l.day && R.id !== l.item?.id),
+          onSave: (R) => {
+            sa(R, l.item?.id, l.day), y();
           },
           onDelete: () => {
-            dt(h.item.id), D();
+            la(l.item.id), y();
           }
         }
       ) }),
-      h?.type === "wish" && /* @__PURE__ */ e(Nt, { title: "가고 싶은 곳 추가", onClose: D, children: /* @__PURE__ */ e(
-        Qa,
+      l?.type === "wish" && /* @__PURE__ */ e(Et, { title: "가고 싶은 곳 추가", onClose: y, children: /* @__PURE__ */ e(
+        Cn,
         {
-          onSave: ($) => {
-            Q($), D();
+          onSave: (R) => {
+            je(R), y();
           }
         }
       ) }),
-      h?.type === "spend" && /* @__PURE__ */ e(Nt, { title: h.item ? "경비 수정" : "경비 기록", onClose: D, children: /* @__PURE__ */ e(
-        Za,
+      l?.type === "spend" && /* @__PURE__ */ e(Et, { title: l.item ? "경비 수정" : "경비 기록", onClose: y, children: /* @__PURE__ */ e(
+        zn,
         {
-          settings: G,
-          me: s,
-          defaultDay: P,
-          initial: h.item,
-          onSave: ($) => {
-            Oe($, h.item?.id), D();
+          settings: U,
+          me: b,
+          defaultDay: _,
+          initial: l.item,
+          onSave: (R) => {
+            ma(R, l.item?.id), y();
           },
           onDelete: () => {
-            Ue(h.item.id), D();
+            ua(l.item.id), y();
           }
         }
       ) }),
-      h?.type === "post" && /* @__PURE__ */ e(Nt, { title: h.item ? "글 수정" : "새 글", onClose: D, children: /* @__PURE__ */ e(
-        Va,
+      l?.type === "post" && /* @__PURE__ */ e(Et, { title: l.item ? "글 수정" : "새 글", onClose: y, children: /* @__PURE__ */ e(
+        En,
         {
-          initial: h.item,
-          onSave: async ($) => {
-            let R = await Ke($, h.item?.id);
-            return R && D(), R;
+          initial: l.item,
+          onSave: async (R) => {
+            let W = await ga(R, l.item?.id);
+            return W && y(), W;
           },
           onDelete: () => {
-            He(h.item.id), D();
+            fa(l.item.id), y();
           }
         }
       ) }),
-      h?.type === "toPlan" && /* @__PURE__ */ e(Nt, { title: `"${h.wish.name}" 몇째 날에 갈까요?`, onClose: D, children: /* @__PURE__ */ e("div", { className: "jt-daypick", children: Array.from({ length: a.days }, ($, R) => {
-        let X = et(a.start, R);
-        return /* @__PURE__ */ o(
+      l?.type === "toPlan" && /* @__PURE__ */ e(Et, { title: `"${l.wish.name}" 몇째 날에 갈까요?`, onClose: y, children: /* @__PURE__ */ e("div", { className: "jt-daypick", children: Array.from({ length: n.days }, (R, W) => {
+        let Q = nt(n.start, W);
+        return /* @__PURE__ */ r(
           "button",
           {
-            style: { "--lc": U[R % U.length] },
+            style: { "--lc": X[W % X.length] },
             onClick: () => {
-              We(h.wish, R), D(), p("plan");
+              da(l.wish, W), y(), p("plan");
             },
             children: [
-              /* @__PURE__ */ e("span", { className: "jt-day-dot", children: R + 1 }),
-              R + 1,
+              /* @__PURE__ */ e("span", { className: "jt-day-dot", children: W + 1 }),
+              W + 1,
               "일차 ",
-              zt(X),
+              At(Q),
               " (",
-              Ct(X),
+              Ft(Q),
               ")"
             ]
           },
-          R
+          W
         );
       }) }) })
     ] });
   }
-  return /* @__PURE__ */ o("div", { className: "jt", children: [
-    /* @__PURE__ */ e("style", { children: oe }),
-    vt
+  return /* @__PURE__ */ r("div", { className: "jt", children: [
+    /* @__PURE__ */ e("style", { children: be }),
+    kt
   ] });
 }
-var oe = `
+var be = `
 .jt{--paper:#F2F4F7;--ink:#14213D;--muted:#66718A;--rule:#DCE1EA;--card:#fff;--blue:#0C86AE;
   font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
   background:var(--paper);color:var(--ink);min-height:100vh;max-width:520px;margin:0 auto;
@@ -524,26 +687,3 @@ var oe = `
 .jt-wish-top{display:flex;align-items:center;gap:8px}
 .jt-wish-top strong{font-size:16px}
 .jt-tag{color:#fff;font-size:12px;font-weight:700;padding:2px 9px;border-radius:6px}
-.jt-wish-bottom{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
-.jt-like{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1.5px solid var(--rule);color:var(--muted);border-radius:999px;padding:4px 11px;font-weight:700}
-.jt-like.on{color:#D9262E;border-color:#D9262E;background:#FEF3F3}
-.jt-like.open{color:var(--ink);border-color:var(--ink)}
-.jt-planned{font-size:13px;font-weight:700}
-
-/* spending */
-.jt-total{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:16px;display:flex;flex-direction:column;margin-bottom:12px}
-.jt-total span{font-size:13px;color:var(--muted);font-weight:600}
-.jt-total strong{font-size:34px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.jt-total em{font-style:normal;color:var(--muted)}
-.jt-seg{display:grid;grid-template-columns:1fr 1fr;background:#E3E7EE;border-radius:10px;padding:3px;margin-bottom:14px}
-.jt-seg button{background:none;border:0;padding:8px;border-radius:8px;font-weight:700;color:var(--muted)}
-.jt-seg button.on{background:#fff;color:var(--ink)}
-.jt-listhint{margin:-4px 0 12px}
-.jt-group{margin-bottom:16px}
-.jt-group h4{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;margin-bottom:8px}
-.jt-pip{width:12px;height:12px;border-radius:50%;background:var(--lc)}
-.jt-spend{width:100%;text-align:left;background:#fff;border:1px solid var(--rule);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
-.jt-spend:active{background:#F8F9FB}
-.jt-spend-main{min-width:0;flex:1}
-.jt-spend-title{font-weight:700;display:flex;align-items:center;gap:8px;min-width:0}
-.jt-spend-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
