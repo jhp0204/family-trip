@@ -1,6 +1,6 @@
 // 앱 화면과 부품을 기기에 보관해서 인터넷이 약해도 열리게 함 (항상 최신 버전을 먼저 시도)
-const CACHE = "fjt-v5";
-const CDN = ["esm.sh", "www.gstatic.com"];
+const CACHE = "fjt-v9";
+const CDN = ["esm.sh", "www.gstatic.com", "unpkg.com"];
 self.addEventListener("install", (e) => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(["./", "./index.html", "./manifest.webmanifest", "./app.js", "./app-1.js", "./app-2.js", "./app-3.js", "./app-4.js", "./app-5.js", "./icon.svg"]).catch(() => {})));
