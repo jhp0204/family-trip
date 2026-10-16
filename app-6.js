@@ -1,4 +1,161 @@
-children: [
+var CHAT_PREFIX = "trip:chat:", READ_PREFIX = "trip:read:", chatKey = (m) => CHAT_PREFIX + m.at.toString(36).padStart(10, "0") + "-" + m.id, hm = (t) => {
+  let d = new Date(t);
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}, dayLabel = (t) => {
+  let d = new Date(t);
+  return `${d.getMonth() + 1}월 ${d.getDate()}일 (${wk(d)})`;
+};
+function linkify(text) {
+  return text.split(/(https?:\/\/[^\s]+)/g).map(
+    (p, i) => i % 2 ? /* @__PURE__ */ jsx("a", { href: p, target: "_blank", rel: "noopener noreferrer", children: p }, i) : p
+  );
+}
+function ChatTab({ settings, me, msgs, reads, notice, onSend, onDelete, onEdit, onPin, onUnpin, onSendLoc, badgeAsk, onBadgeAsk }) {
+  let members = settings.members, [text, setText] = useState(""), [sel, setSel] = useState(null), [locBusy, setLocBusy] = useState(!1), [editId, setEditId] = useState(null), [editText, setEditText] = useState(""), [noticeOpen, setNoticeOpen] = useState(!1), [flash, setFlash] = useState(null), live = notice ? msgs.find((x) => x.id === notice.id) : null, nv = notice ? { ...notice, ...live ? { text: live.text, kind: live.kind, lat: live.lat, lng: live.lng } : {} } : null, goTo = (id) => {
+    let el = document.getElementById("msg-" + id);
+    el && (el.scrollIntoView({ block: "center", behavior: "smooth" }), setFlash(id), setTimeout(() => setFlash(null), 1600));
+  }, startEdit = (m) => {
+    setEditId(m.id), setEditText(m.text), setSel(null);
+  }, saveEdit = (m) => {
+    let t = editText.trim();
+    t && (t !== m.text && onEdit(m, t), setEditId(null));
+  }, endRef = useRef(null), first = useRef(!0), count = msgs.length;
+  useEffect(() => {
+    let last = msgs[count - 1], near = window.innerHeight + window.scrollY > document.documentElement.scrollHeight - 260;
+    (first.current || near || last && last.by === me) && endRef.current && endRef.current.scrollIntoView({ block: "end", behavior: first.current ? "auto" : "smooth" }), first.current = !1;
+  }, [count]);
+  let send = () => {
+    let t = text.trim();
+    t && (onSend(t), setText(""));
+  }, sendLoc = async () => {
+    setLocBusy(!0), await onSendLoc(), setLocBusy(!1);
+  }, prevDay = "", prev = null;
+  return /* @__PURE__ */ jsxs("section", { className: "jt-chat", children: [
+    count === 0 && /* @__PURE__ */ jsxs("div", { className: "jt-empty", children: [
+      /* @__PURE__ */ jsx("p", { children: "아직 대화가 없어요." }),
+      /* @__PURE__ */ jsx("p", { children: "가족에게 첫 메시지를 남겨 보세요. 아래 위치 버튼으로 내 위치도 보낼 수 있어요." })
+    ] }),
+    nv && /* @__PURE__ */ jsxs("div", { className: "jt-notice" + (noticeOpen ? " open" : ""), children: [
+      /* @__PURE__ */ jsxs("button", { type: "button", className: "jt-notice-head", onClick: () => setNoticeOpen(!noticeOpen), "aria-expanded": noticeOpen, children: [
+        /* @__PURE__ */ jsx(Megaphone, { size: 17, className: "jt-notice-ic", "aria-hidden": "true" }),
+        /* @__PURE__ */ jsx("span", { className: "jt-notice-label", children: "공지" }),
+        /* @__PURE__ */ jsx("span", { className: "jt-notice-text", children: nv.kind === "loc" ? `${nv.by}의 위치` : nv.text }),
+        /* @__PURE__ */ jsx(ChevronDown, { size: 18, className: "jt-fold-ic", "aria-hidden": "true" })
+      ] }),
+      noticeOpen && /* @__PURE__ */ jsxs("div", { className: "jt-notice-body", children: [
+        nv.kind === "loc" ? /* @__PURE__ */ jsxs("p", { children: [
+          nv.by,
+          "이(가) 보낸 위치예요.",
+          " ",
+          /* @__PURE__ */ jsx("a", { href: mapUrl({ lat: nv.lat, lng: nv.lng }), target: "_blank", rel: "noopener noreferrer", children: "지도에서 보기" })
+        ] }) : /* @__PURE__ */ jsx("p", { className: "jt-msg-text", children: linkify(nv.text) }),
+        /* @__PURE__ */ jsxs("span", { className: "jt-notice-meta", children: [
+          nv.by,
+          "의 메시지, ",
+          nv.pinnedBy,
+          "이(가) 공지로 등록",
+          live ? "" : " (원래 메시지는 지워졌어요)"
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "jt-notice-act", children: [
+          live && /* @__PURE__ */ jsx("button", { type: "button", className: "jt-like", onClick: () => goTo(nv.id), children: "메시지로 이동" }),
+          /* @__PURE__ */ jsxs(
+            "button",
+            {
+              type: "button",
+              className: "jt-like",
+              onClick: () => {
+                onUnpin(), setNoticeOpen(!1);
+              },
+              children: [
+                /* @__PURE__ */ jsx(PinOff, { size: 14 }),
+                "공지 해제"
+              ]
+            }
+          )
+        ] })
+      ] })
+    ] }),
+    badgeAsk && /* @__PURE__ */ jsxs("div", { className: "jt-badgeask", children: [
+      /* @__PURE__ */ jsx("span", { children: "홈 화면 앱 아이콘에도 안 읽은 메시지 수를 표시할 수 있어요." }),
+      /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary sm", onClick: onBadgeAsk, children: "표시 허용" })
+    ] }),
+    /* @__PURE__ */ jsx("ol", { className: "jt-msgs", children: msgs.map((m) => {
+      let dl = dayLabel(m.at), showDay = dl !== prevDay, mine = m.by === me, cont = !showDay && prev && prev.by === m.by && m.at - prev.at < 5 * 6e4;
+      return prevDay = dl, prev = m, /* @__PURE__ */ jsxs(React.Fragment, { children: [
+        showDay && /* @__PURE__ */ jsx("li", { className: "jt-daysep", "aria-label": dl, children: /* @__PURE__ */ jsx("span", { children: dl }) }),
+        /* @__PURE__ */ jsxs(
+          "li",
+          {
+            id: "msg-" + m.id,
+            className: "jt-msg" + (mine ? " mine" : "") + (cont ? " cont" : "") + (flash === m.id ? " flash" : ""),
+            children: [
+              !mine && /* @__PURE__ */ jsx("span", { className: "jt-msg-av", children: !cont && /* @__PURE__ */ jsx(Avatar, { name: m.by, members, size: 30 }) }),
+              /* @__PURE__ */ jsxs("div", { className: "jt-msg-col", children: [
+                !mine && !cont && /* @__PURE__ */ jsx("span", { className: "jt-msg-name", children: m.by }),
+                /* @__PURE__ */ jsxs("div", { className: "jt-msg-row", children: [
+                  editId === m.id ? /* @__PURE__ */ jsxs("div", { className: "jt-msg-editbox", children: [
+                    /* @__PURE__ */ jsx(
+                      "textarea",
+                      {
+                        rows: 2,
+                        value: editText,
+                        onChange: (e) => setEditText(e.target.value),
+                        onKeyDown: (e) => {
+                          e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && (e.preventDefault(), saveEdit(m)), e.key === "Escape" && setEditId(null);
+                        },
+                        "aria-label": "메시지 수정",
+                        autoFocus: !0
+                      }
+                    ),
+                    /* @__PURE__ */ jsxs("div", { className: "jt-msg-editact", children: [
+                      /* @__PURE__ */ jsx("button", { type: "button", className: "jt-ghost sm", onClick: () => setEditId(null), children: "취소" }),
+                      /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary sm", onClick: () => saveEdit(m), disabled: !editText.trim(), children: "저장" })
+                    ] })
+                  ] }) : /* @__PURE__ */ jsx(
+                    "button",
+                    {
+                      type: "button",
+                      className: "jt-bubble" + (m.kind === "loc" ? " loc" : "") + (notice && notice.id === m.id ? " pinned" : ""),
+                      onClick: () => setSel(sel === m.id ? null : m.id),
+                      "aria-label": mine ? "내 메시지, 누르면 메뉴" : "누르면 공지 메뉴",
+                      "aria-expanded": sel === m.id,
+                      children: m.kind === "loc" ? /* @__PURE__ */ jsxs("span", { className: "jt-locmsg", children: [
+                        /* @__PURE__ */ jsx(MapPin, { size: 16 }),
+                        mine ? "내 위치를 보냈어요" : `${m.by}의 현재 위치`
+                      ] }) : /* @__PURE__ */ jsx("span", { className: "jt-msg-text", children: linkify(m.text) })
+                    }
+                  ),
+                  /* @__PURE__ */ jsxs("span", { className: "jt-msg-meta", children: [
+                    (() => {
+                      let left = members.filter((x) => x !== m.by && (reads[x] || 0) < m.at);
+                      return left.length > 0 ? /* @__PURE__ */ jsx("b", { className: "jt-unread", title: `안 읽음: ${left.join(", ")}`, "aria-label": `${left.length}명 안 읽음`, children: left.length }) : null;
+                    })(),
+                    /* @__PURE__ */ jsxs("time", { className: "jt-msg-time", children: [
+                      m.editedAt ? "수정됨 " : "",
+                      hm(m.at)
+                    ] })
+                  ] })
+                ] }),
+                m.kind === "loc" && /* @__PURE__ */ jsxs("div", { className: "jt-loclinks", children: [
+                  /* @__PURE__ */ jsxs("a", { className: "jt-maplink", href: mapUrl({ lat: m.lat, lng: m.lng }), target: "_blank", rel: "noopener noreferrer", children: [
+                    /* @__PURE__ */ jsx(ExternalLink, { size: 13 }),
+                    "지도에서 보기"
+                  ] }),
+                  !mine && /* @__PURE__ */ jsxs("a", { className: "jt-maplink", href: dirUrl(m), target: "_blank", rel: "noopener noreferrer", children: [
+                    /* @__PURE__ */ jsx(Navigation, { size: 13 }),
+                    "길 찾기"
+                  ] })
+                ] }),
+                sel === m.id && editId !== m.id && /* @__PURE__ */ jsxs("div", { className: "jt-msg-menu", children: [
+                  notice && notice.id === m.id ? /* @__PURE__ */ jsxs(
+                    "button",
+                    {
+                      type: "button",
+                      className: "jt-like",
+                      onClick: () => {
+                        onUnpin(), setSel(null);
+                      },
+                      children: [
                         /* @__PURE__ */ jsx(PinOff, { size: 14 }),
                         "공지 해제"
                       ]
@@ -57,6 +214,127 @@ children: [
     ] })
   ] });
 }
+function Wheel({ members, onClose }) {
+  let [people, setPeople] = useState(members), [name, setName] = useState(""), [rot, setRot] = useState(0), [spinning, setSpinning] = useState(!1), [winner, setWinner] = useState(null), n = people.length, slice = n ? 360 / n : 360, reduce = typeof window < "u" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches, add = () => {
+    let t = name.trim();
+    !t || people.includes(t) || (setPeople([...people, t]), setName(""), setWinner(null));
+  }, spin = () => {
+    if (n < 2 || spinning) return;
+    let pick = Math.floor(Math.random() * n), target = 360 - (pick * slice + slice / 2), base = rot - rot % 360;
+    setWinner(null), setSpinning(!0), setRot(base + 360 * (reduce ? 1 : 6) + target), setTimeout(() => {
+      setSpinning(!1), setWinner(people[pick]), navigator.vibrate && navigator.vibrate([30, 40, 30]);
+    }, reduce ? 600 : 4200);
+  }, R = 140, pt = (deg2, r = R) => {
+    let a = (deg2 - 90) * Math.PI / 180;
+    return [R + r * Math.cos(a), R + r * Math.sin(a)];
+  };
+  return /* @__PURE__ */ jsx(Sheet, { title: "랜덤 돌림판", onClose, children: /* @__PURE__ */ jsxs("div", { className: "jt-form", children: [
+    /* @__PURE__ */ jsxs("div", { className: "jt-wheel-wrap", children: [
+      /* @__PURE__ */ jsx("span", { className: "jt-wheel-pin", "aria-hidden": "true" }),
+      /* @__PURE__ */ jsxs(
+        "svg",
+        {
+          className: "jt-wheel",
+          viewBox: `0 0 ${R * 2} ${R * 2}`,
+          style: { transform: `rotate(${rot}deg)`, transitionDuration: spinning ? reduce ? "0.6s" : "4.2s" : "0s" },
+          role: "img",
+          "aria-label": `참가자 ${n}명의 돌림판`,
+          children: [
+            n === 0 && /* @__PURE__ */ jsx("circle", { cx: R, cy: R, r: R, fill: "#E3E7EE" }),
+            n === 1 && /* @__PURE__ */ jsx("circle", { cx: R, cy: R, r: R, fill: LINE[0] }),
+            n > 1 && people.map((m, i) => {
+              let [x1, y1] = pt(i * slice), [x2, y2] = pt((i + 1) * slice), big = slice > 180 ? 1 : 0;
+              return /* @__PURE__ */ jsx("path", { d: `M${R},${R} L${x1},${y1} A${R},${R} 0 ${big} 1 ${x2},${y2} Z`, fill: LINE[i % LINE.length], stroke: "#fff", strokeWidth: "2" }, m);
+            }),
+            people.map((m, i) => {
+              let mid = n > 1 ? i * slice + slice / 2 : 0, [tx, ty] = n > 1 ? pt(mid, R * 0.62) : [R, R];
+              return /* @__PURE__ */ jsx(
+                "text",
+                {
+                  x: tx,
+                  y: ty,
+                  textAnchor: "middle",
+                  dominantBaseline: "middle",
+                  transform: n > 1 ? `rotate(${mid} ${tx} ${ty})` : void 0,
+                  className: "jt-wheel-label",
+                  children: m.length > 6 ? m.slice(0, 6) + "…" : m
+                },
+                "t" + m
+              );
+            }),
+            /* @__PURE__ */ jsx("circle", { cx: R, cy: R, r: "16", fill: "#fff" })
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "jt-wheel-result", role: "status", "aria-live": "polite", children: spinning ? "돌아가는 중…" : winner ? /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx("span", { children: "당첨" }),
+      /* @__PURE__ */ jsx("strong", { children: winner })
+    ] }) : n < 2 ? "두 명 이상 있어야 돌릴 수 있어요" : "가운데 버튼을 눌러 돌려 보세요" }),
+    /* @__PURE__ */ jsxs("div", { className: "jt-inline", children: [
+      /* @__PURE__ */ jsx("button", { type: "button", className: "jt-primary", onClick: spin, disabled: n < 2 || spinning, children: winner ? "다시 돌리기" : "돌리기" }),
+      winner && !spinning && n > 2 && /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          className: "jt-secondary",
+          onClick: () => {
+            setPeople(people.filter((x) => x !== winner)), setWinner(null);
+          },
+          children: "당첨자 빼기"
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
+      /* @__PURE__ */ jsxs("span", { children: [
+        "참가자 ",
+        n,
+        "명"
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "jt-chips", children: people.map((m) => /* @__PURE__ */ jsxs("span", { className: "jt-chip on", children: [
+        m,
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            disabled: spinning,
+            onClick: () => {
+              setPeople(people.filter((x) => x !== m)), setWinner(null);
+            },
+            "aria-label": `${m} 빼기`,
+            children: /* @__PURE__ */ jsx(X, { size: 14 })
+          }
+        )
+      ] }, m)) }),
+      /* @__PURE__ */ jsxs("div", { className: "jt-inline", children: [
+        /* @__PURE__ */ jsx(
+          "input",
+          {
+            value: name,
+            onChange: (e) => setName(e.target.value),
+            onKeyDown: (e) => e.key === "Enter" && !e.nativeEvent.isComposing && add(),
+            placeholder: "참가자 추가 (예: 삼촌)",
+            "aria-label": "참가자 이름",
+            disabled: spinning
+          }
+        ),
+        /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary", onClick: add, disabled: spinning, children: "추가" })
+      ] }),
+      people.length !== members.length || people.some((m) => !members.includes(m)) ? /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          className: "jt-ghost sm jt-wheel-reset",
+          onClick: () => {
+            setPeople(members), setWinner(null);
+          },
+          disabled: spinning,
+          children: "가족 전원으로 되돌리기"
+        }
+      ) : null
+    ] })
+  ] }) });
+}
 var HERO = [
   { f: "Osaka Castle 02bs3200.jpg", t: "오사카성", by: "663highland", lic: "CC BY-SA 3.0", pos: "50% 45%" },
   { f: "Dotonbori, Osaka, at night, November 2016.jpg", t: "도톤보리 야경", by: "Wikimedia Commons", lic: "CC BY-SA", pos: "50% 40%" },
@@ -110,7 +388,7 @@ function HeroSlides() {
   ] });
 }
 function App() {
-  let [loaded, setLoaded] = useState(!1), [settings, setSettings] = useState(null), [plan, setPlan] = useState([]), [wish, setWish] = useState([]), [spend, setSpend] = useState([]), [board, setBoard] = useState([]), [me, setMe] = useState(null), [tab, setTab] = useState("plan"), [ui, setUi] = useState({ wish: "list", spend: "me" }), uiReady = useRef(!1), [day, setDay] = useState(0), [editSettings, setEditSettings] = useState(!1), [switching, setSwitching] = useState(!1), [slowSync, setSlowSync] = useState(!1);
+  let [loaded, setLoaded] = useState(!1), [settings, setSettings] = useState(null), [plan, setPlan] = useState([]), [wish, setWish] = useState([]), [spend, setSpend] = useState([]), [board, setBoard] = useState([]), [me, setMe] = useState(null), [tab, setTab] = useState("plan"), [ui, setUi] = useState({ wish: "list", spend: "me" }), uiReady = useRef(!1), [day, setDay] = useState(0), [editSettings, setEditSettings] = useState(!1), [switching, setSwitching] = useState(!1), [wheelOpen, setWheelOpen] = useState(!1), [slowSync, setSlowSync] = useState(!1);
   useEffect(() => {
     let t = setTimeout(() => setSlowSync(!0), 8e3);
     return () => clearTimeout(t);
@@ -205,590 +483,3 @@ function App() {
       } catch {
       }
   }, [unread, badgePerm]);
-  let askBadge = async () => {
-    try {
-      let r = await Notification.requestPermission();
-      setBadgePerm(r), setToast(r === "granted" ? "앱 아이콘에 안 읽은 메시지 수가 표시돼요." : "허용하지 않아서 아이콘 숫자는 표시되지 않아요.");
-    } catch {
-      setBadgePerm("denied");
-    }
-  }, [toast, setToast] = useState("");
-  useEffect(() => {
-    if (!toast) return;
-    let t = setTimeout(() => setToast(""), 2600);
-    return () => clearTimeout(t);
-  }, [toast]);
-  let setShare = (next, quiet) => {
-    setShareOn(next), setAskShare(!1), next || setGeoErr(""), quiet || setToast(next ? "위치 공유를 켰어요. 앱이 열려 있는 동안만 공유돼요." : "위치 공유를 껐어요. 가족 지도에서 내 위치가 사라져요.");
-    try {
-      window.storage.set("locshare", next ? "on" : "off", !1);
-    } catch {
-    }
-  }, toggleShare = () => setShare(!shareOn);
-  useEffect(() => {
-    if (!shareOn || !me || !settings) return;
-    let key = LOC_PREFIX + encodeURIComponent(me), watchId = null, last = null, lastSent = 0, send = (pos) => {
-      last = pos, lastSent = Date.now(), setMyPos(pos), save(key, { ...pos, at: Date.now(), online: !0 });
-    }, start = () => {
-      if (watchId == null) {
-        if (!navigator.geolocation) {
-          setGeoErr("이 기기에서는 위치를 쓸 수 없어요.");
-          return;
-        }
-        watchId = navigator.geolocation.watchPosition(
-          (p) => {
-            let pos = { lat: p.coords.latitude, lng: p.coords.longitude, acc: Math.round(p.coords.accuracy) };
-            setGeoErr(""), !last || distM(last, pos) > 25 || Date.now() - lastSent > 6e4 ? send(pos) : setMyPos(pos);
-          },
-          (err) => setGeoErr(
-            err.code === 1 ? "위치 권한이 꺼져 있어요. 휴대폰 설정에서 이 앱(또는 브라우저)의 위치 권한을 허용해 주세요." : "위치를 찾지 못했어요. 잠시 후 다시 시도할게요."
-          ),
-          { enableHighAccuracy: !0, maximumAge: 3e4, timeout: 2e4 }
-        );
-      }
-    }, stop = (mark) => {
-      watchId != null && navigator.geolocation.clearWatch(watchId), watchId = null, mark && save(key, { online: !1, at: Date.now() });
-    }, onVis = () => document.visibilityState === "visible" ? start() : stop(!0), onHide = () => stop(!0), beat = setInterval(() => {
-      document.visibilityState === "visible" && last && send(last);
-    }, 6e4);
-    return document.visibilityState === "visible" && start(), document.addEventListener("visibilitychange", onVis), window.addEventListener("pagehide", onHide), () => {
-      clearInterval(beat), document.removeEventListener("visibilitychange", onVis), window.removeEventListener("pagehide", onHide), stop(!0);
-    };
-  }, [shareOn, me, !!settings]), useEffect(() => {
-    if (uiReady.current)
-      try {
-        window.storage.set("ui", JSON.stringify({ tab, ...ui }), !1);
-      } catch {
-      }
-  }, [tab, ui]);
-  let toggleMini = () => {
-    let next = !mini;
-    setMini(next);
-    try {
-      window.storage.set("hdr", next ? "min" : "max", !1);
-    } catch {
-    }
-  };
-  useEffect(() => {
-    let alive = !0, run = async () => {
-      let v = await fetchFx();
-      if (alive)
-        if (v) {
-          let val = { ...v, at: Date.now() };
-          setFx(val), save(KEYS.fx, val);
-        } else {
-          let c = await load(KEYS.fx, null);
-          alive && c && c.rate > 0 && setFx({ ...c, cached: !0 });
-        }
-    };
-    run();
-    let t = setInterval(run, 3 * 36e5);
-    return () => {
-      alive = !1, clearInterval(t);
-    };
-  }, []);
-  let refresh = useCallback(async () => {
-    let [s, p, w, e, nt, bd] = await Promise.all([
-      load(KEYS.settings, null),
-      load(KEYS.plan, []),
-      load(KEYS.wish, []),
-      load(KEYS.spend, []),
-      load(KEYS.notice, null),
-      load(KEYS.board, [])
-    ]);
-    setBoard(bd), setNotice(nt && nt.id ? nt : null), setSettings(s), setPlan(p), setWish(w), setSpend(e);
-    try {
-      let next = {};
-      (await loadPrefix(LOC_PREFIX)).forEach(([k, v]) => next[decodeURIComponent(k.slice(LOC_PREFIX.length))] = v), setLocs(next);
-    } catch {
-    }
-    try {
-      let list = (await loadPrefix(CHAT_PREFIX)).map(([k, v]) => ({ ...v, key: k }));
-      list.sort((a, b) => a.at - b.at), setChat((cur) => {
-        let pending = cur.filter((m) => m.pending && !list.some((x) => x.id === m.id));
-        return [...list, ...pending];
-      });
-    } catch {
-    }
-    try {
-      let next = {};
-      (await loadPrefix(READ_PREFIX)).forEach(([k, v]) => next[decodeURIComponent(k.slice(READ_PREFIX.length))] = v.at || 0), setReads((cur) => {
-        let merged = { ...next };
-        return Object.keys(cur).forEach((k) => merged[k] = Math.max(merged[k] || 0, cur[k] || 0)), merged;
-      });
-    } catch {
-    }
-    setLoaded(!0);
-  }, []);
-  useEffect(() => {
-    (async () => {
-      try {
-        let r = await window.storage.get("me", !1);
-        r && r.value && setMe(r.value);
-      } catch {
-      }
-      try {
-        let r = await window.storage.get("ui", !1), u = r && r.value ? JSON.parse(r.value) : null;
-        u && (["board", "plan", "wish", "spend", "family", "chat"].includes(u.tab) && setTab(u.tab), setUi((cur) => ({
-          wish: ["list", "map", "near"].includes(u.wish) ? u.wish : cur.wish,
-          spend: ["me", "day", "all"].includes(u.spend) ? u.spend : cur.spend
-        })));
-      } catch {
-      }
-      uiReady.current = !0, await refresh();
-    })();
-    let off = window.storage.onChange ? window.storage.onChange(refresh) : null, t = setInterval(refresh, off ? 6e4 : 1e4);
-    return () => {
-      clearInterval(t), off && off();
-    };
-  }, [refresh]), useEffect(() => {
-    if (!settings || inited.current) return;
-    inited.current = !0;
-    let diff = Math.round((parse(iso(/* @__PURE__ */ new Date())) - parse(settings.start)) / 864e5);
-    diff >= 0 && diff < settings.days && setDay(diff);
-  }, [settings]);
-  let mutate = async (key, fallback, setter, fn) => {
-    let cur = await load(key, fallback), next = fn(cur);
-    setter(next);
-    let ok = await save(key, next);
-    return ok || setError("저장하지 못했어요. 잠시 후 다시 시도해 주세요."), ok;
-  }, pickMe = async (name) => {
-    setMe(name), setSwitching(!1);
-    try {
-      await window.storage.set("me", name, !1);
-    } catch {
-    }
-  }, saveSettings = async (s) => {
-    setSettings(s), setEditSettings(!1), await save(KEYS.settings, s) || setError("설정을 저장하지 못했어요. 잠시 후 다시 시도해 주세요."), me && !s.members.includes(me) && setMe(null);
-  }, close = () => setSheet(null);
-  closersRef.current = () => {
-    sheet ? setSheet(null) : switching ? setSwitching(!1) : editSettings && setEditSettings(!1);
-  };
-  let overlayOpen = !!sheet || switching || editSettings && !!settings;
-  useEffect(() => {
-    overlayOpen && !historyPushed.current ? (history.pushState({ jtOverlay: !0 }, ""), historyPushed.current = !0) : !overlayOpen && historyPushed.current && (historyPushed.current = !1, history.state && history.state.jtOverlay && history.back());
-  }, [overlayOpen]), useEffect(() => {
-    let onPop = () => {
-      historyPushed.current && (historyPushed.current = !1, closersRef.current && closersRef.current());
-    };
-    return window.addEventListener("popstate", onPop), () => window.removeEventListener("popstate", onPop);
-  }, []);
-  let commentOps = (key, setter) => ({
-    add: (id, text) => mutate(
-      key,
-      [],
-      setter,
-      (list) => list.map(
-        (x) => x.id === id ? { ...x, comments: [...x.comments || [], { id: uid(), by: me, text, createdAt: Date.now() }] } : x
-      )
-    ),
-    del: (id, cid) => mutate(
-      key,
-      [],
-      setter,
-      (list) => list.map((x) => x.id === id ? { ...x, comments: (x.comments || []).filter((c) => c.id !== cid) } : x)
-    )
-  }), reactOp = (key, setter) => (id, emoji) => mutate(key, [], setter, (list) => list.map((x) => x.id === id ? toggleReaction(x, emoji, me) : x)), reactPlan = reactOp(KEYS.plan, setPlan), reactWish = reactOp(KEYS.wish, setWish), reactPost = reactOp(KEYS.board, setBoard), planCm = commentOps(KEYS.plan, setPlan), wishCm = commentOps(KEYS.wish, setWish), savePlan = (vals, id, d) => mutate(
-    KEYS.plan,
-    [],
-    setPlan,
-    (list) => id ? list.map((i) => i.id === id ? { ...i, ...vals } : i) : [...list, { id: uid(), day: d, by: me, ...vals }]
-  ), delPlan = (id) => mutate(KEYS.plan, [], setPlan, (list) => list.filter((i) => i.id !== id)), addWish = (vals) => mutate(KEYS.wish, [], setWish, (list) => [...list, { id: uid(), by: me, likes: [me], createdAt: Date.now(), ...vals }]), likeWish = (id) => mutate(
-    KEYS.wish,
-    [],
-    setWish,
-    (list) => list.map(
-      (w) => w.id === id ? { ...w, likes: w.likes.includes(me) ? w.likes.filter((x) => x !== me) : [...w.likes, me] } : w
-    )
-  ), delWish = (id) => mutate(KEYS.wish, [], setWish, (list) => list.filter((w) => w.id !== id)), batchPos = async (upd) => {
-    let n = Object.keys(upd).length;
-    await mutate(KEYS.wish, [], setWish, (list) => list.map((w) => upd[w.id] ? { ...w, ...upd[w.id] } : w)) && setToast(`${n}곳에 위치를 연결했어요.`);
-  }, updateWish = (id, vals) => mutate(KEYS.wish, [], setWish, (list) => list.map((w) => w.id === id ? { ...w, ...vals, editedAt: Date.now() } : w)), planWish = async (w, d) => {
-    await mutate(KEYS.plan, [], setPlan, (list) => [
-      ...list,
-      {
-        id: uid(),
-        day: d,
-        by: me,
-        time: "",
-        title: w.name,
-        wishId: w.id,
-        place: w.area || "",
-        link: w.link || "",
-        memo: w.memo || "",
-        comments: w.comments || [],
-        reactions: w.reactions || {},
-        ...hasPos(w) ? { lat: w.lat, lng: w.lng } : {}
-      }
-    ]), setDay(d);
-  }, saveSpend = (vals, id) => mutate(
-    KEYS.spend,
-    [],
-    setSpend,
-    (list) => id ? list.map((e) => e.id === id ? { ...e, ...vals, editedAt: Date.now(), editedBy: me } : e) : [...list, { id: uid(), by: me, createdAt: Date.now(), ...vals }]
-  ), delSpend = (id) => mutate(KEYS.spend, [], setSpend, (list) => list.filter((e) => e.id !== id)), savePost = async ({ text, urls, photos }, id) => {
-    for (let p of photos.filter((x) => x.data)) {
-      if (!await save(photoKey(p.id), p.data)) return !1;
-      photoCache.set(p.id, p.data);
-    }
-    let ids = photos.map((p) => p.id), removed = [], ok = await mutate(KEYS.board, [], setBoard, (list) => id ? list.map((x) => x.id !== id ? x : (removed = (x.photos || []).filter((pid) => !ids.includes(pid)), { ...x, text, urls, photos: ids, editedAt: Date.now() })) : [{ id: uid(), by: me, createdAt: Date.now(), text, urls, photos: ids, likes: [], comments: [] }, ...list]);
-    return ok && removed.forEach(deletePhoto), ok;
-  }, delPost = async (id) => {
-    let gone = [];
-    await mutate(KEYS.board, [], setBoard, (list) => (gone = list.find((x) => x.id === id)?.photos || [], list.filter((x) => x.id !== id))) && gone.forEach(deletePhoto);
-  }, addComment = (id, text) => mutate(
-    KEYS.board,
-    [],
-    setBoard,
-    (list) => list.map(
-      (p) => p.id === id ? { ...p, comments: [...p.comments || [], { id: uid(), by: me, text, createdAt: Date.now() }] } : p
-    )
-  ), delComment = (id, cid) => mutate(
-    KEYS.board,
-    [],
-    setBoard,
-    (list) => list.map((p) => p.id === id ? { ...p, comments: (p.comments || []).filter((c) => c.id !== cid) } : p)
-  ), content, waitingSync = loaded && !settings && window.storage && window.storage.isSynced && !window.storage.isSynced();
-  if (!loaded || waitingSync)
-    content = /* @__PURE__ */ jsxs("div", { className: "jt-loading", role: "status", "aria-live": "polite", children: [
-      /* @__PURE__ */ jsxs("div", { className: "jt-dots", "aria-hidden": "true", children: [
-        /* @__PURE__ */ jsx("i", {}),
-        /* @__PURE__ */ jsx("i", {}),
-        /* @__PURE__ */ jsx("i", {})
-      ] }),
-      waitingSync ? "여행 정보 받는 중" : "앱 준비 중",
-      waitingSync && slowSync && /* @__PURE__ */ jsx("p", { className: "jt-loading-sub", children: "인터넷 연결이 느린 것 같아요. 연결되면 자동으로 열려요." })
-    ] });
-  else if (!settings || editSettings)
-    content = /* @__PURE__ */ jsx(
-      SettingsForm,
-      {
-        initial: settings,
-        onSave: saveSettings,
-        onCancel: settings ? () => setEditSettings(!1) : null,
-        wish,
-        onBatchPos: batchPos
-      }
-    );
-  else if (!me || !settings.members.includes(me) || switching) {
-    let valid = me && settings.members.includes(me);
-    content = /* @__PURE__ */ jsx(
-      WhoAreYou,
-      {
-        members: settings.members,
-        onPick: pickMe,
-        current: valid ? me : null,
-        onBack: valid ? () => setSwitching(!1) : null
-      }
-    );
-  } else {
-    let first = addDays(settings.start, 0), last = addDays(settings.start, settings.days - 1), dday = Math.round((parse(settings.start) - parse(iso(/* @__PURE__ */ new Date()))) / 864e5), todayIdx = Math.round((parse(iso(/* @__PURE__ */ new Date())) - parse(settings.start)) / 864e5), defaultDay = todayIdx >= 0 && todayIdx < settings.days ? todayIdx : day, S = fx ? { ...settings, rate: fx.rate, fx } : settings;
-    RATE_NOW = S.rate, content = /* @__PURE__ */ jsxs(Fragment, { children: [
-      /* @__PURE__ */ jsxs("header", { className: "jt-head hero" + (mini ? " mini" : tab === "plan" ? " tall" : ""), children: [
-        !mini && /* @__PURE__ */ jsx(HeroSlides, {}),
-        /* @__PURE__ */ jsxs("div", { className: "jt-head-top", children: [
-          /* @__PURE__ */ jsxs("button", { className: "jt-me", onClick: () => setSwitching(!0), "aria-label": "사용자 바꾸기", children: [
-            /* @__PURE__ */ jsx(Avatar, { name: me, members: settings.members, size: 24 }),
-            me
-          ] }),
-          mini && /* @__PURE__ */ jsxs("strong", { className: "jt-mini-title", children: [
-            /* @__PURE__ */ jsx("span", { className: "jt-mini-name", children: settings.title }),
-            dday > 0 && /* @__PURE__ */ jsxs("em", { children: [
-              "D-",
-              dday
-            ] }),
-            dday === 0 && /* @__PURE__ */ jsx("em", { children: "오늘 출발" })
-          ] }),
-          /* @__PURE__ */ jsxs("div", { className: "jt-head-btns", children: [
-            /* @__PURE__ */ jsxs(
-              "button",
-              {
-                className: "jt-icon light jt-locbtn" + (shareOn ? " on" : ""),
-                onClick: toggleShare,
-                "aria-pressed": shareOn,
-                "aria-label": shareOn ? "위치 공유 끄기 (지금 켜짐)" : "위치 공유 켜기 (지금 꺼짐)",
-                title: shareOn ? "위치 공유 켜짐" : "위치 공유 꺼짐",
-                children: [
-                  /* @__PURE__ */ jsx(MapPin, { size: 19 }),
-                  /* @__PURE__ */ jsx("i", { "aria-hidden": "true" })
-                ]
-              }
-            ),
-            /* @__PURE__ */ jsx(
-              "button",
-              {
-                className: "jt-icon light",
-                onClick: toggleMini,
-                "aria-label": mini ? "상단 크게 보기" : "상단 줄이기",
-                "aria-expanded": !mini,
-                children: mini ? /* @__PURE__ */ jsx(ChevronDown, { size: 20 }) : /* @__PURE__ */ jsx(ChevronUp, { size: 20 })
-              }
-            ),
-            /* @__PURE__ */ jsx("button", { className: "jt-icon light", onClick: () => setEditSettings(!0), "aria-label": "여행 설정", children: /* @__PURE__ */ jsx(Settings, { size: 20 }) })
-          ] })
-        ] }),
-        !mini && /* @__PURE__ */ jsxs(Fragment, { children: [
-          /* @__PURE__ */ jsx("h1", { children: settings.title }),
-          /* @__PURE__ */ jsxs("div", { className: "jt-head-sub", children: [
-            /* @__PURE__ */ jsxs("span", { children: [
-              first.getMonth() + 1,
-              "월 ",
-              first.getDate(),
-              "일 – ",
-              last.getMonth() + 1,
-              "월 ",
-              last.getDate(),
-              "일"
-            ] }),
-            dday > 0 && /* @__PURE__ */ jsxs("span", { className: "jt-dday", children: [
-              "출발까지 ",
-              dday,
-              "일"
-            ] }),
-            dday === 0 && /* @__PURE__ */ jsx("span", { className: "jt-dday", children: "오늘 출발!" })
-          ] })
-        ] })
-      ] }),
-      error && /* @__PURE__ */ jsxs("div", { className: "jt-error", role: "alert", children: [
-        error,
-        /* @__PURE__ */ jsx("button", { onClick: () => setError(""), "aria-label": "닫기", children: /* @__PURE__ */ jsx(X, { size: 16 }) })
-      ] }),
-      /* @__PURE__ */ jsxs("main", { className: "jt-main", children: [
-        tab === "board" && /* @__PURE__ */ jsx(
-          BoardTab,
-          {
-            settings: S,
-            board,
-            me,
-            onEdit: (item) => setSheet({ type: "post", item }),
-            onLike: reactPost,
-            onComment: addComment,
-            onDelComment: delComment
-          }
-        ),
-        tab === "plan" && /* @__PURE__ */ jsx(
-          PlanTab,
-          {
-            settings: S,
-            schedule: plan,
-            day,
-            setDay,
-            onEdit: (item) => setSheet({ type: "plan", item, day: item.day }),
-            onAddAt: (d, t) => setSheet({ type: "plan", day: d, preset: { time: t, end: fmtMin(Math.min(toMin(t) + 60, 23 * 60 + 59)) } }),
-            me,
-            onComment: planCm.add,
-            onDelComment: planCm.del,
-            onReact: reactPlan
-          }
-        ),
-        tab === "wish" && /* @__PURE__ */ jsx(
-          WishTab,
-          {
-            settings: S,
-            onBatchPos: batchPos,
-            view: ui.wish,
-            setView: (v) => setUi((u) => ({ ...u, wish: v })),
-            plan,
-            wish,
-            me,
-            onEdit: (item) => setSheet({ type: "wish", item }),
-            onSave: addWish,
-            onLike: likeWish,
-            onPlan: (w) => setSheet({ type: "toPlan", wish: w }),
-            onDelete: delWish,
-            onComment: wishCm.add,
-            onDelComment: wishCm.del,
-            onReact: reactWish
-          }
-        ),
-        tab === "spend" && /* @__PURE__ */ jsx(
-          SpendTab,
-          {
-            settings: S,
-            spend,
-            me,
-            view: ui.spend,
-            setView: (v) => setUi((u) => ({ ...u, spend: v })),
-            onEdit: (item) => setSheet({ type: "spend", item })
-          }
-        ),
-        tab === "chat" && /* @__PURE__ */ jsx(
-          ChatTab,
-          {
-            settings: S,
-            me,
-            msgs: chat,
-            reads,
-            notice,
-            onEdit: editChat,
-            onPin: pinChat,
-            onUnpin: unpinChat,
-            badgeAsk: badgePerm === "default",
-            onBadgeAsk: askBadge,
-            onSend: (t) => sendChat({ kind: "text", text: t }),
-            onDelete: delChat,
-            onSendLoc: sendMyLoc
-          }
-        ),
-        tab === "family" && /* @__PURE__ */ jsx(
-          FamilyTab,
-          {
-            settings: S,
-            me,
-            locs,
-            shareOn,
-            onToggle: toggleShare,
-            myPos,
-            geoErr
-          }
-        )
-      ] }),
-      (() => {
-        let fab = {
-          board: ["글쓰기", () => setSheet({ type: "post" })],
-          plan: [`${day + 1}일차 일정 추가`, () => setSheet({ type: "plan", day })],
-          wish: ["가고 싶은 곳 추가", () => setSheet({ type: "wish" })],
-          spend: ["경비 추가", () => setSheet({ type: "spend" })]
-        }[tab];
-        return fab ? /* @__PURE__ */ jsxs("button", { className: "jt-fab", onClick: fab[1], children: [
-          /* @__PURE__ */ jsx(Plus, { size: 20, strokeWidth: 2.6 }),
-          fab[0]
-        ] }) : null;
-      })(),
-      /* @__PURE__ */ jsx("nav", { className: "jt-nav", "aria-label": "메뉴", children: [
-        ["board", "공지", Megaphone],
-        ["plan", "일정", CalendarDays],
-        ["wish", "가고 싶은 곳", Heart],
-        ["spend", "경비", Wallet],
-        ["family", "위치 공유", Users],
-        ["chat", "채팅", MessagesSquare]
-      ].map(([id, label, Icon]) => /* @__PURE__ */ jsxs("button", { className: tab === id ? "on" : "", onClick: () => setTab(id), "aria-current": tab === id, children: [
-        /* @__PURE__ */ jsxs("span", { className: "jt-nav-ic", children: [
-          /* @__PURE__ */ jsx(Icon, { size: 21 }),
-          id === "chat" && unread > 0 && tab !== "chat" && /* @__PURE__ */ jsx("b", { className: "jt-badge", "aria-label": `안 읽은 메시지 ${unread}개`, children: unread > 99 ? "99+" : unread })
-        ] }),
-        label
-      ] }, id)) }),
-      sheet?.type === "plan" && /* @__PURE__ */ jsx(Sheet, { title: sheet.item ? "일정 수정" : `${sheet.day + 1}일차 일정 추가`, onClose: close, children: /* @__PURE__ */ jsx(
-        PlanForm,
-        {
-          initial: sheet.item,
-          preset: sheet.preset,
-          gkey: settings.gmapsKey,
-          dayItems: plan.filter((i) => i.day === sheet.day && i.id !== sheet.item?.id),
-          onSave: (v) => {
-            savePlan(v, sheet.item?.id, sheet.day), close();
-          },
-          onDelete: () => {
-            delPlan(sheet.item.id), close();
-          }
-        }
-      ) }),
-      sheet?.type === "wish" && /* @__PURE__ */ jsx(Sheet, { title: sheet.item ? "가고 싶은 곳 수정" : "가고 싶은 곳 추가", onClose: close, children: /* @__PURE__ */ jsx(
-        WishForm,
-        {
-          initial: sheet.item,
-          gkey: settings.gmapsKey,
-          onSave: (v) => {
-            sheet.item ? updateWish(sheet.item.id, v) : addWish(v), close();
-          },
-          onDelete: () => {
-            delWish(sheet.item.id), close();
-          }
-        }
-      ) }),
-      sheet?.type === "spend" && /* @__PURE__ */ jsx(Sheet, { title: sheet.item ? "경비 수정" : "경비 기록", onClose: close, children: /* @__PURE__ */ jsx(
-        SpendForm,
-        {
-          settings: S,
-          me,
-          defaultDay,
-          initial: sheet.item,
-          onSave: (v) => {
-            saveSpend(v, sheet.item?.id), close();
-          },
-          onDelete: () => {
-            delSpend(sheet.item.id), close();
-          }
-        }
-      ) }),
-      sheet?.type === "post" && /* @__PURE__ */ jsx(Sheet, { title: sheet.item ? "글 수정" : "새 글", onClose: close, children: /* @__PURE__ */ jsx(
-        PostForm,
-        {
-          initial: sheet.item,
-          onSave: async (v) => {
-            let ok = await savePost(v, sheet.item?.id);
-            return ok && close(), ok;
-          },
-          onDelete: () => {
-            delPost(sheet.item.id), close();
-          }
-        }
-      ) }),
-      askShare && !sheet && /* @__PURE__ */ jsx(Sheet, { title: "가족과 위치를 공유할까요?", onClose: () => setShare(!1, !0), children: /* @__PURE__ */ jsxs("div", { className: "jt-form", children: [
-        /* @__PURE__ */ jsxs("p", { className: "jt-ask", children: [
-          "켜 두면 ",
-          /* @__PURE__ */ jsx("b", { children: "앱이 열려 있는 동안만" }),
-          " 내 위치가 가족 지도에 보여요. 앱을 닫거나 화면이 꺼지면 바로 사라져요."
-        ] }),
-        /* @__PURE__ */ jsx("p", { className: "jt-hint jt-ask-hint", children: '언제든 위쪽 위치 버튼이나 "위치 공유" 탭에서 켜고 끌 수 있어요.' }),
-        /* @__PURE__ */ jsx("button", { className: "jt-primary", onClick: () => setShare(!0), children: "위치 공유 켜기" }),
-        /* @__PURE__ */ jsx("button", { className: "jt-ghost", onClick: () => setShare(!1, !0), children: "나중에 할게요" })
-      ] }) }),
-      toast && /* @__PURE__ */ jsx("div", { className: "jt-toast", role: "status", children: toast }),
-      sheet?.type === "toPlan" && /* @__PURE__ */ jsx(Sheet, { title: `"${sheet.wish.name}" 몇째 날에 갈까요?`, onClose: close, children: /* @__PURE__ */ jsx("div", { className: "jt-daypick", children: Array.from({ length: settings.days }, (_, i) => {
-        let d = addDays(settings.start, i);
-        return /* @__PURE__ */ jsxs(
-          "button",
-          {
-            style: { "--lc": LINE[i % LINE.length] },
-            onClick: () => {
-              planWish(sheet.wish, i), close(), setTab("plan");
-            },
-            children: [
-              /* @__PURE__ */ jsxs("span", { className: "jt-daychip", children: [
-                i + 1,
-                "일차"
-              ] }),
-              md(d),
-              " (",
-              wk(d),
-              ")"
-            ]
-          },
-          i
-        );
-      }) }) })
-    ] });
-  }
-  return /* @__PURE__ */ jsxs("div", { className: "jt", children: [
-    /* @__PURE__ */ jsx("style", { children: CSS }),
-    /* @__PURE__ */ jsx(OfflineBar, {}),
-    content
-  ] });
-}
-var CSS = `
-.jt{--ink:#14213D;--muted:#66718A;--rule:#DCE1EA;--card:#fff;--blue:#0C86AE;font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;max-width:520px;margin:0 auto;display:flex;flex-direction:column;position:relative;font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%;--paper:#F1F3F6;--soft:#E7EAF0}
-.jt *{box-sizing:border-box}
-:where(.jt) button{font:inherit;color:inherit;cursor:pointer}
-.jt button:focus-visible,.jt input:focus-visible,.jt select:focus-visible,.jt textarea:focus-visible,.jt [role=button]:focus-visible,.jt a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.jt h1,.jt h3,.jt h4,.jt p,.jt ul,.jt ol{margin:0;padding:0}
-.jt ul,.jt ol{list-style:none}
-.jt-loading{padding:96px 20px;text-align:center;color:var(--muted);font-size:15px;font-weight:600}
-.jt-loading-sub{margin-top:10px;font-size:13px;font-weight:500}
-.jt-dots{display:flex;justify-content:center;gap:9px;height:22px;align-items:flex-end;margin-bottom:14px}
-.jt-dots i{width:10px;height:10px;border-radius:50%;animation:jt-dot 1.1s ease-in-out infinite}
-.jt-dots i:nth-child(1){background:#E8800A}
-.jt-dots i:nth-child(2){background:#D9262E;animation-delay:.15s}
-.jt-dots i:nth-child(3){background:#0A9B6E;animation-delay:.3s}
-@keyframes jt-dot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-10px);opacity:1}}
-@keyframes jt-dotfade{0%,100%{opacity:.35}50%{opacity:1}}
-@media (prefers-reduced-motion:reduce){.jt-dots i{animation:jt-dotfade 1.4s ease-in-out infinite}}
-.jt-head{background:var(--ink);color:#fff}
-.jt-head-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.jt-head h1{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
-.jt-head-sub{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px;color:#C4CCDD;font-size:14px}
-.jt-dday{background:#fff;color:var(--ink);font-weight:700;font-size:13px;padding:2px 10px;border-radius:999px}
-.jt-me{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:0;color:#fff;padding:4px 12px 4px 4px;border-radius:999px;font-weight:600}
-.jt-avatar{display:inline-grid;place-items:center;border-radius:50%;color:#fff;font-weight:800;flex:0 0 auto}
-.jt-icon{background:none;border:0;padding:8px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
