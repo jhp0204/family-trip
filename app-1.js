@@ -33,6 +33,7 @@ import {
   Lock,
   WifiOff,
   Dices,
+  Receipt,
   Wifi,
   Pin,
   PinOff,
@@ -368,6 +369,18 @@ async function fetchFx() {
   return null;
 }
 var rateText = (r) => r.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }), fxNote = (st) => st.fx ? `100엔 = ₩${rateText(st.rate)} (${st.fx.source}, ${st.fx.date.slice(5).replace("-", "/")}${st.fx.cached ? ", 마지막으로 받은 값" : ""})` : `100엔 = ₩${rateText(st.rate)} (설정에 입력한 환율, 자동 환율을 불러오지 못했어요)`;
+async function compressReceipt(file) {
+  let img = await readImage(file), max = 1400, q = 0.6, out = "";
+  for (let i = 0; i < 6; i++) {
+    let sc = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+    c.width = Math.max(1, Math.round(img.naturalWidth * sc)), c.height = Math.max(1, Math.round(img.naturalHeight * sc));
+    let ctx = c.getContext("2d");
+    if (ctx.fillStyle = "#fff", ctx.fillRect(0, 0, c.width, c.height), ctx.drawImage(img, 0, 0, c.width, c.height), out = c.toDataURL("image/jpeg", q), out.length < 3e5) break;
+    max = Math.round(max * 0.85), q = Math.max(0.35, q - 0.07);
+  }
+  return out;
+}
+var RECEIPT_MAX = 3;
 function settle(spend, members) {
   let zero = () => Object.fromEntries(members.map((m) => [m, 0])), paid = zero(), share = zero(), skipped = [];
   spend.forEach((e) => {
