@@ -18,7 +18,11 @@ function SpendRow({ e, members, rate, onEdit }) {
           (e.split || []).length === members.length ? "모두" : (e.split || []).join(", "),
           " 나눔"
         ] }),
-        e.editedAt ? ", 수정됨" : ""
+        e.editedAt ? ", 수정됨" : "",
+        e.photos && e.photos.length > 0 && /* @__PURE__ */ jsxs("span", { className: "jt-rcpt", "aria-label": `영수증 ${e.photos.length}장`, children: [
+          /* @__PURE__ */ jsx(Receipt, { size: 12 }),
+          e.photos.length
+        ] })
       ] })
     ] }),
     /* @__PURE__ */ jsx("div", { className: "jt-spend-amt", children: e.cur === "KRW" ? /* @__PURE__ */ jsxs(Fragment, { children: [
