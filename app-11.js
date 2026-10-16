@@ -26,6 +26,7 @@
 /* 영수증 */
 .jt-rthumbs{grid-template-columns:repeat(3,1fr)}
 .jt-rcpt{display:inline-flex;align-items:center;gap:2px;margin-left:6px;font-size:11px;font-weight:700;color:#0A6A8B;background:#EAF4F8;border-radius:5px;padding:0 5px;vertical-align:1px}
+.jt-merge{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
 `;
 
 // src/main.jsx
