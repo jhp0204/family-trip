@@ -7,7 +7,8 @@ function SpendRow({ e, members, rate, onEdit }) {
       /* @__PURE__ */ jsxs("div", { className: "jt-meta", children: [
         e.personal ? /* @__PURE__ */ jsxs(Fragment, { children: [
           e.method === "card" ? "카드" : "현금",
-          " 결제"
+          " 결제",
+          e.who ? `, ${e.who} 기록` : ""
         ] }) : isFund(e) ? /* @__PURE__ */ jsxs(Fragment, { children: [
           e.payer === FUND ? "" : `${e.payer}이(가) 냄, `,
           /* @__PURE__ */ jsx("span", { className: "jt-fundtag", children: "공금" }),
@@ -73,18 +74,18 @@ function SpendDays({ days, start, members, rate, onEdit, filter, empty }) {
     })
   ] }) : /* @__PURE__ */ jsx("p", { className: "jt-hint jt-listhint", children: empty });
 }
-var LEDGER_PREFIX = "trip:pexp:";
-function PersonalView({ ledger, settings, me, commonShare, onEdit, onCash }) {
-  let rate = settings.rate, items = ledger && ledger.items || [], cash = Number(ledger && ledger.cash && ledger.cash.jpy) || 0, [editCash, setEditCash] = useState(!1), [cashText, setCashText] = useState(cash ? String(cash) : ""), jp = items.filter((e) => e.cur !== "KRW"), usedJ = jp.reduce((a, e) => a + (Number(e.amount) || 0), 0), usedK = items.filter((e) => e.cur === "KRW").reduce((a, e) => a + (Number(e.orig) || 0), 0), cashUsed = jp.filter((e) => (e.method || "cash") === "cash").reduce((a, e) => a + (Number(e.amount) || 0), 0), cardJ = usedJ - cashUsed, left = cash - cashUsed, wonOf = (e) => e.cur === "KRW" ? Number(e.orig) || 0 : (Number(e.amount) || 0) * (e.rate || rate) / 100, usedW = items.reduce((a, e) => a + wonOf(e), 0), groups = useMemo(() => {
+var LEDGER_PREFIX = "trip:pexp:", groupOf = (me, settings) => {
+  let g = (settings && settings.pgroups || []).find((x) => x.includes(me)), members = settings && settings.members || [];
+  return g ? members.filter((m) => g.includes(m)) : [me];
+}, ledgerName = (me, settings) => groupOf(me, settings).join("+");
+function PersonalView({ ledger, settings, me, commonShare, onEdit, onCash, group = [me], legacy = [], onMerge }) {
+  let shared = group.length > 1, rate = settings.rate, items = ledger && ledger.items || [], cash = Number(ledger && ledger.cash && ledger.cash.jpy) || 0, [editCash, setEditCash] = useState(!1), [cashText, setCashText] = useState(cash ? String(cash) : ""), jp = items.filter((e) => e.cur !== "KRW"), usedJ = jp.reduce((a, e) => a + (Number(e.amount) || 0), 0), usedK = items.filter((e) => e.cur === "KRW").reduce((a, e) => a + (Number(e.orig) || 0), 0), cashUsed = jp.filter((e) => (e.method || "cash") === "cash").reduce((a, e) => a + (Number(e.amount) || 0), 0), cardJ = usedJ - cashUsed, left = cash - cashUsed, wonOf = (e) => e.cur === "KRW" ? Number(e.orig) || 0 : (Number(e.amount) || 0) * (e.rate || rate) / 100, usedW = items.reduce((a, e) => a + wonOf(e), 0), groups = useMemo(() => {
     let g = {};
-    return items.forEach((e) => (g[e.day] = g[e.day] || []).push(e)), Object.keys(g).map(Number).sort((x, y) => x - y).map((d) => ({ day: d, items: [...g[d]].sort((x, y) => (y.createdAt || 0) - (x.createdAt || 0)) }));
+    return items.forEach((e) => (g[e.day] = g[e.day] || []).push(shared ? { ...e, who: e.by } : e)), Object.keys(g).map(Number).sort((x, y) => x - y).map((d) => ({ day: d, items: [...g[d]].sort((x, y) => (y.createdAt || 0) - (x.createdAt || 0)) }));
   }, [items]);
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsxs("div", { className: "jt-total jt-pcard", children: [
-      /* @__PURE__ */ jsxs("span", { children: [
-        me,
-        "의 개인 경비 (나만 보여요)"
-      ] }),
+      /* @__PURE__ */ jsx("span", { children: shared ? `${group.join(", ")}의 개인 경비 (두 사람만 보여요)`.replace("두 사람", group.length === 2 ? "두 사람" : `${group.length}명`) : `${me}의 개인 경비 (나만 보여요)` }),
       /* @__PURE__ */ jsxs("div", { className: "jt-pgrid", children: [
         /* @__PURE__ */ jsxs("div", { children: [
           /* @__PURE__ */ jsx("em", { children: "총 현금" }),
@@ -148,10 +149,19 @@ function PersonalView({ ledger, settings, me, commonShare, onEdit, onCash }) {
         " (환전한 엔화)"
       ] }),
       commonShare && /* @__PURE__ */ jsxs("p", { className: "jt-pshare", children: [
-        "공통 경비 중 내 몫은 ",
+        "공통 경비 중 ",
+        shared ? `${group.join(", ")} 몫` : "내 몫",
+        "은 ",
         commonShare,
         "예요. (나의 정산 참고)"
       ] })
+    ] }),
+    shared && legacy.length > 0 && /* @__PURE__ */ jsxs("div", { className: "jt-warn-inline jt-merge", children: [
+      /* @__PURE__ */ jsxs("span", { children: [
+        "따로 쓰던 개인 경비가 있어요: ",
+        legacy.map((l) => `${l.name} ${l.count}건`).join(", ")
+      ] }),
+      /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary sm", onClick: onMerge, children: "함께 쓰기로 합치기" })
     ] }),
     groups.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "jt-empty", children: [
       /* @__PURE__ */ jsx("p", { children: "아직 개인 경비가 없어요." }),
@@ -159,7 +169,7 @@ function PersonalView({ ledger, settings, me, commonShare, onEdit, onCash }) {
     ] }) : /* @__PURE__ */ jsx(SpendDays, { days: groups, start: settings.start, members: settings.members, rate, onEdit, empty: "" })
   ] });
 }
-function SpendTab({ settings, spend, me, onEdit, view: pView, setView: pSetView, ledger, onEditPersonal, onCash }) {
+function SpendTab({ settings, spend, me, onEdit, view: pView, setView: pSetView, ledger, onEditPersonal, onCash, legacyLedgers = [], onMergeLedgers }) {
   let { members, rate, start } = settings, [own, setOwn] = useState("me"), view = pView || own, setView = pSetView || setOwn, total = spend.reduce((s, e) => s + (Number(e.amount) || 0), 0), result = useMemo(() => settleMix(spend, members, rate), [spend, members, rate]), U = result.unit, fundItems = spend.filter(isFund), myFund = fundItems.filter((e) => e.payer === me), fundBy = [...members, FUND].map((m) => [m, fundItems.filter((e) => e.payer === m)]).filter(([, items]) => items.length), F = (v) => fmtU(v, U), totalJ = spend.filter((e) => e.cur !== "KRW").reduce((a, e) => a + (Number(e.amount) || 0), 0), totalJW = spend.filter((e) => e.cur !== "KRW").reduce((a, e) => a + (Number(e.amount) || 0) * (e.rate || rate) / 100, 0), totalK = spend.filter((e) => e.cur === "KRW").reduce((a, e) => a + (Number(e.orig) || 0), 0), byCat = useMemo(() => {
     let t = {};
     return spend.forEach((e) => t[e.cat] = (t[e.cat] || 0) + (Number(e.amount) || 0)), SPEND_CATS.filter((c) => t[c]).map((c) => ({ c, v: t[c] }));
@@ -186,7 +196,13 @@ function SpendTab({ settings, spend, me, onEdit, view: pView, setView: pSetView,
         ledger,
         settings,
         me,
-        commonShare: spend.length && (result.share[me] || 0) > 0 ? F(result.share[me]) : "",
+        commonShare: (() => {
+          let v = groupOf(me, settings).reduce((a, m) => a + (result.share[m] || 0), 0);
+          return spend.length && v > 0 ? F(v) : "";
+        })(),
+        group: groupOf(me, settings),
+        legacy: legacyLedgers,
+        onMerge: onMergeLedgers,
         onEdit: onEditPersonal,
         onCash
       }
