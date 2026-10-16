@@ -88,9 +88,22 @@ function WishForm({ initial, gkey, onSave, onDelete }) {
   ] });
 }
 function SpendForm({ settings, me, defaultDay, initial, onSave, onDelete, personal = !1 }) {
-  let [method, setMethod] = useState(initial?.method || "cash"), { members, days, start } = settings, [ownRate, setOwnRate] = useState(!!initial?.rate), [rateText2, setRateText] = useState(initial?.rate ? String(initial.rate) : String(Math.round(settings.rate * 100) / 100)), customRate = Number(rateText2), rateOk = !ownRate || customRate >= 300 && customRate <= 3e3, rate = ownRate && rateOk ? customRate : settings.rate, [title, setTitle] = useState(initial?.title || ""), [cur, setCur] = useState(initial?.cur === "KRW" ? "KRW" : "JPY"), [amount, setAmount] = useState(
+  let [method, setMethod] = useState(initial?.method || "cash"), [photos, setPhotos] = useState(() => (initial?.photos || []).map((id) => ({ id }))), [pbusy, setPbusy] = useState(!1), [pmsg, setPmsg] = useState(""), [lb, setLb] = useState(null), fileRef = useRef(null), addPhotos = async (fileList) => {
+    let files = Array.from(fileList || []).filter((f) => f.type.startsWith("image/")), room = RECEIPT_MAX - photos.length;
+    if (!files.length || room <= 0) return;
+    setPbusy(!0), setPmsg("사진 줄이는 중");
+    let added = [], failed = 0;
+    for (let f of files.slice(0, room))
+      try {
+        let data = await compressReceipt(f), id = uid();
+        photoCache.set(id, data), added.push({ id, data });
+      } catch {
+        failed++;
+      }
+    setPhotos((x) => [...x, ...added]), setPbusy(!1), setPmsg(failed ? `${failed}장은 열 수 없는 형식이라 빠졌어요.` : files.length > room ? `영수증은 ${RECEIPT_MAX}장까지 넣을 수 있어요.` : ""), fileRef.current && (fileRef.current.value = "");
+  }, { members, days, start } = settings, [ownRate, setOwnRate] = useState(!!initial?.rate), [rateText2, setRateText] = useState(initial?.rate ? String(initial.rate) : String(Math.round(settings.rate * 100) / 100)), customRate = Number(rateText2), rateOk = !ownRate || customRate >= 300 && customRate <= 3e3, rate = ownRate && rateOk ? customRate : settings.rate, [title, setTitle] = useState(initial?.title || ""), [cur, setCur] = useState(initial?.cur === "KRW" ? "KRW" : "JPY"), [amount, setAmount] = useState(
     initial ? String((initial.cur === "KRW" ? Number(initial.orig) : Number(initial.amount)) || "") : ""
-  ), [payer, setPayer] = useState(initial && members.includes(initial.payer) ? initial.payer : me), [cat, setCat] = useState(initial?.cat || "식비"), [day, setDay] = useState(initial ? Math.min(initial.day, days - 1) : defaultDay), [split, setSplit] = useState(initial ? (initial.split || []).filter((m) => members.includes(m)) : []), [fund, setFund] = useState(!!initial && isFund(initial)), typed = Number(amount) || 0, amt = cur === "KRW" ? Math.round(typed * 100 / rate) : typed, lost = initial ? [initial.payer, ...initial.split || []].filter((m, i, a) => m && m !== FUND && !members.includes(m) && a.indexOf(m) === i) : [], toggle = (m) => setSplit(split.includes(m) ? split.filter((x) => x !== m) : [...split, m]), ok = title.trim() && amt > 0 && (personal || fund || split.length > 0) && rateOk;
+  ), [payer, setPayer] = useState(initial && members.includes(initial.payer) ? initial.payer : me), [cat, setCat] = useState(initial?.cat || "식비"), [day, setDay] = useState(initial ? Math.min(initial.day, days - 1) : defaultDay), [split, setSplit] = useState(initial ? (initial.split || []).filter((m) => members.includes(m)) : []), [fund, setFund] = useState(!!initial && isFund(initial)), typed = Number(amount) || 0, amt = cur === "KRW" ? Math.round(typed * 100 / rate) : typed, lost = initial ? [initial.payer, ...initial.split || []].filter((m, i, a) => m && m !== FUND && !members.includes(m) && a.indexOf(m) === i) : [], toggle = (m) => setSplit(split.includes(m) ? split.filter((x) => x !== m) : [...split, m]), ok = title.trim() && amt > 0 && (personal || fund || split.length > 0) && rateOk && !pbusy;
   return /* @__PURE__ */ jsxs("div", { className: "jt-form", children: [
     /* @__PURE__ */ jsx(Field, { label: "어디에 썼나요", children: /* @__PURE__ */ jsx("input", { value: title, onChange: (e) => setTitle(e.target.value), placeholder: "예: 점심 라멘" }) }),
     /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
@@ -237,6 +250,30 @@ function SpendForm({ settings, me, defaultDay, initial, onSave, onDelete, person
       ] })
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
+      /* @__PURE__ */ jsx("span", { children: "영수증 사진 (선택)" }),
+      photos.length > 0 && /* @__PURE__ */ jsx("div", { className: "jt-thumbs jt-rthumbs", children: photos.map((ph, i) => /* @__PURE__ */ jsxs("div", { className: "jt-thumb", children: [
+        /* @__PURE__ */ jsx(Photo, { id: ph.id, data: ph.data, onClick: () => setLb(i) }),
+        /* @__PURE__ */ jsx("button", { type: "button", className: "jt-thumb-x", onClick: () => setPhotos(photos.filter((x) => x.id !== ph.id)), "aria-label": "사진 빼기", children: /* @__PURE__ */ jsx(X, { size: 14 }) })
+      ] }, ph.id)) }),
+      /* @__PURE__ */ jsx("input", { ref: fileRef, type: "file", accept: "image/*", multiple: !0, hidden: !0, onChange: (e) => addPhotos(e.target.files) }),
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          className: "jt-secondary jt-photo-add",
+          onClick: () => fileRef.current && fileRef.current.click(),
+          disabled: pbusy || photos.length >= RECEIPT_MAX,
+          children: [
+            /* @__PURE__ */ jsx(Receipt, { size: 16 }),
+            pbusy ? "사진 줄이는 중" : `영수증 사진 추가 (${photos.length}/${RECEIPT_MAX})`
+          ]
+        }
+      ),
+      pmsg && !pbusy && /* @__PURE__ */ jsx("p", { className: "jt-hint", children: pmsg }),
+      /* @__PURE__ */ jsx("p", { className: "jt-hint", children: "글자만 읽히도록 자동으로 줄여서 저장해요. 카메라로 찍거나 앨범에서 고를 수 있어요." })
+    ] }),
+    lb != null && /* @__PURE__ */ jsx(Lightbox, { photos: photos.map((x) => x.id), index: lb, onClose: () => setLb(null) }),
+    /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
       /* @__PURE__ */ jsx("span", { children: "종류" }),
       /* @__PURE__ */ jsx("div", { className: "jt-chips", children: SPEND_CATS.map((c) => /* @__PURE__ */ jsx("button", { type: "button", className: "jt-chip" + (cat === c ? " on" : ""), onClick: () => setCat(c), children: c }, c)) })
     ] }),
@@ -267,7 +304,8 @@ function SpendForm({ settings, me, defaultDay, initial, onSave, onDelete, person
           ...personal ? { personal: !0, method } : {},
           cur,
           orig: cur === "KRW" ? typed : void 0,
-          rate: ownRate && rateOk ? customRate : void 0
+          rate: ownRate && rateOk ? customRate : void 0,
+          photos
         }),
         children: initial ? "수정 저장" : personal ? "개인 경비 기록하기" : "공통 경비 기록하기"
       }
