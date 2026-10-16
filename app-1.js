@@ -1,353 +1,353 @@
 // src/main.jsx
-import { useState as Lt, useEffect as os } from "react";
-import { createRoot as is } from "react-dom/client";
+import { useState as _t, useEffect as ss } from "react";
+import { createRoot as rs } from "react-dom/client";
 
 // src/app.jsx
-import mo, { useState as j, useEffect as K, useMemo as le, useCallback as uo, useRef as J } from "react";
+import uo, { useState as j, useEffect as K, useMemo as le, useCallback as fo, useRef as J } from "react";
 import {
-  Plus as fo,
+  Plus as go,
   X as Gt,
-  Heart as oa,
-  Trash2 as go,
+  Heart as an,
+  Trash2 as ho,
   MapPin as Et,
-  Settings as ho,
-  CalendarDays as bo,
-  Wallet as xo,
-  Check as cn,
+  Settings as bo,
+  CalendarDays as xo,
+  Wallet as jo,
+  Check as ca,
   ExternalLink as Bt,
-  Map as jo,
-  MessageSquare as yo,
-  Image as vo,
-  Link2 as wo,
-  Send as pn,
+  Map as yo,
+  MessageSquare as vo,
+  Image as wo,
+  Link2 as ko,
+  Send as pa,
   Pencil as Xt,
-  ChevronLeft as dn,
-  ChevronRight as mn,
+  ChevronLeft as da,
+  ChevronRight as ma,
   ChevronDown as Ct,
-  ChevronUp as un,
-  Users as ko,
-  Crosshair as No,
-  HelpCircle as Co,
-  MessagesSquare as zo,
-  Megaphone as fn,
-  Lock as Eo,
-  WifiOff as Ao,
+  ChevronUp as ua,
+  Users as No,
+  Crosshair as Co,
+  HelpCircle as zo,
+  MessagesSquare as Eo,
+  Megaphone as fa,
+  Lock as Ao,
+  WifiOff as So,
   Wifi as Mo,
-  Pin as So,
-  PinOff as _a,
-  Utensils as Io,
+  Pin as Io,
+  PinOff as On,
+  Utensils as Do,
   TrainFront as Fo,
-  BedDouble as Do,
-  Ticket as Po,
-  ShoppingBag as $o,
-  MoreHorizontal as Ro,
-  Sun as To,
-  CloudSun as Bo,
-  Cloud as Oa,
+  BedDouble as Po,
+  Ticket as $o,
+  ShoppingBag as Ro,
+  MoreHorizontal as To,
+  Sun as Bo,
+  CloudSun as _o,
+  Cloud as Un,
   CloudFog as Lo,
-  CloudDrizzle as _o,
-  CloudRain as Oo,
-  CloudSnow as Uo,
-  CloudLightning as Ko,
-  Umbrella as Wo,
-  SmilePlus as Ho,
-  LocateFixed as Yo,
-  Star as Jo,
+  CloudDrizzle as Oo,
+  CloudRain as Uo,
+  CloudSnow as Ko,
+  CloudLightning as Wo,
+  Umbrella as Ho,
+  SmilePlus as Yo,
+  LocateFixed as Jo,
+  Star as Go,
   Navigation as At
 } from "lucide-react";
 
 // src/store.js
 import { initializeApp as ao } from "firebase/app";
 import {
-  initializeFirestore as Ma,
-  persistentLocalCache as no,
-  persistentMultipleTabManager as oo,
-  collection as io,
-  doc as Oe,
-  onSnapshot as so,
-  setDoc as Fa,
-  getDoc as ro,
-  deleteDoc as lo
+  initializeFirestore as Mn,
+  persistentLocalCache as oo,
+  persistentMultipleTabManager as io,
+  collection as so,
+  doc as Le,
+  onSnapshot as ro,
+  setDoc as Fn,
+  getDoc as lo,
+  deleteDoc as co
 } from "firebase/firestore";
-var ae = "fjt:", wt = { config: null, code: null }, He = (e) => btoa(unescape(encodeURIComponent(JSON.stringify(e)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""), co = (e) => JSON.parse(decodeURIComponent(escape(atob(e.replace(/-/g, "+").replace(/_/g, "/")))));
-function Ye(e) {
+var ne = "fjt:", wt = { config: null, code: null }, We = (e) => btoa(unescape(encodeURIComponent(JSON.stringify(e)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""), po = (e) => JSON.parse(decodeURIComponent(escape(atob(e.replace(/-/g, "+").replace(/_/g, "/")))));
+function He(e) {
   try {
-    let a = String(e || "").trim(), n = a.includes("#") ? a.slice(a.indexOf("#") + 1) : a, i = new URLSearchParams(n).get("j") || (n.startsWith("j=") ? n.slice(2) : "");
+    let n = String(e || "").trim(), o = n.includes("#") ? n.slice(n.indexOf("#") + 1) : n, i = new URLSearchParams(o).get("j") || (o.startsWith("j=") ? o.slice(2) : "");
     if (!i) return null;
-    let s = co(i);
+    let s = po(i);
     return s && s.c && s.t ? s : null;
   } catch {
     return null;
   }
 }
-function Da() {
-  let e = Ye(location.hash);
+function Pn() {
+  let e = He(location.hash);
   if (e)
-    return localStorage.setItem(ae + "conn", JSON.stringify(e)), e;
+    return localStorage.setItem(ne + "conn", JSON.stringify(e)), e;
   try {
-    let a = JSON.parse(localStorage.getItem(ae + "conn"));
-    if (a && a.c && a.t)
-      return history.replaceState(null, "", "#j=" + He(a)), a;
+    let n = JSON.parse(localStorage.getItem(ne + "conn"));
+    if (n && n.c && n.t)
+      return history.replaceState(null, "", "#j=" + We(n)), n;
   } catch {
   }
   return null;
 }
-function Pa(e, a) {
-  let n = { c: e, t: a };
-  return localStorage.setItem(ae + "conn", JSON.stringify(n)), history.replaceState(null, "", "#j=" + He(n)), n;
+function $n(e, n) {
+  let o = { c: e, t: n };
+  return localStorage.setItem(ne + "conn", JSON.stringify(o)), history.replaceState(null, "", "#j=" + We(o)), o;
 }
-var $a = () => location.origin + location.pathname + "#j=" + He({ c: wt.config, t: wt.code });
-function Ra() {
-  localStorage.removeItem(ae + "conn"), history.replaceState(null, "", location.pathname), location.reload();
+var Rn = () => location.origin + location.pathname + "#j=" + We({ c: wt.config, t: wt.code });
+function Tn() {
+  localStorage.removeItem(ne + "conn"), history.replaceState(null, "", location.pathname), location.reload();
 }
-var Ta = () => {
-  let e = "abcdefghjkmnpqrstuvwxyz23456789", a = crypto.getRandomValues(new Uint8Array(14));
-  return Array.from(a, (n) => e[n % e.length]).join("");
+var Bn = () => {
+  let e = "abcdefghjkmnpqrstuvwxyz23456789", n = crypto.getRandomValues(new Uint8Array(14));
+  return Array.from(n, (o) => e[o % e.length]).join("");
 };
-function Ba(e) {
-  let a = String(e || "");
+function _n(e) {
+  let n = String(e || "");
   try {
-    let i = JSON.parse(a);
+    let i = JSON.parse(n);
     if (i.apiKey && i.projectId && i.appId) return i;
   } catch {
   }
-  let n = {};
+  let o = {};
   return ["apiKey", "authDomain", "projectId", "storageBucket", "messagingSenderId", "appId"].forEach((i) => {
-    let s = a.match(new RegExp(i + `\\s*[:=]\\s*["']([^"']+)["']`));
-    s && (n[i] = s[1]);
-  }), n.apiKey && n.projectId && n.appId ? n : null;
+    let s = n.match(new RegExp(i + `\\s*[:=]\\s*["']([^"']+)["']`));
+    s && (o[i] = s[1]);
+  }), o.apiKey && o.projectId && o.appId ? o : null;
 }
-var Ot = null, vt = /* @__PURE__ */ new Map(), Ue = /* @__PURE__ */ new Set(), Ke = Promise.resolve(), Te = null, je = !1, Sa = null, Be = () => {
-  clearTimeout(Sa), Sa = setTimeout(() => Ue.forEach((e) => e()), 250);
-}, We = (e) => e.startsWith("trip:photo:"), Le = (e) => We(e) ? Oe(Ot, "trips", wt.code, "photos", e.slice(11)) : Oe(Ot, "trips", wt.code, "data", e), _e = (e) => ae + wt.code + ":" + e, Ia = (e) => Promise.race([e.then(() => !0), new Promise((a) => setTimeout(() => a(!0), 4e3))]);
-function Je(e, a) {
-  Te && Te(), vt.clear(), wt.config = e, wt.code = a;
-  let n = ao(e, "fjt-" + Date.now());
+var Ot = null, vt = /* @__PURE__ */ new Map(), Oe = /* @__PURE__ */ new Set(), Ue = Promise.resolve(), Re = null, je = !1, In = null, Te = () => {
+  clearTimeout(In), In = setTimeout(() => Oe.forEach((e) => e()), 250);
+}, Ke = (e) => e.startsWith("trip:photo:"), Be = (e) => Ke(e) ? Le(Ot, "trips", wt.code, "photos", e.slice(11)) : Le(Ot, "trips", wt.code, "data", e), _e = (e) => ne + wt.code + ":" + e, Dn = (e) => Promise.race([e.then(() => !0), new Promise((n) => setTimeout(() => n(!0), 4e3))]);
+function Ye(e, n) {
+  Re && Re(), vt.clear(), wt.config = e, wt.code = n;
+  let o = ao(e, "fjt-" + Date.now());
   try {
-    Ot = Ma(n, { localCache: no({ tabManager: oo() }) });
+    Ot = Mn(o, { localCache: oo({ tabManager: io() }) });
   } catch {
-    Ot = Ma(n, {});
+    Ot = Mn(o, {});
   }
   let i;
-  je = !1, Ke = new Promise((g) => i = g), setTimeout(() => i(), 8e3);
+  je = !1, Ue = new Promise((m) => i = m), setTimeout(() => i(), 8e3);
   let s = !0;
-  Te = so(
-    io(Ot, "trips", a, "data"),
+  Re = ro(
+    so(Ot, "trips", n, "data"),
     { includeMetadataChanges: !0 },
-    (g) => {
-      let d = g.docChanges();
-      d.forEach((r) => {
+    (m) => {
+      let u = m.docChanges();
+      u.forEach((r) => {
         r.type === "removed" ? vt.delete(r.doc.id) : vt.set(r.doc.id, r.doc.data().v);
       });
-      let c = !g.metadata.fromCache;
-      (c || g.size > 0) && i(), c && !je ? (je = !0, Be()) : !s && d.length && Be(), s = !1;
+      let p = !m.metadata.fromCache;
+      (p || m.size > 0) && i(), p && !je ? (je = !0, Te()) : !s && u.length && Te(), s = !1;
     },
     () => {
-      i(), Be();
+      i(), Te();
     }
-  ), window.storage = po;
+  ), window.storage = mo;
 }
-async function La() {
-  let e = Oe(Ot, "trips", wt.code, "data", "_ping");
+async function Ln() {
+  let e = Le(Ot, "trips", wt.code, "data", "_ping");
   await Promise.race([
-    Fa(e, { v: "ok", t: Date.now() }),
-    new Promise((a, n) => setTimeout(() => n(new Error("timeout")), 9e3))
+    Fn(e, { v: "ok", t: Date.now() }),
+    new Promise((n, o) => setTimeout(() => o(new Error("timeout")), 9e3))
   ]);
 }
-var po = {
-  async get(e, a) {
-    if (!a) {
-      let n = localStorage.getItem(_e(e));
-      if (n == null) throw new Error("not found");
-      return { key: e, value: n, shared: !1 };
+var mo = {
+  async get(e, n) {
+    if (!n) {
+      let o = localStorage.getItem(_e(e));
+      if (o == null) throw new Error("not found");
+      return { key: e, value: o, shared: !1 };
     }
-    if (We(e)) {
-      let n = await ro(Le(e));
-      if (!n.exists()) throw new Error("not found");
-      return { key: e, value: n.data().v, shared: !0 };
+    if (Ke(e)) {
+      let o = await lo(Be(e));
+      if (!o.exists()) throw new Error("not found");
+      return { key: e, value: o.data().v, shared: !0 };
     }
-    if (await Ke, !vt.has(e)) throw new Error("not found");
+    if (await Ue, !vt.has(e)) throw new Error("not found");
     return { key: e, value: vt.get(e), shared: !0 };
   },
-  async set(e, a, n) {
-    return n ? (We(e) || vt.set(e, a), await Ia(Fa(Le(e), { v: a, t: Date.now() })), { key: e, value: a, shared: !0 }) : (localStorage.setItem(_e(e), a), { key: e, value: a, shared: !1 });
+  async set(e, n, o) {
+    return o ? (Ke(e) || vt.set(e, n), await Dn(Fn(Be(e), { v: n, t: Date.now() })), { key: e, value: n, shared: !0 }) : (localStorage.setItem(_e(e), n), { key: e, value: n, shared: !1 });
   },
-  async delete(e, a) {
-    return a ? (vt.delete(e), await Ia(lo(Le(e))), { key: e, deleted: !0, shared: !0 }) : (localStorage.removeItem(_e(e)), { key: e, deleted: !0, shared: !1 });
+  async delete(e, n) {
+    return n ? (vt.delete(e), await Dn(co(Be(e))), { key: e, deleted: !0, shared: !0 }) : (localStorage.removeItem(_e(e)), { key: e, deleted: !0, shared: !1 });
   },
-  async list(e = "", a) {
-    return a ? (await Ke, { keys: [...vt.keys()].filter((n) => n.startsWith(e)), prefix: e, shared: !0 }) : { keys: [], prefix: e, shared: !1 };
+  async list(e = "", n) {
+    return n ? (await Ue, { keys: [...vt.keys()].filter((o) => o.startsWith(e)), prefix: e, shared: !0 }) : { keys: [], prefix: e, shared: !1 };
   },
   // 서버와 한 번이라도 맞춰졌는지 (처음 연 기기에서 빈 화면을 "여행 없음"으로 착각하지 않게)
   isSynced() {
     return je;
   },
   onChange(e) {
-    return Ue.add(e), () => Ue.delete(e);
+    return Oe.add(e), () => Oe.delete(e);
   }
 };
 
 // src/app.jsx
-import { Fragment as st, jsx as t, jsxs as o } from "react/jsx-runtime";
-var X = { settings: "trip:settings", plan: "trip:plan", wish: "trip:wish", spend: "trip:spend", fx: "trip:fx", notice: "trip:notice", board: "trip:board" }, ia = (e) => "trip:photo:" + e, ne = 6, q = ["#E8800A", "#D9262E", "#0A9B6E", "#0C86AE", "#7B5FC4", "#8A5530", "#0A8F82", "#A8802F", "#CC3F7A"], Go = ["일", "월", "화", "수", "목", "금", "토"], sa = ["맛집", "관광", "쇼핑", "기타"], gn = ["식비", "교통", "숙소", "체험", "쇼핑", "기타"], Ht = { 맛집: "#D9262E", 관광: "#0C86AE", 쇼핑: "#7B5FC4", 기타: "#66718A" }, Ua = {
-  식비: { Icon: Io, color: "#D9262E" },
+import { Fragment as st, jsx as t, jsxs as a } from "react/jsx-runtime";
+var X = { settings: "trip:settings", plan: "trip:plan", wish: "trip:wish", spend: "trip:spend", fx: "trip:fx", notice: "trip:notice", board: "trip:board" }, on = (e) => "trip:photo:" + e, ae = 6, V = ["#E8800A", "#D9262E", "#0A9B6E", "#0C86AE", "#7B5FC4", "#8A5530", "#0A8F82", "#A8802F", "#CC3F7A"], Xo = ["일", "월", "화", "수", "목", "금", "토"], sn = ["맛집", "관광", "쇼핑", "기타"], ga = ["식비", "교통", "숙소", "체험", "쇼핑", "기타"], Ht = { 맛집: "#D9262E", 관광: "#0C86AE", 쇼핑: "#7B5FC4", 기타: "#66718A" }, Kn = {
+  식비: { Icon: Do, color: "#D9262E" },
   교통: { Icon: Fo, color: "#0C86AE" },
-  숙소: { Icon: Do, color: "#7B5FC4" },
-  체험: { Icon: Po, color: "#E8800A" },
-  쇼핑: { Icon: $o, color: "#0A9B6E" },
-  기타: { Icon: Ro, color: "#66718A" }
-}, ta = (e) => Ua[e] || Ua.기타, yt = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6), dt = (e) => new Date(e.getTime() - e.getTimezoneOffset() * 6e4).toISOString().slice(0, 10), Ft = (e) => {
-  let [a, n, i] = e.split("-").map(Number);
-  return new Date(a, n - 1, i);
-}, ft = (e, a) => {
-  let n = Ft(e);
-  return n.setDate(n.getDate() + a), n;
-}, $t = (e) => `${e.getMonth() + 1}/${e.getDate()}`, Mt = (e) => Go[e.getDay()], Dt = (e) => "¥" + Math.round(e).toLocaleString("ko-KR"), Yt = (e, a) => "₩" + (Math.round(e * a / 100 / 100) * 100).toLocaleString("ko-KR"), hn = 900, it = (e) => `${Dt(e)}(${Yt(e, hn)})`, ot = (e) => String(e).padStart(2, "0"), ke = (e) => {
-  let a = (Date.now() - e) / 1e3;
-  if (a < 60) return "방금";
-  if (a < 3600) return `${Math.floor(a / 60)}분 전`;
-  if (a < 86400) return `${Math.floor(a / 3600)}시간 전`;
-  let n = new Date(e);
-  return `${n.getMonth() + 1}/${n.getDate()} ${ot(n.getHours())}:${ot(n.getMinutes())}`;
-}, Ka = (e) => {
-  let a = (e || "").trim();
-  if (!a) return "";
-  /^https?:\/\//i.test(a) || (a = "https://" + a);
+  숙소: { Icon: Po, color: "#7B5FC4" },
+  체험: { Icon: $o, color: "#E8800A" },
+  쇼핑: { Icon: Ro, color: "#0A9B6E" },
+  기타: { Icon: To, color: "#66718A" }
+}, Qe = (e) => Kn[e] || Kn.기타, yt = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6), dt = (e) => new Date(e.getTime() - e.getTimezoneOffset() * 6e4).toISOString().slice(0, 10), Ft = (e) => {
+  let [n, o, i] = e.split("-").map(Number);
+  return new Date(n, o - 1, i);
+}, ft = (e, n) => {
+  let o = Ft(e);
+  return o.setDate(o.getDate() + n), o;
+}, Rt = (e) => `${e.getMonth() + 1}/${e.getDate()}`, St = (e) => Xo[e.getDay()], Pt = (e) => "¥" + Math.round(e).toLocaleString("ko-KR"), Yt = (e, n) => "₩" + (Math.round(e * n / 100 / 100) * 100).toLocaleString("ko-KR"), ha = 900, it = (e) => `${Pt(e)}(${Yt(e, ha)})`, ot = (e) => String(e).padStart(2, "0"), ke = (e) => {
+  let n = (Date.now() - e) / 1e3;
+  if (n < 60) return "방금";
+  if (n < 3600) return `${Math.floor(n / 60)}분 전`;
+  if (n < 86400) return `${Math.floor(n / 3600)}시간 전`;
+  let o = new Date(e);
+  return `${o.getMonth() + 1}/${o.getDate()} ${ot(o.getHours())}:${ot(o.getMinutes())}`;
+}, Wn = (e) => {
+  let n = (e || "").trim();
+  if (!n) return "";
+  /^https?:\/\//i.test(n) || (n = "https://" + n);
   try {
-    let n = new URL(a);
-    return n.hostname.includes(".") ? n.href : "";
+    let o = new URL(n);
+    return o.hostname.includes(".") ? o.href : "";
   } catch {
     return "";
   }
-}, Xo = (e) => {
+}, qo = (e) => {
   try {
     return new URL(e).hostname.replace(/^www\./, "");
   } catch {
     return e;
   }
-}, Pt = (e) => {
-  let [a, n] = String(e).split(":").map(Number);
-  return a * 60 + (n || 0);
+}, $t = (e) => {
+  let [n, o] = String(e).split(":").map(Number);
+  return n * 60 + (o || 0);
 }, Kt = (e) => `${ot(Math.floor(e / 60) % 24)}:${ot(e % 60)}`, pe = (e) => {
-  let a = Pt(e.time), n = e.end ? Pt(e.end) : a + 60;
-  return n <= a && (n = a + 60), { s: a, e: Math.min(n, 24 * 60) };
-}, bn = (e) => {
-  let a = Math.floor(e / 60), n = e % 60;
-  return [a ? `${a}시간` : "", n ? `${n}분` : ""].filter(Boolean).join(" ");
+  let n = $t(e.time), o = e.end ? $t(e.end) : n + 60;
+  return o <= n && (o = n + 60), { s: n, e: Math.min(o, 24 * 60) };
+}, ba = (e) => {
+  let n = Math.floor(e / 60), o = e % 60;
+  return [n ? `${n}시간` : "", o ? `${o}분` : ""].filter(Boolean).join(" ");
 };
 function Vo(e) {
-  let a = e || "", n = a.match(/(^|[^\d])([01]?\d|2[0-3])[:：]([0-5]\d)(?!\d)/);
-  if (n) return `${ot(Number(n[2]))}:${n[3]}`;
-  if (n = a.match(/(^|[^\d])([01]?\d|2[0-3])\s*시(?!간|장|내|티|즈)\s*(반|([0-5]?\d)\s*분)?/), !n) return "";
-  let i = n[3] === "반" ? 30 : n[4] ? Number(n[4]) : 0;
-  return `${ot(Number(n[2]))}:${ot(i)}`;
+  let n = e || "", o = n.match(/(^|[^\d])([01]?\d|2[0-3])[:：]([0-5]\d)(?!\d)/);
+  if (o) return `${ot(Number(o[2]))}:${o[3]}`;
+  if (o = n.match(/(^|[^\d])([01]?\d|2[0-3])\s*시(?!간|장|내|티|즈)\s*(반|([0-5]?\d)\s*분)?/), !o) return "";
+  let i = o[3] === "반" ? 30 : o[4] ? Number(o[4]) : 0;
+  return `${ot(Number(o[2]))}:${ot(i)}`;
 }
-var qo = Array.from({ length: 24 }, (e, a) => ot(a));
-function Wa({ value: e, onChange: a, disabled: n, label: i }) {
-  let [s, g] = e ? e.split(":") : ["", ""], d = Array.from({ length: 12 }, (c, r) => ot(r * 5));
-  return g && !d.includes(g) && (d = [...d, g].sort()), /* @__PURE__ */ o("div", { className: "jt-tsel" + (n ? " off" : ""), children: [
-    /* @__PURE__ */ o(
+var Zo = Array.from({ length: 24 }, (e, n) => ot(n));
+function Hn({ value: e, onChange: n, disabled: o, label: i }) {
+  let [s, m] = e ? e.split(":") : ["", ""], u = Array.from({ length: 12 }, (p, r) => ot(r * 5));
+  return m && !u.includes(m) && (u = [...u, m].sort()), /* @__PURE__ */ a("div", { className: "jt-tsel" + (o ? " off" : ""), children: [
+    /* @__PURE__ */ a(
       "select",
       {
         "aria-label": i + " 시",
         value: s,
-        disabled: n,
-        onChange: (c) => a(c.target.value ? `${c.target.value}:${g || "00"}` : ""),
+        disabled: o,
+        onChange: (p) => n(p.target.value ? `${p.target.value}:${m || "00"}` : ""),
         children: [
           /* @__PURE__ */ t("option", { value: "", children: "--" }),
-          qo.map((c) => /* @__PURE__ */ t("option", { value: c, children: c }, c))
+          Zo.map((p) => /* @__PURE__ */ t("option", { value: p, children: p }, p))
         ]
       }
     ),
     /* @__PURE__ */ t("span", { "aria-hidden": "true", children: ":" }),
-    /* @__PURE__ */ o(
+    /* @__PURE__ */ a(
       "select",
       {
         "aria-label": i + " 분",
-        value: g,
-        disabled: n || !s,
-        onChange: (c) => a(`${s}:${c.target.value}`),
+        value: m,
+        disabled: o || !s,
+        onChange: (p) => n(`${s}:${p.target.value}`),
         children: [
           !s && /* @__PURE__ */ t("option", { value: "", children: "--" }),
-          d.map((c) => /* @__PURE__ */ t("option", { value: c, children: c }, c))
+          u.map((p) => /* @__PURE__ */ t("option", { value: p, children: p }, p))
         ]
       }
     )
   ] });
 }
-var Zo = (e) => {
-  let a = e.filter((i) => i.time).map((i) => ({ id: i.id, ...pe(i) })), n = /* @__PURE__ */ new Set();
-  return a.forEach(
-    (i) => a.forEach((s) => {
-      i.id !== s.id && i.s < s.e && s.s < i.e && n.add(i.id);
+var Qo = (e) => {
+  let n = e.filter((i) => i.time).map((i) => ({ id: i.id, ...pe(i) })), o = /* @__PURE__ */ new Set();
+  return n.forEach(
+    (i) => n.forEach((s) => {
+      i.id !== s.id && i.s < s.e && s.s < i.e && o.add(i.id);
     })
-  ), n;
-}, Ne = (e) => at(e) ? `${e.lat},${e.lng}` : e.place ? ra(e.place) : "", Qo = (e, a) => {
-  let n = e ? Ne(e) : "", i = Ne(a);
-  return "https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=" + encodeURIComponent(i) + (n ? "&origin=" + encodeURIComponent(n) : "");
-}, ze = (e) => "https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=" + encodeURIComponent(at(e) ? `${e.lat},${e.lng}` : ra(e.name || e.title, e.area || e.place)) + (e.placeId ? "&destination_place_id=" + encodeURIComponent(e.placeId) : ""), ra = (...e) => [...e, "일본"].filter(Boolean).join(" "), at = (e) => typeof e.lat == "number" && typeof e.lng == "number", xn = (e) => at(e) ? `${e.lat},${e.lng}` : ra(e.name || e.title, e.area || e.place), Rt = (e) => /^https?:\/\//.test(e.link || "") ? e.link : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(xn(e)), ti = (e) => "https://maps.google.com/maps?hl=ko&z=15&output=embed&q=" + encodeURIComponent(xn(e)), kt = 256, Ge = (e, a, n) => {
-  let i = kt * 2 ** n, s = e * Math.PI / 180;
+  ), o;
+}, Ne = (e) => nt(e) ? `${e.lat},${e.lng}` : e.place ? rn(e.place) : "", ti = (e, n) => {
+  let o = e ? Ne(e) : "", i = Ne(n);
+  return "https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=" + encodeURIComponent(i) + (o ? "&origin=" + encodeURIComponent(o) : "");
+}, ze = (e) => "https://www.google.com/maps/dir/?api=1&travelmode=transit&destination=" + encodeURIComponent(nt(e) ? `${e.lat},${e.lng}` : rn(e.name || e.title, e.area || e.place)) + (e.placeId ? "&destination_place_id=" + encodeURIComponent(e.placeId) : ""), rn = (...e) => [...e, "일본"].filter(Boolean).join(" "), nt = (e) => typeof e.lat == "number" && typeof e.lng == "number", xa = (e) => nt(e) ? `${e.lat},${e.lng}` : rn(e.name || e.title, e.area || e.place), Tt = (e) => /^https?:\/\//.test(e.link || "") ? e.link : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(xa(e)), ei = (e) => "https://maps.google.com/maps?hl=ko&z=15&output=embed&q=" + encodeURIComponent(xa(e)), kt = 256, Je = (e, n, o) => {
+  let i = kt * 2 ** o, s = e * Math.PI / 180;
   return {
-    x: (a + 180) / 360 * i,
+    x: (n + 180) / 360 * i,
     y: (1 - Math.log(Math.tan(s) + 1 / Math.cos(s)) / Math.PI) / 2 * i
   };
-}, Ha = (e, a, n) => {
-  let i = kt * 2 ** n, s = Math.PI - 2 * Math.PI * a / i;
+}, Yn = (e, n, o) => {
+  let i = kt * 2 ** o, s = Math.PI - 2 * Math.PI * n / i;
   return { lat: 180 / Math.PI * Math.atan(Math.sinh(s)), lng: e / i * 360 - 180 };
 }, oe = (e) => Math.max(3, Math.min(18, e));
-async function Xe(e) {
-  let a = await window.storage.list(e, !0), n = (a && a.keys || []).map((s) => typeof s == "string" ? s : s.key).filter(Boolean), i = await Promise.all(n.map((s) => bt(s, null)));
-  return n.map((s, g) => [s, i[g]]).filter(([, s]) => s);
+async function Ge(e) {
+  let n = await window.storage.list(e, !0), o = (n && n.keys || []).map((s) => typeof s == "string" ? s : s.key).filter(Boolean), i = await Promise.all(o.map((s) => bt(s, null)));
+  return o.map((s, m) => [s, i[m]]).filter(([, s]) => s);
 }
-async function bt(e, a) {
+async function bt(e, n) {
   try {
-    let n = await window.storage.get(e, !0);
-    return n && n.value ? JSON.parse(n.value) : a;
+    let o = await window.storage.get(e, !0);
+    return o && o.value ? JSON.parse(o.value) : n;
   } catch {
-    return a;
+    return n;
   }
 }
-async function ht(e, a) {
+async function ht(e, n) {
   try {
-    return !!await window.storage.set(e, JSON.stringify(a), !0);
+    return !!await window.storage.set(e, JSON.stringify(n), !0);
   } catch {
     return !1;
   }
 }
 var zt = /* @__PURE__ */ new Map(), ye = /* @__PURE__ */ new Map();
-function ei(e) {
+function ni(e) {
   if (zt.has(e)) return Promise.resolve(zt.get(e));
   if (ye.has(e)) return ye.get(e);
-  let a = bt(ia(e), null).then((n) => (ye.delete(e), n && zt.set(e, n), n));
-  return ye.set(e, a), a;
+  let n = bt(on(e), null).then((o) => (ye.delete(e), o && zt.set(e, o), o));
+  return ye.set(e, n), n;
 }
-async function Ya(e) {
+async function Jn(e) {
   zt.delete(e);
   try {
-    await window.storage.delete(ia(e), !0);
+    await window.storage.delete(on(e), !0);
   } catch {
   }
 }
-var ai = (e) => new Promise((a, n) => {
+var ai = (e) => new Promise((n, o) => {
   let i = URL.createObjectURL(e), s = new Image();
   s.onload = () => {
-    URL.revokeObjectURL(i), a(s);
+    URL.revokeObjectURL(i), n(s);
   }, s.onerror = () => {
-    URL.revokeObjectURL(i), n(new Error("bad image"));
+    URL.revokeObjectURL(i), o(new Error("bad image"));
   }, s.src = i;
 });
-async function ni(e) {
-  let a = await ai(e), n = 1280, i = 0.7, s = "";
-  for (let g = 0; g < 5; g++) {
-    let d = Math.min(1, n / Math.max(a.naturalWidth, a.naturalHeight)), c = document.createElement("canvas");
-    c.width = Math.max(1, Math.round(a.naturalWidth * d)), c.height = Math.max(1, Math.round(a.naturalHeight * d));
-    let r = c.getContext("2d");
-    if (r.fillStyle = "#fff", r.fillRect(0, 0, c.width, c.height), r.drawImage(a, 0, 0, c.width, c.height), s = c.toDataURL("image/jpeg", i), s.length < 6e5) break;
-    n = Math.round(n * 0.8), i = Math.max(0.4, i - 0.08);
+async function oi(e) {
+  let n = await ai(e), o = 1280, i = 0.7, s = "";
+  for (let m = 0; m < 5; m++) {
+    let u = Math.min(1, o / Math.max(n.naturalWidth, n.naturalHeight)), p = document.createElement("canvas");
+    p.width = Math.max(1, Math.round(n.naturalWidth * u)), p.height = Math.max(1, Math.round(n.naturalHeight * u));
+    let r = p.getContext("2d");
+    if (r.fillStyle = "#fff", r.fillRect(0, 0, p.width, p.height), r.drawImage(n, 0, 0, p.width, p.height), s = p.toDataURL("image/jpeg", i), s.length < 6e5) break;
+    o = Math.round(o * 0.8), i = Math.max(0.4, i - 0.08);
   }
   return s;
 }
-var oi = [
+var ii = [
   ["https://api.frankfurter.dev/v1/latest?base=JPY&symbols=KRW", (e) => ({ rate: e.rates.KRW * 100, date: e.date, source: "ECB 공식 기준환율" })],
   ["https://api.frankfurter.app/latest?from=JPY&to=KRW", (e) => ({ rate: e.rates.KRW * 100, date: e.date, source: "ECB 공식 기준환율" })],
   [
@@ -355,323 +355,336 @@ var oi = [
     (e) => ({ rate: e.rates.KRW * 100, date: dt(new Date(e.time_last_update_unix * 1e3)), source: "ExchangeRate-API" })
   ]
 ];
-async function ii() {
-  for (let [e, a] of oi)
+async function si() {
+  for (let [e, n] of ii)
     try {
-      let n = await fetch(e);
-      if (!n.ok) continue;
-      let i = a(await n.json());
+      let o = await fetch(e);
+      if (!o.ok) continue;
+      let i = n(await o.json());
       if (i.rate > 0) return i;
     } catch {
     }
   return null;
 }
-var Ja = (e) => e.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }), Ce = (e) => e.fx ? `100엔 = ₩${Ja(e.rate)} (${e.fx.source}, ${e.fx.date.slice(5).replace("-", "/")}${e.fx.cached ? ", 마지막으로 받은 값" : ""})` : `100엔 = ₩${Ja(e.rate)} (설정에 입력한 환율, 자동 환율을 불러오지 못했어요)`;
-function Ga(e, a) {
-  let n = () => Object.fromEntries(a.map((u) => [u, 0])), i = n(), s = n(), g = [];
-  e.forEach((u) => {
-    let I = Number(u.amount) || 0, p = (u.split || []).filter((k) => a.includes(k));
+var Gn = (e) => e.toLocaleString("ko-KR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }), Ce = (e) => e.fx ? `100엔 = ₩${Gn(e.rate)} (${e.fx.source}, ${e.fx.date.slice(5).replace("-", "/")}${e.fx.cached ? ", 마지막으로 받은 값" : ""})` : `100엔 = ₩${Gn(e.rate)} (설정에 입력한 환율, 자동 환율을 불러오지 못했어요)`;
+function Xn(e, n) {
+  let o = () => Object.fromEntries(n.map((c) => [c, 0])), i = o(), s = o(), m = [];
+  e.forEach((c) => {
+    let I = Number(c.amount) || 0, g = (c.split || []).filter((A) => n.includes(A));
     if (!(I <= 0)) {
-      if (!p.length || !a.includes(u.payer)) {
-        g.push(u);
+      if (!g.length || !n.includes(c.payer)) {
+        m.push(c);
         return;
       }
-      i[u.payer] += I, p.forEach((k) => s[k] += I / p.length);
+      i[c.payer] += I, g.forEach((A) => s[A] += I / g.length);
     }
   });
-  let d = Object.fromEntries(a.map((u) => [u, i[u] - s[u]])), c = a.filter((u) => d[u] > 0.5).map((u) => ({ m: u, v: d[u] })).sort((u, I) => I.v - u.v), r = a.filter((u) => d[u] < -0.5).map((u) => ({ m: u, v: -d[u] })).sort((u, I) => I.v - u.v), x = [], N = 0, E = 0;
-  for (; N < r.length && E < c.length; ) {
-    let u = Math.min(r[N].v, c[E].v);
-    u >= 1 && x.push({ from: r[N].m, to: c[E].m, v: Math.round(u) }), r[N].v -= u, c[E].v -= u, r[N].v < 0.5 && N++, c[E].v < 0.5 && E++;
+  let u = Object.fromEntries(n.map((c) => [c, i[c] - s[c]])), p = n.filter((c) => u[c] > 0.5).map((c) => ({ m: c, v: u[c] })).sort((c, I) => I.v - c.v), r = n.filter((c) => u[c] < -0.5).map((c) => ({ m: c, v: -u[c] })).sort((c, I) => I.v - c.v), x = [], k = 0, z = 0;
+  for (; k < r.length && z < p.length; ) {
+    let c = Math.min(r[k].v, p[z].v);
+    c >= 1 && x.push({ from: r[k].m, to: p[z].m, v: Math.round(c) }), r[k].v -= c, p[z].v -= c, r[k].v < 0.5 && k++, p[z].v < 0.5 && z++;
   }
-  return { paid: i, share: s, net: d, moves: x, skipped: g };
+  return { paid: i, share: s, net: u, moves: x, skipped: m };
 }
-function pt({ name: e, members: a, size: n = 28 }) {
-  let i = Math.max(0, a.indexOf(e));
+function pt({ name: e, members: n, size: o = 28 }) {
+  let i = Math.max(0, n.indexOf(e));
   return /* @__PURE__ */ t(
     "span",
     {
       className: "jt-avatar",
-      style: { width: n, height: n, background: q[(i * 2 + 3) % q.length], fontSize: n * 0.46 },
+      style: { width: o, height: o, background: V[(i * 2 + 3) % V.length], fontSize: o * 0.46 },
       "aria-hidden": "true",
       children: e ? e[0] : "?"
     }
   );
 }
-function mt({ label: e, children: a }) {
-  return /* @__PURE__ */ o("label", { className: "jt-field", children: [
+function mt({ label: e, children: n }) {
+  return /* @__PURE__ */ a("label", { className: "jt-field", children: [
     /* @__PURE__ */ t("span", { children: e }),
-    a
+    n
   ] });
 }
-function Nt({ title: e, onClose: a, children: n }) {
+function Nt({ title: e, onClose: n, children: o }) {
   return K(() => {
-    let i = (s) => s.key === "Escape" && a();
+    let i = (s) => s.key === "Escape" && n();
     return window.addEventListener("keydown", i), () => window.removeEventListener("keydown", i);
-  }, [a]), /* @__PURE__ */ t("div", { className: "jt-scrim", onClick: a, children: /* @__PURE__ */ o("div", { className: "jt-sheet", role: "dialog", "aria-label": e, onClick: (i) => i.stopPropagation(), children: [
-    /* @__PURE__ */ o("div", { className: "jt-sheet-head", children: [
+  }, [n]), /* @__PURE__ */ t("div", { className: "jt-scrim", onClick: n, children: /* @__PURE__ */ a("div", { className: "jt-sheet", role: "dialog", "aria-label": e, onClick: (i) => i.stopPropagation(), children: [
+    /* @__PURE__ */ a("div", { className: "jt-sheet-head", children: [
       /* @__PURE__ */ t("h3", { children: e }),
-      /* @__PURE__ */ t("button", { className: "jt-icon", onClick: a, "aria-label": "닫기", children: /* @__PURE__ */ t(Gt, { size: 20 }) })
+      /* @__PURE__ */ t("button", { className: "jt-icon", onClick: n, "aria-label": "닫기", children: /* @__PURE__ */ t(Gt, { size: 20 }) })
     ] }),
-    n
+    o
   ] }) });
 }
-function St({ onConfirm: e, label: a = "삭제" }) {
-  let [n, i] = j(!1);
+function It({ onConfirm: e, label: n = "삭제" }) {
+  let [o, i] = j(!1);
   return K(() => {
-    if (!n) return;
+    if (!o) return;
     let s = setTimeout(() => i(!1), 3e3);
     return () => clearTimeout(s);
-  }, [n]), /* @__PURE__ */ o(
+  }, [o]), /* @__PURE__ */ a(
     "button",
     {
       type: "button",
-      className: "jt-del" + (n ? " armed" : ""),
+      className: "jt-del" + (o ? " armed" : ""),
       onClick: (s) => {
-        s.stopPropagation(), n ? e() : i(!0);
+        s.stopPropagation(), o ? e() : i(!0);
       },
       children: [
-        /* @__PURE__ */ t(go, { size: 15 }),
-        n ? "한 번 더 누르면 삭제돼요" : a
+        /* @__PURE__ */ t(ho, { size: 15 }),
+        o ? "한 번 더 누르면 삭제돼요" : n
       ]
     }
   );
 }
-var Xa = [
+var qn = [
   ["👍", "좋아요"],
   ["❤️", "사랑해요"],
   ["😆", "웃겨요"],
   ["😢", "슬퍼요"],
   ["😮", "놀라워요"]
 ];
-function jn(e) {
-  let a = {};
-  return Object.entries(e.reactions || {}).forEach(([n, i]) => a[n] = [...i]), a;
+function ja(e) {
+  let n = {};
+  return Object.entries(e.reactions || {}).forEach(([o, i]) => n[o] = [...i]), n;
 }
-function si(e, a, n) {
-  let i = jn(e), s = (i[a] || []).includes(n), g = {};
-  return Object.entries(i).forEach(([d, c]) => {
-    let r = c.filter((x) => x !== n);
-    r.length && (g[d] = r);
-  }), s || (g[a] = [...g[a] || [], n]), { ...e, reactions: g };
+function ri(e, n, o) {
+  let i = ja(e), s = (i[n] || []).includes(o), m = {};
+  return Object.entries(i).forEach(([u, p]) => {
+    let r = p.filter((x) => x !== o);
+    r.length && (m[u] = r);
+  }), s || (m[n] = [...m[n] || [], o]), { ...e, reactions: m };
 }
-function la({ className: e, onTap: a, names: n = [], title: i, members: s = [], children: g, ...d }) {
-  let [c, r] = j(!1), [x, N] = j("up left"), E = J(null), u = J(null), I = J(!1);
+function ln({ className: e, onTap: n, names: o = [], title: i, members: s = [], children: m, ...u }) {
+  let [p, r] = j(!1), [x, k] = j("up left"), z = J(null), c = J(null), I = J(!1);
   K(() => {
-    if (!c) return;
-    let v = (M) => E.current && !E.current.contains(M.target) && r(!1);
-    return document.addEventListener("pointerdown", v), () => document.removeEventListener("pointerdown", v);
-  }, [c]), K(() => () => clearTimeout(u.current), []);
-  let p = () => {
-    if (E.current) {
-      let v = E.current.getBoundingClientRect();
-      N((v.top < 200 ? "down" : "up") + " " + (v.left > window.innerWidth - 210 ? "right" : "left"));
+    if (!p) return;
+    let y = (C) => z.current && !z.current.contains(C.target) && r(!1);
+    return document.addEventListener("pointerdown", y), () => document.removeEventListener("pointerdown", y);
+  }, [p]), K(() => () => clearTimeout(c.current), []);
+  let g = () => {
+    if (z.current) {
+      let y = z.current.getBoundingClientRect();
+      k((y.top < 200 ? "down" : "up") + " " + (y.left > window.innerWidth - 210 ? "right" : "left"));
     }
     r(!0), navigator.vibrate && navigator.vibrate(15);
-  }, k = () => {
-    I.current = !1, clearTimeout(u.current), u.current = setTimeout(() => {
-      I.current = !0, p();
+  }, A = () => {
+    I.current = !1, clearTimeout(c.current), c.current = setTimeout(() => {
+      I.current = !0, g();
     }, 450);
-  }, w = () => clearTimeout(u.current);
-  return /* @__PURE__ */ o("span", { className: "jt-hold", ref: E, children: [
+  }, w = () => clearTimeout(c.current);
+  return /* @__PURE__ */ a("span", { className: "jt-hold", ref: z, children: [
     /* @__PURE__ */ t(
       "button",
       {
         type: "button",
         className: e + " jt-holdbtn",
-        ...d,
-        title: n.length ? n.join(", ") : void 0,
-        onPointerDown: k,
+        ...u,
+        title: o.length ? o.join(", ") : void 0,
+        onPointerDown: A,
         onPointerUp: w,
         onPointerLeave: w,
         onPointerCancel: w,
-        onContextMenu: (v) => {
-          v.preventDefault(), w(), I.current = !0, p();
+        onContextMenu: (y) => {
+          y.preventDefault(), w(), I.current = !0, g();
         },
-        onClick: (v) => {
-          if (v.stopPropagation(), I.current) {
+        onClick: (y) => {
+          if (y.stopPropagation(), I.current) {
             I.current = !1;
             return;
           }
-          a(v);
+          n(y);
         },
-        children: g
+        children: m
       }
     ),
-    c && /* @__PURE__ */ o("div", { className: "jt-whopop " + x, role: "dialog", "aria-label": i, children: [
-      /* @__PURE__ */ o("strong", { children: [
+    p && /* @__PURE__ */ a("div", { className: "jt-whopop " + x, role: "dialog", "aria-label": i, children: [
+      /* @__PURE__ */ a("strong", { children: [
         i,
         " ",
-        n.length,
+        o.length,
         "명"
       ] }),
-      n.length ? /* @__PURE__ */ t("ul", { children: n.map((v) => /* @__PURE__ */ o("li", { children: [
-        /* @__PURE__ */ t(pt, { name: v, members: s.length ? s : n, size: 22 }),
-        v
-      ] }, v)) }) : /* @__PURE__ */ t("p", { children: "아직 아무도 없어요." })
+      o.length ? /* @__PURE__ */ t("ul", { children: o.map((y) => /* @__PURE__ */ a("li", { children: [
+        /* @__PURE__ */ t(pt, { name: y, members: s.length ? s : o, size: 22 }),
+        y
+      ] }, y)) }) : /* @__PURE__ */ t("p", { children: "아직 아무도 없어요." })
     ] })
   ] });
 }
-function Ee({ item: e, me: a, onReact: n, members: i = [] }) {
-  let [s, g] = j(!1), [d, c] = j("up right"), r = J(null), x = jn(e), N = () => {
+function Ee({ item: e, me: n, onReact: o, members: i = [] }) {
+  let [s, m] = j(!1), [u, p] = j("up right"), r = J(null), x = ja(e), k = () => {
     if (!s && r.current) {
-      let p = r.current.getBoundingClientRect(), w = r.current.querySelector(".jt-rchip.add").getBoundingClientRect().right - 240 < 8 ? "left" : "right", v = p.top < 190 ? "down" : "up";
-      c(v + " " + w);
+      let g = r.current.getBoundingClientRect(), w = r.current.querySelector(".jt-rchip.add").getBoundingClientRect().right - 240 < 8 ? "left" : "right", y = g.top < 190 ? "down" : "up";
+      p(y + " " + w);
     }
-    g(!s);
-  }, E = Xa.filter(([p]) => (x[p] || []).length), u = Object.keys(x).find((p) => x[p].includes(a));
+    m(!s);
+  }, z = qn.filter(([g]) => (x[g] || []).length), c = Object.keys(x).find((g) => x[g].includes(n));
   K(() => {
     if (!s) return;
-    let p = (k) => r.current && !r.current.contains(k.target) && g(!1);
-    return document.addEventListener("pointerdown", p), () => document.removeEventListener("pointerdown", p);
+    let g = (A) => r.current && !r.current.contains(A.target) && m(!1);
+    return document.addEventListener("pointerdown", g), () => document.removeEventListener("pointerdown", g);
   }, [s]);
-  let I = (p) => {
-    n(p), g(!1);
+  let I = (g) => {
+    o(g), m(!1);
   };
-  return /* @__PURE__ */ o(
+  return /* @__PURE__ */ a(
     "div",
     {
       className: "jt-react",
       ref: r,
-      onClick: (p) => p.stopPropagation(),
-      onKeyDown: (p) => p.stopPropagation(),
+      onClick: (g) => g.stopPropagation(),
+      onKeyDown: (g) => g.stopPropagation(),
       children: [
-        E.map(([p, k]) => /* @__PURE__ */ o(
-          la,
+        z.map(([g, A]) => /* @__PURE__ */ a(
+          ln,
           {
-            className: "jt-rchip" + (u === p ? " on" : ""),
-            onTap: () => I(p),
-            names: x[p],
+            className: "jt-rchip" + (c === g ? " on" : ""),
+            onTap: () => I(g),
+            names: x[g],
             members: i,
-            title: `${p} ${k}`,
-            "aria-pressed": u === p,
-            "aria-label": `${k} ${x[p].length}명, 길게 누르면 누른 사람 보기`,
+            title: `${g} ${A}`,
+            "aria-pressed": c === g,
+            "aria-label": `${A} ${x[g].length}명, 길게 누르면 누른 사람 보기`,
             children: [
-              /* @__PURE__ */ t("span", { className: "jt-emoji", children: p }),
-              x[p].length
+              /* @__PURE__ */ t("span", { className: "jt-emoji", children: g }),
+              x[g].length
             ]
           },
-          p
+          g
         )),
         /* @__PURE__ */ t(
           "button",
           {
             type: "button",
             className: "jt-rchip add" + (s ? " open" : ""),
-            onClick: N,
+            onClick: k,
             "aria-expanded": s,
             "aria-label": "이모티콘 남기기",
-            children: /* @__PURE__ */ t(Ho, { size: 16 })
+            children: /* @__PURE__ */ t(Yo, { size: 16 })
           }
         ),
-        s && /* @__PURE__ */ o("div", { className: "jt-rpop " + d, role: "dialog", "aria-label": "이모티콘 고르기", children: [
-          /* @__PURE__ */ t("div", { className: "jt-rpop-row", children: Xa.map(([p, k]) => /* @__PURE__ */ t(
+        s && /* @__PURE__ */ a("div", { className: "jt-rpop " + u, role: "dialog", "aria-label": "이모티콘 고르기", children: [
+          /* @__PURE__ */ t("div", { className: "jt-rpop-row", children: qn.map(([g, A]) => /* @__PURE__ */ t(
             "button",
             {
               type: "button",
-              className: "jt-rpick" + (u === p ? " on" : ""),
-              onClick: () => I(p),
-              "aria-label": k,
-              title: k,
-              children: p
+              className: "jt-rpick" + (c === g ? " on" : ""),
+              onClick: () => I(g),
+              "aria-label": A,
+              title: A,
+              children: g
             },
-            p
+            g
           )) }),
-          E.length > 0 && /* @__PURE__ */ t("ul", { className: "jt-rwho", children: E.map(([p]) => /* @__PURE__ */ o("li", { children: [
-            /* @__PURE__ */ t("span", { className: "jt-emoji", children: p }),
-            x[p].join(", ")
-          ] }, p)) })
+          z.length > 0 && /* @__PURE__ */ t("ul", { className: "jt-rwho", children: z.map(([g]) => /* @__PURE__ */ a("li", { children: [
+            /* @__PURE__ */ t("span", { className: "jt-emoji", children: g }),
+            x[g].join(", ")
+          ] }, g)) })
         ] })
       ]
     }
   );
 }
-function ri() {
-  let [e, a] = j(null), [n, i] = j("");
+function li() {
+  let [e, n] = j(null), [o, i] = j("");
   return K(() => {
     if (!navigator.geolocation) {
       i("fail");
       return;
     }
-    let s = !0, g = () => navigator.geolocation.getCurrentPosition(
-      (c) => {
-        s && (a({ lat: c.coords.latitude, lng: c.coords.longitude }), i(""));
+    let s = !0, m = () => navigator.geolocation.getCurrentPosition(
+      (p) => {
+        s && (n({ lat: p.coords.latitude, lng: p.coords.longitude }), i(""));
       },
-      (c) => s && i(c && c.code === 1 ? "denied" : "fail"),
+      (p) => s && i(p && p.code === 1 ? "denied" : "fail"),
       { enableHighAccuracy: !1, timeout: 15e3, maximumAge: 6e4 }
     );
-    g();
-    let d = setInterval(() => document.visibilityState === "visible" && g(), 6e4);
+    m();
+    let u = setInterval(() => document.visibilityState === "visible" && m(), 6e4);
     return () => {
-      s = !1, clearInterval(d);
+      s = !1, clearInterval(u);
     };
-  }, []), [e, n];
+  }, []), [e, o];
 }
-var Va = (e) => e < 1e3 ? `${Math.round(e / 10) * 10}m` : e < 1e4 ? `${(e / 1e3).toFixed(1)}km` : `${Math.round(e / 1e3)}km`, li = (e) => e < 1e3 ? "near" : e < 5e3 ? "mid" : "far", qa = (e) => String(e || "").toLowerCase().replace(/[\s·・,.\-()（）'"!?&/]/g, "").replace(/(본점|지점|점|店)$/, "");
-function Za(e, a) {
-  if (e = qa(e), a = qa(a), !e || !a) return 0;
-  if (e.includes(a) || a.includes(e)) return 1;
-  let n = (c) => {
+var Vn = (e) => e < 1e3 ? `${Math.round(e / 10) * 10}m` : e < 1e4 ? `${(e / 1e3).toFixed(1)}km` : `${Math.round(e / 1e3)}km`, ci = (e) => e < 1e3 ? "near" : e < 5e3 ? "mid" : "far", Zn = (e) => String(e || "").toLowerCase().replace(/[\s·・,.\-()（）'"!?&/]/g, "").replace(/(본점|지점|점|店)$/, "");
+function Qn(e, n) {
+  if (e = Zn(e), n = Zn(n), !e || !n) return 0;
+  if (e.includes(n) || n.includes(e)) return 1;
+  let o = (p) => {
     let r = /* @__PURE__ */ new Map();
-    for (let x = 0; x < c.length - 1; x++) r.set(c.slice(x, x + 2), (r.get(c.slice(x, x + 2)) || 0) + 1);
+    for (let x = 0; x < p.length - 1; x++) r.set(p.slice(x, x + 2), (r.get(p.slice(x, x + 2)) || 0) + 1);
     return r;
-  }, i = n(e), s = n(a), g = 0;
-  i.forEach((c, r) => s.has(r) && (g += Math.min(c, s.get(r))));
-  let d = e.length - 1 + (a.length - 1);
-  return d > 0 ? 2 * g / d : 0;
+  }, i = o(e), s = o(n), m = 0;
+  i.forEach((p, r) => s.has(r) && (m += Math.min(p, s.get(r))));
+  let u = e.length - 1 + (n.length - 1);
+  return u > 0 ? 2 * m / u : 0;
 }
-var ci = (e) => e.lat > 24 && e.lat < 46 && e.lng > 122 && e.lng < 154, pi = (e) => /^https?:\/\/(share\.google|g\.co\/kgs|(www\.)?google\.[a-z.]+\/search)/i.test(String(e || ""));
-async function di(e, a) {
-  let n;
-  try {
-    n = await Me([e.name, e.area].filter(Boolean).join(" "), a);
-  } catch {
-    return { status: "error" };
+var pi = (e) => e.lat > 24 && e.lat < 46 && e.lng > 122 && e.lng < 154, di = (e) => /^https?:\/\/(share\.google|g\.co\/kgs|(www\.)?google\.[a-z.]+\/search)/i.test(String(e || ""));
+async function mi(e, n, o) {
+  let i = [[e.name, e.area].filter(Boolean).join(" "), e.name].filter((p, r, x) => p && x.indexOf(p) === r), s = { status: "none" }, m = "", u = "";
+  for (let p = 0; p < i.length; p++) {
+    p && await new Promise((c) => setTimeout(c, o));
+    let r;
+    try {
+      r = await Ea(i[p], n);
+    } catch {
+      s = s.status === "none" ? { status: "error" } : s;
+      continue;
+    }
+    if (m = r.engine, r.gErr && (u = r.gErr), !r.list.length) continue;
+    let x = r.list.filter(pi).map((c) => ({ r: c, score: Math.max(Qn(e.name, c.name), Qn(e.name, `${c.name} ${c.area}`)) })).filter((c) => c.score >= 0.5).sort((c, I) => I.score - c.score);
+    if (!x.length) {
+      s = { status: "diff" };
+      continue;
+    }
+    let [k, z] = x;
+    if (!e.area && z && z.score >= k.score - 0.1 && Jt(k.r, z.r) > 1500) {
+      s = { status: "multi" };
+      continue;
+    }
+    return { status: "ok", r: k.r, engine: m, gErr: u };
   }
-  let i = (n || []).filter(ci).map((d) => ({ r: d, score: Math.max(Za(e.name, d.name), Za(e.name, `${d.name} ${d.area}`)) })).filter((d) => d.score >= 0.5).sort((d, c) => c.score - d.score);
-  if (!n || !n.length) return { status: "none" };
-  if (!i.length) return { status: "diff" };
-  let [s, g] = i;
-  return !e.area && g && g.score >= s.score - 0.1 && Jt(s.r, g.r) > 1500 ? { status: "multi" } : { status: "ok", r: s.r };
+  return { ...s, engine: m, gErr: u };
 }
-var mi = {
+var ui = (e) => /auth/i.test(e) ? "구글이 API 키를 거부했어요. 구글 클라우드에서 키의 웹사이트 제한(https://jhp0204.github.io/*)을 확인해 주세요." : /load/i.test(e) ? "구글 지도 기능을 불러오지 못했어요. 회사 등 네트워크에서 차단됐을 수 있어요. 휴대폰 데이터로 다시 해 보세요." : /PERMISSION|not authorized|API_KEY|forbidden|denied|403/i.test(e) ? "Places API (New)가 꺼져 있거나 키에 허용되지 않았어요. 구글 클라우드에서 API 사용 설정과 키의 API 제한을 확인해 주세요." : /RESOURCE_EXHAUSTED|quota|429/i.test(e) ? "오늘 구글 장소 검색 한도에 도달했어요. 내일 다시 해 보세요." : `구글 장소 검색이 실패했어요 (${e.slice(0, 80)})`, fi = {
   none: "검색 결과가 없어요",
   diff: "이름이 확실히 맞는 곳이 없어요",
   multi: "지점이 여러 곳이에요. 동네를 적으면 찾을 수 있어요",
   error: "검색을 못 했어요 (인터넷 연결 확인)"
 };
-function ui({ targets: e, gkey: a, onApply: n, onClose: i }) {
-  let [s, g] = j([]), [d, c] = j(!1), [r, x] = j({}), N = J(!1);
+function gi({ targets: e, gkey: n, onApply: o, onClose: i }) {
+  let [s, m] = j([]), [u, p] = j(!1), [r, x] = j({}), k = J(!1);
   K(() => {
-    let p = !0;
+    let w = !0;
     return (async () => {
-      let k = a && !Tt ? 250 : 1100;
-      for (let w of e) {
-        if (!p || N.current) break;
-        let v = await di(w, a);
-        if (!p) return;
-        g((M) => [...M, { w, ...v }]), v.status === "ok" && x((M) => ({ ...M, [w.id]: !0 })), await new Promise((M) => setTimeout(M, k));
+      let y = n && !Mt ? 250 : 1100;
+      for (let C of e) {
+        if (!w || k.current) break;
+        let d = await mi(C, n, y);
+        if (!w) return;
+        m((l) => [...l, { w: C, ...d }]), d.status === "ok" && x((l) => ({ ...l, [C.id]: !0 })), await new Promise((l) => setTimeout(l, y));
       }
-      p && c(!0);
+      w && p(!0);
     })(), () => {
-      p = !1;
+      w = !1;
     };
   }, []);
-  let E = s.filter((p) => p.status === "ok"), u = s.filter((p) => p.status !== "ok"), I = E.filter((p) => r[p.w.id]);
-  return /* @__PURE__ */ t(Nt, { title: "위치 없는 장소 한 번에 찾기", onClose: i, children: /* @__PURE__ */ o("div", { className: "jt-form", children: [
-    d ? /* @__PURE__ */ o("p", { className: "jt-hint jt-geo-sum", children: [
+  let z = s.filter((w) => w.status === "ok"), c = s.filter((w) => w.status !== "ok"), I = z.filter((w) => r[w.w.id]), g = (s.find((w) => w.gErr) || {}).gErr || "", A = s.some((w) => w.engine === "osm");
+  return /* @__PURE__ */ t(Nt, { title: "위치 없는 장소 한 번에 찾기", onClose: i, children: /* @__PURE__ */ a("div", { className: "jt-form", children: [
+    u ? /* @__PURE__ */ a("p", { className: "jt-hint jt-geo-sum", children: [
       e.length,
       "곳 중 ",
-      /* @__PURE__ */ o("b", { children: [
-        E.length,
+      /* @__PURE__ */ a("b", { children: [
+        z.length,
         "곳"
       ] }),
       "을 찾았어요. 확실하지 않은 ",
-      u.length,
+      c.length,
       "곳은 비워 뒀어요."
-    ] }) : /* @__PURE__ */ o("div", { className: "jt-geo-run", children: [
+    ] }) : /* @__PURE__ */ a("div", { className: "jt-geo-run", children: [
       /* @__PURE__ */ t("div", { className: "jt-geo-bar", children: /* @__PURE__ */ t("i", { style: { width: `${s.length / e.length * 100}%` } }) }),
-      /* @__PURE__ */ o("span", { children: [
+      /* @__PURE__ */ a("span", { children: [
         s.length,
         "/",
         e.length,
@@ -683,112 +696,79 @@ function ui({ targets: e, gkey: a, onApply: n, onClose: i }) {
           type: "button",
           className: "jt-ghost sm",
           onClick: () => {
-            N.current = !0, c(!0);
+            k.current = !0, p(!0);
           },
           children: "여기까지만 찾기"
         }
       )
     ] }),
-    E.length > 0 && /* @__PURE__ */ o(st, { children: [
+    s.length > 0 && (g || !n && A) && /* @__PURE__ */ a("div", { className: "jt-warn-inline jt-geo-why", children: [
+      g ? /* @__PURE__ */ t("b", { children: "구글 장소 검색을 쓰지 못해서 무료 검색(OpenStreetMap)으로 찾았어요." }) : /* @__PURE__ */ t("b", { children: "구글 지도 키가 없어 무료 검색(OpenStreetMap)으로 찾았어요." }),
+      /* @__PURE__ */ t("span", { children: g ? ui(g) : "무료 검색은 한국어 이름을 잘 못 찾아요. 설정에 구글 지도 키를 넣으면 훨씬 잘 찾아요." })
+    ] }),
+    z.length > 0 && /* @__PURE__ */ a(st, { children: [
       /* @__PURE__ */ t("h4", { className: "jt-subhead", children: "찾았어요 (체크한 곳만 저장돼요)" }),
-      /* @__PURE__ */ t("ul", { className: "jt-geo-list", children: E.map(({ w: p, r: k }) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ o("label", { children: [
+      /* @__PURE__ */ t("ul", { className: "jt-geo-list", children: z.map(({ w, r: y }) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ a("label", { children: [
         /* @__PURE__ */ t(
           "input",
           {
             type: "checkbox",
-            checked: !!r[p.id],
-            onChange: (w) => x((v) => ({ ...v, [p.id]: w.target.checked }))
+            checked: !!r[w.id],
+            onChange: (C) => x((d) => ({ ...d, [w.id]: C.target.checked }))
           }
         ),
-        /* @__PURE__ */ o("span", { children: [
-          /* @__PURE__ */ t("strong", { children: p.name }),
-          /* @__PURE__ */ o("em", { children: [
-            k.name,
-            k.area ? `, ${k.area}` : ""
+        /* @__PURE__ */ a("span", { children: [
+          /* @__PURE__ */ t("strong", { children: w.name }),
+          /* @__PURE__ */ a("em", { children: [
+            y.name,
+            y.area ? `, ${y.area}` : ""
           ] })
         ] })
-      ] }) }, p.id)) })
+      ] }) }, w.id)) })
     ] }),
-    u.length > 0 && /* @__PURE__ */ o(st, { children: [
+    c.length > 0 && /* @__PURE__ */ a(st, { children: [
       /* @__PURE__ */ t("h4", { className: "jt-subhead", children: "비워 둔 곳" }),
-      /* @__PURE__ */ t("ul", { className: "jt-geo-list miss", children: u.map(({ w: p, status: k }) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ o("span", { children: [
-        /* @__PURE__ */ t("strong", { children: p.name }),
-        /* @__PURE__ */ t("em", { children: mi[k] })
-      ] }) }, p.id)) }),
+      /* @__PURE__ */ t("ul", { className: "jt-geo-list miss", children: c.map(({ w, status: y, engine: C }) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ a("span", { children: [
+        /* @__PURE__ */ t("strong", { children: w.name }),
+        /* @__PURE__ */ a("em", { children: [
+          fi[y],
+          C ? C === "google" ? " (구글 검색)" : " (무료 검색)" : ""
+        ] })
+      ] }) }, w.id)) }),
       /* @__PURE__ */ t("p", { className: "jt-hint", children: '비워 둔 곳은 수정 화면의 "위치 검색"으로 직접 고를 수 있어요.' })
     ] }),
     /* @__PURE__ */ t(
       "button",
       {
         className: "jt-primary",
-        disabled: !d || !I.length,
+        disabled: !u || !I.length,
         onClick: () => {
-          let p = {};
-          I.forEach(({ w: k, r: w }) => {
-            p[k.id] = {
-              lat: w.lat,
-              lng: w.lng,
-              ...w.placeId ? { placeId: w.placeId } : {},
+          let w = {};
+          I.forEach(({ w: y, r: C }) => {
+            w[y.id] = {
+              lat: C.lat,
+              lng: C.lng,
+              ...C.placeId ? { placeId: C.placeId } : {},
               // 구글 검색 링크(share.google 등)는 구글맵 링크로 바꿔 줌
-              ...w.link && (!k.link || pi(k.link)) ? { link: w.link } : {},
-              ...!k.area && w.area ? { area: w.area.split(" ").slice(0, 3).join(" ") } : {}
+              ...C.link && (!y.link || di(y.link)) ? { link: C.link } : {},
+              ...!y.area && C.area ? { area: C.area.split(" ").slice(0, 3).join(" ") } : {}
             };
-          }), n(p);
+          }), o(w);
         },
-        children: d ? `선택한 ${I.length}곳에 위치 저장` : "찾는 중"
+        children: u ? `선택한 ${I.length}곳에 위치 저장` : "찾는 중"
       }
     )
   ] }) });
 }
-function ce(e, a) {
-  let n = (a || []).find((i) => i.wishId === e.id) || (a || []).find((i) => !i.wishId && i.title === e.name);
-  return n ? n.day : null;
+function ce(e, n) {
+  let o = (n || []).find((i) => i.wishId === e.id) || (n || []).find((i) => !i.wishId && i.title === e.name);
+  return o ? o.day : null;
 }
-function yn() {
-  let [e, a] = j({});
-  return [e, (s) => a((g) => ({ ...g, [s]: !g[s] })), (s, g) => a(g ? Object.fromEntries(s.map((d) => [d, !0])) : {})];
+function ya() {
+  let [e, n] = j({});
+  return [e, (s) => n((m) => ({ ...m, [s]: !m[s] })), (s, m) => n(m ? Object.fromEntries(s.map((u) => [u, !0])) : {})];
 }
-function vn({ ids: e, open: a, setAll: n }) {
+function va({ ids: e, open: n, setAll: o }) {
   if (e.length < 2) return null;
-  let i = e.every((s) => a[s]);
-  return /* @__PURE__ */ t("div", { className: "jt-foldall", children: /* @__PURE__ */ o("button", { type: "button", className: "jt-ghost sm", onClick: () => n(e, !i), children: [
-    i ? /* @__PURE__ */ t(un, { size: 15 }) : /* @__PURE__ */ t(Ct, { size: 15 }),
-    i ? "모두 접기" : "모두 펼치기"
-  ] }) });
-}
-function ca({ count: e, open: a, onClick: n }) {
-  return /* @__PURE__ */ o(
-    "button",
-    {
-      type: "button",
-      className: "jt-like jt-cbtn" + (a ? " open" : ""),
-      onClick: (i) => {
-        i.stopPropagation(), n();
-      },
-      "aria-expanded": a,
-      children: [
-        /* @__PURE__ */ t(yo, { size: 15 }),
-        "댓글 ",
-        e || 0
-      ]
-    }
-  );
-}
-function Ae({ comments: e = [], me: a, members: n, onAdd: i, onDelete: s }) {
-  let [g, d] = j(""), c = () => {
-    let r = g.trim();
-    r && (i(r), d(""));
-  };
-  return /* @__PURE__ */ o("div", { className: "jt-comments", onClick: (r) => r.stopPropagation(), onKeyDown: (r) => r.stopPropagation(), children: [
-    e.length === 0 && /* @__PURE__ */ t("p", { className: "jt-hint jt-nocomment", children: "첫 댓글을 남겨 보세요." }),
-    /* @__PURE__ */ t("ul", { children: e.map((r) => /* @__PURE__ */ o("li", { className: "jt-comment", children: [
-      /* @__PURE__ */ t(pt, { name: r.by, members: n, size: 24 }),
-      /* @__PURE__ */ o("div", { className: "jt-comment-body", children: [
-        /* @__PURE__ */ o("div", { children: [
-          /* @__PURE__ */ t("strong", { children: r.by }),
-          /* @__PURE__ */ t("span", { children: ke(r.createdAt) })
-        ] }),
-        /* @__PURE__ */ t("p", { children: r.text })
-      ] }),
-      r.by === a && /* @__PURE__ */ t(St, { onConfirm: () => s(r.id), label: "" })
-    ] }, r.id)) }),
+  let i = e.every((s) => n[s]);
+  return /* @__PURE__ */ t("div", { className: "jt-foldall", children: /* @__PURE__ */ a("button", { type: "button", className: "jt-ghost sm", onClick: () => o(e, !i), children: [
