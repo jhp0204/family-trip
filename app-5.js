@@ -1,540 +1,607 @@
-.jt-comment .jt-del{padding:4px}
-.jt-comment-input{margin-top:10px}
-.jt-comment-input input{padding:9px 12px}
-.jt-send{flex:0 0 auto;width:42px;border:0;border-radius:10px;background:var(--ink);color:#fff !important;display:grid;place-items:center}
-.jt-send:disabled{opacity:.3;cursor:not-allowed}
-.jt-formmsg{margin:0}
-.jt-maprow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.jt-maplink{display:inline-flex;align-items:center;gap:5px;background:#EAF4F8;color:#0A6A8B;border:0;border-radius:8px;padding:6px 11px;font-size:13px;font-weight:700;text-decoration:none}
-.jt-maplink.inline{margin-top:8px}
-.jt-embed{margin-top:10px}
-.jt-embed iframe{width:100%;height:220px;border:0;border-radius:10px;background:#E3E7EE}
-.jt-embed p{font-size:12px;color:var(--muted);margin-top:4px}
-.jt-mapsearch{margin-bottom:10px}
-.jt-mapmsg{margin:8px 0 0}
-.jt-results{background:#fff;border:1px solid var(--rule);border-radius:10px;margin-bottom:10px;overflow:hidden}
-.jt-results li+li{border-top:1px solid var(--rule)}
-.jt-results button{width:100%;background:none;border:0;text-align:left;padding:10px 12px;display:flex;flex-direction:column}
-.jt-results button:active{background:#EDF0F5}
-.jt-results span{font-size:12px;color:var(--muted)}
-.jt-map{position:relative;overflow:hidden;border-radius:12px;border:1px solid var(--rule);background:#DDE2EA;touch-action:none;user-select:none;cursor:grab;height:min(58vh,460px);min-height:320px}
-.jt-map img{position:absolute;width:256px;height:256px;max-width:none;pointer-events:none;user-select:none}
-.jt-pin{position:absolute;width:26px;height:26px;margin:-33px 0 0 -13px;padding:0;border:0;background:var(--pc);border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 5px rgba(0,0,0,.35);z-index:2}
-.jt-pin::after{content:"";position:absolute;inset:-8px}
-.jt-pin i{position:absolute;inset:7px;background:#fff;border-radius:50%}
-.jt-pin.sel{width:34px;height:34px;margin:-43px 0 0 -17px;z-index:3}
-.jt-pin.sel i{inset:10px}
-.jt-pin.temp{--pc:var(--ink);z-index:4;pointer-events:none}
-.jt-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:5}
-.jt-zoom button{width:38px;height:38px;border-radius:10px;border:1px solid var(--rule);background:#fff;font-size:22px;font-weight:700;line-height:1;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.jt-mapfail{position:absolute;left:12px;right:60px;top:12px;background:#FFF4E5;color:#7A4100;border:1px solid #F2C894;border-radius:10px;padding:8px 10px;font-size:13px;font-weight:600;z-index:6;pointer-events:none}
-.jt-attr{position:absolute;right:0;bottom:0;background:rgba(255,255,255,.85);font-size:10px;padding:1px 6px;color:#33405C;text-decoration:none;z-index:5}
-.jt-mappanel{margin-top:12px;background:#fff;border:1px solid var(--rule);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
-.jt-mappanel .jt-inline{margin-top:0}
-.jt-mappanel .jt-primary{padding:11px;font-size:15px}
-.jt-mappanel .jt-maprow{margin-top:0}
-@media (prefers-reduced-motion:reduce){.jt-sheet{animation:none}
-}
-.jt-main{flex:1;padding:16px 16px 150px}
-.jt-head{padding:12px 20px 22px;border-radius:0 0 22px 22px}
-.jt-card,.jt-wish,.jt-total,.jt-mappanel,.jt-results,.jt-who-btn,.jt-daypick button{border-color:transparent;border-radius:16px}
-.jt-empty{background:#fff;border-radius:16px;padding:32px 20px;margin-top:4px}
-.jt-nav{background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid rgba(20,33,61,.06)}
-.jt-nav button.on{box-shadow:none;color:var(--ink);font-weight:800}
-.jt-nav-ic{height:30px;border-radius:999px;display:grid;place-items:center;transition:background .15s}
-.jt-nav button.on .jt-nav-ic{background:var(--ink);color:#fff}
-.jt-fab{position:fixed;z-index:20;bottom:calc(78px + env(safe-area-inset-bottom));right:max(16px,calc(50% - 244px));display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:#fff !important;border:0;border-radius:999px;padding:14px 20px 14px 16px;font-weight:800;font-size:15px;box-shadow:0 6px 18px rgba(20,33,61,.28)}
-.jt-fab:active{transform:scale(.97)}
-.jt-total strong{font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;font-size:36px;margin-top:2px}
-.jt-catbar{display:flex;gap:3px;height:10px;margin-top:14px;border-radius:999px;overflow:hidden}
-.jt-catbar i{display:block;min-width:4px}
-.jt-catlegend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px;color:var(--muted)}
-.jt-catlegend li{display:inline-flex;align-items:center;gap:5px}
-.jt-catlegend b{color:var(--ink);font-variant-numeric:tabular-nums}
-.jt-dot{width:8px;height:8px;border-radius:50%}
-.jt-mybal{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:20px;border-left:6px solid var(--muted)}
-.jt-mybal.plus{border-left-color:#0A9B6E}
-.jt-mybal.minus{border-left-color:#D9262E}
-.jt-mybal-top{display:flex;align-items:center;gap:12px}
-.jt-mybal-top div{display:flex;flex-direction:column;line-height:1.3}
-.jt-mybal-top span{font-size:13px;color:var(--muted);font-weight:600}
-.jt-mybal-top strong{font-size:19px;font-weight:800;letter-spacing:-.01em}
-.jt-mybal.plus .jt-mybal-top strong{color:#0A7D58}
-.jt-mybal.minus .jt-mybal-top strong{color:#B42318}
-.jt-mybal .jt-moves{margin:12px 0 0;gap:0}
-.jt-mybal .jt-moves li{display:flex;justify-content:space-between;align-items:center;border:0;border-radius:0;background:none;padding:10px 0;border-top:1px solid var(--soft)}
-.jt-moves-amt{display:flex;flex-direction:column;align-items:flex-end;line-height:1.25}
-.jt-moves-amt strong{font-size:16px;font-variant-numeric:tabular-nums}
-.jt-moves-amt em{font-style:normal;font-size:12px;color:var(--muted)}
-.jt-people{display:flex;flex-direction:column;margin-top:8px}
-.jt-people li{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--soft)}
-.jt-listhint{margin:0 0 10px 2px}
-.jt-group-sum{margin-left:auto;color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
-.jt-spend-list{background:#fff;border-radius:16px;overflow:hidden}
-.jt-spend-list li+li .jt-spend{border-top:1px solid var(--soft)}
-.jt-spend-list .jt-spend{border:0;border-radius:0;background:none;padding:12px 14px;gap:12px}
-.jt-spend-list .jt-spend:active{background:#F6F7F9}
-.jt-spend-icon{width:38px;height:38px;border-radius:12px;flex:0 0 auto;display:grid;place-items:center;color:var(--cc);background:color-mix(in srgb,var(--cc) 13%,#fff)}
-.jt-spend-name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.jt-warn{background:#FFF4E5;border-radius:16px;padding:14px 16px;margin-bottom:14px;color:#6B3A00}
-.jt-warn strong{font-size:15px}
-.jt-warn p{font-size:13px;margin-top:4px}
-.jt-warn ul{margin-top:10px;display:flex;flex-direction:column;gap:6px}
-.jt-warn button{width:100%;display:flex;justify-content:space-between;gap:10px;background:#fff;border:0;border-radius:10px;padding:9px 12px;text-align:left;font-weight:700}
-.jt-warn em{font-style:normal;font-weight:500;color:var(--muted)}
-.jt-warn-inline{background:#FFF4E5;color:#6B3A00;border-radius:10px;padding:10px 12px;font-size:13px}
-.jt-explain{font-size:12.5px;color:var(--muted);background:var(--paper);border-radius:10px;padding:10px 12px;margin-top:8px}
-@media (prefers-reduced-motion:reduce){.jt-nav-ic{transition:none}}
-.jt-seg.three{grid-template-columns:repeat(3,1fr)}
-.jt-seg.three button{font-size:14px;padding:9px 4px}
-.jt-subhead{font-size:14px;font-weight:800;margin:4px 2px 8px}
-.jt-calc{margin-top:12px;background:var(--paper);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
-.jt-calc span{color:var(--muted)}
-.jt-calc b{font-variant-numeric:tabular-nums}
-.jt-calc .sum{border-top:1px solid var(--soft);padding-top:6px;margin-top:2px}
-.jt-calc .sum span{color:var(--ink);font-weight:700}
-.jt-calc b.plus{color:#0A7D58}
-.jt-calc b.minus{color:#B42318}
-.jt-daynet{background:#fff;border-radius:16px;overflow:hidden}
-.jt-daynet li{display:grid;grid-template-columns:12px 1fr auto;column-gap:10px;align-items:center;padding:11px 14px}
-.jt-daynet li+li{border-top:1px solid var(--soft)}
-.jt-daynet .jt-pip{grid-row:span 2}
-.jt-daynet-label{font-weight:700;font-size:14px}
-.jt-daynet-sub{grid-column:2;font-size:12px;color:var(--muted)}
-.jt-daynet .jt-net{grid-column:3;grid-row:1/span 2}
-.jt-daycard{background:#fff;border-radius:16px;padding:12px 0 0;margin-bottom:14px;overflow:hidden}
-.jt-daycard h4{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;padding:0 14px 8px}
-.jt-daycard .jt-moves2{margin:0 14px 10px}
-.jt-daycard .jt-nomoves{margin:0 14px 10px}
-.jt-daycard .jt-spend-list{border-radius:0;border-top:1px solid var(--soft)}
-.jt-moves2{display:flex;flex-direction:column;gap:6px}
-.jt-moves2 li{display:flex;justify-content:space-between;align-items:center;background:var(--paper);border-radius:10px;padding:8px 12px}
-.jt-moves2 li.mine{box-shadow:inset 3px 0 0 var(--ink)}
-.jt-moves-who{display:inline-flex;align-items:center;gap:4px}
-.jt-moves-who svg{color:var(--muted)}
-.jt-nomoves{margin:0}
-.jt-allcard{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:18px}
-.jt-allcard h4{font-size:15px;font-weight:800;margin-bottom:10px}
-.jt-people.card{background:#fff;border-radius:16px;padding:0 14px;margin-top:0}
-.jt-people.card li:first-child{border-top:0}
-.jt-calc div{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
-.jt-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.jt input:disabled{background:#F1F3F6;color:var(--muted)}
-.jt-clash{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:#9A4A00;background:#FFF4E5;border-radius:6px;padding:2px 8px}
-.jt-tt-wrap{margin-top:22px}
-.jt-tt{position:relative;background:#fff;border-radius:16px;padding:0;margin-top:2px}
-.jt-tt-hour{position:absolute;left:0;right:0;height:0;border-top:1px solid var(--soft);margin-top:7px}
-.jt-tt-hour span{position:absolute;left:10px;top:-8px;font-size:11px;font-weight:700;color:var(--muted);background:#fff;padding-right:4px;font-variant-numeric:tabular-nums}
-.jt-tt-block{position:absolute;border:0;border-radius:8px;text-align:left;padding:5px 8px;overflow:hidden;background:color-mix(in srgb,var(--lc) 14%,#fff);box-shadow:inset 4px 0 0 var(--lc);display:flex;flex-direction:column;gap:1px}
-.jt-tt-block strong{font-size:13px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.jt-tt-block span{font-size:11px;color:#33405C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums}
-.jt-tt-block.short{flex-direction:row;align-items:center;gap:6px;padding:2px 8px}
-.jt-tt-block.short span{display:none}
-.jt-tt-block.clash{box-shadow:inset 4px 0 0 var(--lc),0 0 0 1.5px #F2C894}
-.jt-tt-block:active{filter:brightness(.97)}
-.jt-tt-now{position:absolute;left:48px;right:0;height:0;border-top:2px solid #D9262E;margin-top:7px;z-index:3;pointer-events:none}
-.jt-tt-now span{position:absolute;left:-44px;top:-9px;background:#D9262E;color:#fff;font-size:10px;font-weight:800;border-radius:999px;padding:1px 6px}
-.jt-tt-note{margin:8px 2px 0}
-.jt-tsel{display:flex;align-items:center;gap:4px;background:#fff;border:1.5px solid var(--rule);border-radius:10px;padding:0 6px}
-.jt-tsel.off{background:#F1F3F6}
-.jt .jt-tsel select{border:0;padding:11px 4px;flex:1;min-width:0;background:transparent;text-align:center;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
-.jt-tsel span{font-weight:800;color:var(--muted)}
-.jt-invite{background:#fff;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;margin-top:8px}
-.jt-invite strong{font-size:16px}
-.jt-invite p{font-size:13px;color:var(--muted)}
-.jt-invite summary{font-size:13px;color:var(--muted);cursor:pointer}
-.jt-invite code{display:block;margin-top:6px;font-size:11px;word-break:break-all;background:var(--paper);padding:8px;border-radius:8px;user-select:all}
-.jt-wx{background:#fff;border-radius:16px;padding:12px 14px;margin-bottom:14px}
-.jt-wx-head{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;font-weight:700;color:var(--muted)}
-.jt-wx-head em{font-style:normal;font-weight:500}
-.jt-wx-main{display:flex;align-items:center;gap:12px;margin-top:6px}
-.jt-wx-temp{display:flex;flex-direction:column;flex:1;line-height:1.3}
-.jt-wx-temp strong{font-size:17px;font-weight:800}
-.jt-wx-temp span{font-size:13px;color:var(--muted)}
-.jt-wx-temp b{color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums}
-.jt-wx-rain{display:inline-flex;align-items:center;gap:4px;font-weight:800;color:#0A6A8B;background:#EAF4F8;border-radius:999px;padding:4px 10px;font-size:14px;font-variant-numeric:tabular-nums}
-.jt-wx-tip{margin-top:8px;font-size:13px;font-weight:700;color:#0A6A8B}
-.jt-wx-hours{display:grid;grid-template-columns:repeat(5,1fr);margin-top:10px;border-top:1px solid var(--soft);padding-top:8px}
-.jt-wx-hours li{display:flex;flex-direction:column;align-items:center;gap:2px;font-variant-numeric:tabular-nums}
-.jt-wx-hours span{font-size:11px;color:var(--muted);font-weight:700}
-.jt-wx-hours b{font-size:14px}
-.jt-wx-hours em{font-style:normal;font-size:11px;color:#0A6A8B;min-height:14px}
-.jt-wx-msg{font-size:13.5px;margin-top:6px;color:#33405C}
-.jt-wxchip{flex:0 0 auto;display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;background:var(--paper);border-radius:999px;padding:2px 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.jt-wxchip em{font-style:normal;color:#0A6A8B;margin-left:2px}
-.jt-total .jt-fx{display:block;margin-top:4px;font-size:12px;color:var(--muted);font-weight:500}
-.jt-fxhint b{color:var(--ink);font-size:15px}
-.jt-mlwrap{position:relative}
-.jt-ml{height:min(58vh,460px);min-height:320px;border-radius:12px;overflow:hidden;background:#DDE2EA}
-.jt-mlmsg{position:absolute;left:12px;right:60px;top:12px;background:rgba(255,255,255,.95);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:600;color:#33405C;pointer-events:none}
-.jt-mlpin{background:none;border:0;padding:0;cursor:pointer;line-height:0;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
-.jt-mlpin.temp{pointer-events:none}
-.jt .maplibregl-ctrl-group button{width:38px;height:38px}
-.jt-card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;flex-wrap:wrap}
-.jt-card-foot .jt-by{margin-top:0}
-.jt-cbtn{padding:3px 10px;font-size:13px}
-.jt-card .jt-comments,.jt-wish .jt-comments{margin-top:10px;cursor:auto}
-.jt-mappanel .jt-comments{margin-top:2px}
-.jt:has(.jt-comments input:focus) .jt-fab{display:none}
-.jt-react{position:relative;display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px}
-.jt-rchip{display:inline-flex;align-items:center;gap:3px;background:#fff;border:1.5px solid var(--rule);border-radius:999px;padding:2px 9px;font-size:13px;font-weight:700;color:#33405C;font-variant-numeric:tabular-nums;line-height:1.4}
-.jt-rchip.on{border-color:var(--ink);background:#EEF1F6;color:var(--ink)}
-.jt-rchip.add{color:var(--muted);padding:3px 8px}
-.jt-rchip.add.open{border-color:var(--ink);color:var(--ink)}
-.jt-emoji{font-size:15px;line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
-.jt-rpop{position:absolute;z-index:30;background:#fff;border-radius:16px;box-shadow:0 6px 24px rgba(20,33,61,.22);padding:6px;min-width:226px;animation:jt-pop .14s ease-out}
-.jt-rpop.up{bottom:calc(100% + 6px)}
-.jt-rpop.down{top:calc(100% + 6px)}
-.jt-rpop.right{right:0}
-.jt-rpop.left{left:0}
-@keyframes jt-pop{from{transform:translateY(4px) scale(.96);opacity:0}to{transform:none;opacity:1}}
-.jt-rpop-row{display:flex;gap:2px}
-.jt-rpick{width:42px;height:42px;border:0;border-radius:12px;background:none;font-size:25px;line-height:1;display:grid;place-items:center;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
-.jt-rpick:active{transform:scale(1.15)}
-.jt-rpick.on{background:#EEF1F6}
-.jt-rwho{border-top:1px solid var(--soft);margin-top:6px;padding:6px 6px 2px;display:flex;flex-direction:column;gap:3px;font-size:12px;color:#33405C}
-.jt-rwho li{display:flex;align-items:center;gap:6px}
-.jt-card-foot .jt-react{margin-left:auto}
-@media (prefers-reduced-motion:reduce){.jt-rpop{animation:none}}
-.jt-near-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
-.jt-near-head span{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:#33405C}
-.jt-near-msg{margin:-2px 2px 10px}
-.jt-radius{margin-bottom:12px}
-.jt-near-list{display:flex;flex-direction:column;background:#fff;border-radius:16px;overflow:hidden}
-.jt-near{display:flex;gap:10px;padding:12px 14px;align-items:flex-start}
-.jt-near+.jt-near{border-top:1px solid var(--soft)}
-.jt-near-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.jt-near-main strong{font-size:15px;line-height:1.3}
-.jt-near-sub{font-size:12px;color:var(--muted)}
-.jt-near-meta{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:12.5px;color:var(--muted);align-items:center}
-.jt-star{display:inline-flex;align-items:center;gap:3px;color:#B7791F;font-weight:800}
-.jt-star em{font-style:normal;font-weight:500;color:var(--muted)}
-.jt-open{color:#0A7D58;font-weight:700}
-.jt-closed{color:#B42318;font-weight:700}
-.jt-near-dist{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#33405C;font-variant-numeric:tabular-nums}
-.jt-near-act{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:0 0 auto}
-.jt-near-saved{display:inline-flex;align-items:center;gap:3px;font-size:12.5px;font-weight:700;color:#0A7D58;padding:5px 2px}
-.jt-near-src{font-size:11px;color:var(--muted);margin:8px 2px 0;text-align:right}
-.jt-head.hero{position:relative;overflow:hidden;isolation:isolate;min-height:150px;display:flex;flex-direction:column;transition:min-height .4s ease}
-.jt-head.hero.tall{min-height:196px}
-.jt-head.hero>.jt-head-top,.jt-head.hero>h1,.jt-head.hero>.jt-head-sub{position:relative;z-index:2}
-.jt-head.hero>h1{margin-top:auto;text-shadow:0 2px 12px rgba(0,0,0,.45);font-size:24px}
-.jt-head.hero .jt-head-sub{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.5);padding-bottom:14px}
-.jt-head.hero .jt-me{background:rgba(20,33,61,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.jt-head.hero .jt-icon.light{background:rgba(20,33,61,.45)}
-.jt-hero{position:absolute;inset:0;z-index:0;background:var(--ink)}
-.jt-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.8s ease;transform:scale(1.02)}
-.jt-hero img.on{opacity:1;animation:jt-kb 9s ease-out forwards}
-@keyframes jt-kb{from{transform:scale(1.02)}to{transform:scale(1.12)}}
-.jt-hero-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,33,61,.55) 0%,rgba(20,33,61,.08) 38%,rgba(20,33,61,.15) 55%,rgba(20,33,61,.82) 100%)}
-.jt-hero-foot{position:absolute;left:20px;right:12px;bottom:6px;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none}
-.jt-hero-dots{display:flex;gap:4px}
-.jt-hero-dots i{display:block;width:14px;height:3px;border-radius:2px;background:rgba(255,255,255,.4);transition:width .4s,background .4s}
-.jt-hero-dots i.on{width:22px;background:#fff}
-.jt-hero-cap{pointer-events:auto;font-size:10px;color:rgba(255,255,255,.75);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70%}
-.jt-wish-top .jt-wish-edit{margin-left:auto}
-@media (prefers-reduced-motion:reduce){.jt-hero img.on{animation:none}
-.jt-hero img{transition:opacity .6s}
-.jt-head.hero{transition:none}}
-.jt-head-btns{display:flex;gap:6px}
-.jt-head.hero.mini{min-height:0;padding:10px 14px;border-radius:0 0 16px 16px}
-.jt-head.hero.mini .jt-head-top{margin-bottom:0;gap:10px}
-.jt-head.hero.mini .jt-me,.jt-head.hero.mini .jt-icon.light{background:rgba(255,255,255,.12)}
-.jt-mini-title{flex:1;min-width:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800;color:#fff;white-space:nowrap}
-.jt-mini-name{min-width:0;overflow:hidden;text-overflow:ellipsis}
-.jt-mini-title em{font-style:normal;flex:0 0 auto;background:#fff;color:var(--ink);font-size:12px;font-weight:800;padding:1px 8px;border-radius:999px}
-.jt-nav button{padding:8px 2px 8px;font-size:11px;letter-spacing:-.02em}
-.jt-nav-ic{width:46px;position:relative}
-.jt-share{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:12px;border-left:6px solid var(--rule)}
-.jt-share.on{border-left-color:#0A9B6E}
-.jt-share-text{flex:1;display:flex;flex-direction:column;gap:2px}
-.jt-share-text strong{font-size:15px}
-.jt-share-text span{font-size:12.5px;color:var(--muted)}
-.jt-switch{flex:0 0 auto;width:52px;height:30px;border-radius:999px;border:0;background:#C9D0DC;position:relative;padding:0;transition:background .2s}
-.jt-switch i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
-.jt-switch[aria-checked=true]{background:#0A9B6E}
-.jt-switch[aria-checked=true] i{transform:translateX(22px)}
-.jt-share-err{margin:-4px 0 12px}
-.jt-fam-bar{display:flex;justify-content:space-between;align-items:center;margin:10px 2px 10px;font-size:13px;color:#33405C}
-.jt-fam-bar .jt-secondary{display:inline-flex;align-items:center;gap:4px}
-.jt-fam-list{background:#fff;border-radius:16px;overflow:hidden}
-.jt-fam{display:flex;align-items:center;gap:8px;padding:0 14px 0 0}
-.jt-fam+.jt-fam{border-top:1px solid var(--soft)}
-.jt-fam.sel{background:#F3F6FA}
-.jt-fam-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;background:none;border:0;padding:12px 0 12px 14px;text-align:left}
-.jt-fam-main:disabled{cursor:default}
-.jt-fam:not(.live) .jt-fam-av{opacity:.45}
-.jt-fam-av{position:relative;flex:0 0 auto}
-.jt-live-dot{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;background:#0A9B6E;border:2px solid #fff}
-.jt-fam-txt{display:flex;flex-direction:column;min-width:0}
-.jt-fam-txt strong{font-size:15px}
-.jt-fam-txt span{font-size:12.5px;color:var(--muted)}
-.jt-fam.live .jt-fam-txt span{color:#0A7D58}
-.jt-fam-tip{margin:10px 2px 0}
-@media (prefers-reduced-motion:reduce){.jt-switch,.jt-switch i{transition:none}}
-.jt-form-results{margin:-6px 0 0}
-.jt-picked{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;background:#EEF6F1;border-radius:10px;padding:8px 10px;font-size:13px;font-weight:700;color:#0A7D58;margin-top:-6px}
-.jt-picked span{flex:1;min-width:120px}
-.jt-ghost.sm{padding:4px 6px;font-size:12px}
-.jt-tt-lane{position:absolute;left:56px;right:8px;top:7px;bottom:0;cursor:pointer}
-.jt-tt-ghost{position:absolute;left:2px;right:2px;border:1.5px dashed var(--lc);border-radius:8px;background:color-mix(in srgb,var(--lc) 8%,#fff);font-size:12px;font-weight:700;color:var(--ink);display:flex;align-items:center;padding:0 8px;pointer-events:none}
-.jt-locbtn{position:relative}
-.jt-locbtn i{position:absolute;right:5px;top:5px;width:9px;height:9px;border-radius:50%;background:#9AA3B5;border:2px solid rgba(20,33,61,.9)}
-.jt-locbtn.on i{background:#2FD38A}
-.jt-head.hero .jt-locbtn.on{background:rgba(10,155,110,.55)}
-.jt-ask{font-size:15px;line-height:1.6;color:#33405C}
-.jt-ask-hint{margin-top:-6px}
-.jt-toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));z-index:40;background:var(--ink);color:#fff;font-size:13.5px;font-weight:600;padding:10px 16px;border-radius:12px;max-width:min(92vw,480px);box-shadow:0 6px 18px rgba(20,33,61,.3);animation:jt-up .2s ease-out}
-.jt-helpbtn{align-self:flex-start;display:inline-flex;align-items:center;gap:4px;margin-top:4px;background:var(--paper);border:0;border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:700;color:#33405C}
-.jt-helplist{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
-.jt-helplist li{background:#fff;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:3px;border-left:4px solid #0A9B6E}
-.jt-helplist b{font-size:15px}
-.jt-helplist span{font-size:14px;line-height:1.55;color:#33405C}
-.jt-badge{position:absolute;top:-4px;right:2px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#D9262E;color:#fff;font-size:11px;font-weight:800;line-height:18px;text-align:center;box-shadow:0 0 0 2px #fff;font-style:normal}
-.jt-chat{padding-bottom:70px}
-.jt-msgs{display:flex;flex-direction:column;gap:4px}
-.jt-daysep{display:flex;justify-content:center;margin:12px 0 6px}
-.jt-daysep span{background:rgba(20,33,61,.08);color:#33405C;font-size:12px;font-weight:700;padding:3px 12px;border-radius:999px}
-.jt-msg{display:flex;gap:8px;align-items:flex-start;margin-top:6px}
-.jt-msg.cont{margin-top:0}
-.jt-msg.mine{justify-content:flex-end}
-.jt-msg-av{width:30px;flex:0 0 30px}
-.jt-msg-col{display:flex;flex-direction:column;max-width:78%;min-width:0}
-.jt-msg.mine .jt-msg-col{align-items:flex-end}
-.jt-msg-name{font-size:12px;font-weight:700;color:#33405C;margin:0 0 3px 2px}
-.jt-msg-row{display:flex;align-items:flex-end;gap:5px}
-.jt-msg.mine .jt-msg-row{flex-direction:row-reverse}
-.jt-bubble{border:0;text-align:left;background:#fff;color:var(--ink);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:15px;line-height:1.45;min-width:0;cursor:default}
-.jt-msg.mine .jt-bubble{background:var(--ink);color:#fff;border-radius:16px 16px 4px 16px;cursor:pointer}
-.jt-msg.cont .jt-bubble{border-radius:16px}
-.jt-msg-text{white-space:pre-wrap;word-break:break-word}
-.jt-msg-text a{color:inherit;text-decoration:underline;word-break:break-all}
-.jt-msg-time{font-size:10.5px;color:var(--muted);flex:0 0 auto;font-variant-numeric:tabular-nums;padding-bottom:2px}
-.jt-bubble.loc{background:#EEF6F1;color:#0A7D58}
-.jt-msg.mine .jt-bubble.loc{background:#0A9B6E;color:#fff}
-.jt-locmsg{display:inline-flex;align-items:center;gap:6px;font-weight:700}
-.jt-loclinks{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap}
-.jt-msg-del{margin-top:4px}
-.jt-chatbar{position:fixed;z-index:15;left:50%;transform:translateX(-50%);width:min(100%,520px);bottom:calc(62px + env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:8px;padding:8px 12px;background:rgba(241,243,246,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid rgba(20,33,61,.06)}
-.jt .jt-chatbar textarea{flex:1;resize:none;max-height:120px;min-height:42px;padding:10px 12px;border-radius:20px;font-size:15px;line-height:1.35}
-.jt-chatbar .jt-send{height:42px;border-radius:50%;width:42px}
-.jt-chat-loc{flex:0 0 auto;width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:#0A7D58;display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px var(--rule)}
-.jt-chat-loc:disabled{opacity:.5}
-.jt-next{display:flex;align-items:center;gap:6px;margin-top:10px;padding:8px 10px;border-radius:10px;background:#F1F5FB;color:#0A6A8B;font-size:13px;text-decoration:none;line-height:1.35}
-.jt-next b{font-weight:800}
-.jt-next span{min-width:0}
-.jt-msg-meta{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex:0 0 auto}
-.jt-msg:not(.mine) .jt-msg-meta{align-items:flex-start}
-.jt-unread{font-size:11px;font-weight:800;color:#C98A00;line-height:1;font-style:normal}
-.jt-badgeask{display:flex;align-items:center;gap:10px;background:#fff;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:13px;color:#33405C}
-.jt-badgeask span{flex:1}
-.jt-maplink.route{background:#EEF6F1;color:#0A7D58}
-.jt-backbar{margin:-12px 0 10px -8px}
-.jt-back{display:inline-flex;align-items:center;gap:2px;background:none;border:0;padding:8px 10px 8px 4px;border-radius:10px;font-size:15px;font-weight:700;color:#33405C}
-.jt-back:active{background:#E3E7EE}
-.jt-who-btn.on{border-color:var(--ink)}
-.jt-who-name{flex:1}
-.jt-who-now{font-style:normal;font-size:12px;font-weight:700;color:#fff;background:var(--ink);border-radius:999px;padding:2px 10px}
-.jt-foldall{display:flex;justify-content:flex-end;margin:-6px 0 6px}
-.jt-foldall .jt-ghost{display:inline-flex;align-items:center;gap:3px;font-size:13px;color:#33405C}
-.jt-fold-head{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;padding:0;text-align:left;min-height:28px}
-.jt-fold-head .jt-card-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.jt-card.open .jt-fold-head .jt-card-title,.jt-wish.open .jt-fold-name{white-space:normal}
-.jt-fold-name{flex:1;min-width:0;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.jt-fold-ic{flex:0 0 auto;color:var(--muted);transition:transform .2s}
-.open>.jt-fold-head .jt-fold-ic{transform:rotate(180deg)}
-.jt-fold-body{margin-top:6px}
-.jt-fold-wx{margin-bottom:4px}
-.jt-fold-tools{display:flex;justify-content:flex-end;margin:-2px 0 4px}
-.jt-editbtn{padding:3px 10px;font-size:13px}
-.jt-card{border-radius:14px;padding:9px 12px}
-.jt-row:first-child .jt-rail::before{top:17px}
-.jt-row:last-child .jt-rail::before{bottom:auto;height:17px}
-@media (prefers-reduced-motion:reduce){.jt-fold-ic{transition:none}}
-.jt-daybadge{flex:0 0 auto;color:#fff;font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px}
-.jt-listbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-2px 0 10px}
-.jt-listbar .jt-foldall{margin:0}
-.jt-pfsel{position:relative;display:inline-flex;align-items:center}
-.jt .jt-pfsel select{-webkit-appearance:none;appearance:none;width:auto;font-size:14px;font-weight:700;padding:7px 32px 7px 12px;border-radius:999px;background:#fff;border:1.5px solid var(--rule)}
-.jt-pfsel svg{position:absolute;right:11px;pointer-events:none;color:var(--muted)}
-.jt-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-/* 채팅 수정, 공지 */
-.jt-notice{position:sticky;top:calc(8px + env(safe-area-inset-top));z-index:12;background:#FFF8E6;border:1px solid #F2D58A;border-radius:14px;margin:0 0 12px;box-shadow:0 4px 14px rgba(20,33,61,.08)}
-.jt-notice-head{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;padding:10px 12px;text-align:left}
-.jt-notice-ic{color:#B7791F;flex:0 0 auto}
-.jt-notice-label{flex:0 0 auto;font-size:12px;font-weight:800;color:#fff;background:#C98A00;border-radius:6px;padding:1px 7px}
-.jt-notice-text{flex:1;min-width:0;font-size:14px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.jt-notice.open .jt-notice-text{visibility:hidden}
-.jt-notice.open>.jt-notice-head .jt-fold-ic{transform:rotate(180deg)}
-.jt-notice-body{padding:0 14px 12px;display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow:auto}
-.jt-notice-body p{font-size:15px;line-height:1.55;color:var(--ink)}
-.jt-notice-body a{color:#0A6A8B}
-.jt-notice-meta{font-size:12px;color:var(--muted)}
-.jt-notice-act{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
-.jt-notice-act .jt-like,.jt-msg-menu .jt-like{padding:3px 10px;font-size:13px;background:#fff}
-.jt-msg-menu{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:5px}
-.jt-msg.mine .jt-msg-menu{justify-content:flex-end}
-.jt-bubble{cursor:pointer}
-.jt-bubble.pinned{box-shadow:0 0 0 2px #F2C14E}
-.jt-msg.flash .jt-bubble{animation:jt-flash 1.5s ease-out}
-@keyframes jt-flash{0%,40%{box-shadow:0 0 0 4px #F2C14E}100%{box-shadow:none}}
-.jt-msg-editbox{display:flex;flex-direction:column;gap:6px;min-width:220px;max-width:100%}
-.jt .jt-msg-editbox textarea{font-size:15px;border-radius:12px;padding:8px 10px;resize:vertical}
-.jt-msg-editact{display:flex;justify-content:flex-end;gap:6px}
-@media (prefers-reduced-motion:reduce){.jt-msg.flash .jt-bubble{animation:none;box-shadow:0 0 0 3px #F2C14E}}
-/* 길게 눌러 누른 사람 보기 */
-.jt-hold{position:relative;display:inline-flex}
-.jt-holdbtn{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
-.jt-whopop{position:absolute;z-index:35;min-width:150px;max-width:220px;background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(20,33,61,.22);padding:10px 12px;animation:jt-pop .14s ease-out}
-.jt-whopop.up{bottom:calc(100% + 6px)}.jt-whopop.down{top:calc(100% + 6px)}.jt-whopop.left{left:0}.jt-whopop.right{right:0}
-.jt-whopop strong{display:block;font-size:13px;margin-bottom:6px;white-space:nowrap}
-.jt-whopop ul{display:flex;flex-direction:column;gap:6px}
-.jt-whopop li{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
-.jt-whopop p{font-size:13px;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.jt-whopop{animation:none}}
-/* 날짜 선택: DAY 카드 */
-.jt-day{position:relative;flex:1 0 80px;min-width:80px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:9px 10px 10px;border:0;border-radius:14px;background:#fff;text-align:left;box-shadow:inset 0 3px 0 var(--lc);transition:background .15s,box-shadow .15s,transform .15s}
-.jt-day-no{display:flex;align-items:center;gap:5px;white-space:nowrap;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--lc)}
-.jt-day-today{position:absolute;top:-8px;right:8px;box-shadow:0 0 0 2px var(--paper);font-style:normal;letter-spacing:0;font-size:10.5px;font-weight:800;background:var(--lc);color:#fff;border-radius:999px;padding:0 6px;line-height:16px}
-.jt-day-date{font-size:16px;white-space:nowrap;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.25}
-.jt-day-date em{font-style:normal;font-size:13px;font-weight:700;color:var(--muted)}
-.jt-day-count{font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap}
-.jt-day.active{background:var(--lc);box-shadow:0 6px 14px color-mix(in srgb,var(--lc) 35%,transparent);transform:translateY(-1px)}
-.jt-day.active .jt-day-no,.jt-day.active .jt-day-date,.jt-day.active .jt-day-date em{color:#fff}
-.jt-day.active .jt-day-count{color:rgba(255,255,255,.85)}
-.jt-day.active .jt-day-today{background:#fff;color:var(--lc)}
-.jt-daychip{flex:0 0 auto;display:inline-flex;align-items:center;background:var(--lc);color:#fff;font-size:12px;font-weight:800;letter-spacing:.03em;border-radius:999px;padding:2px 9px;line-height:18px}
-@media (prefers-reduced-motion:reduce){.jt-day{transition:none}.jt-day.active{transform:none}}
-/* API 키 잠금 */
-.jt-keylock{display:flex;align-items:center;gap:8px;background:#F1F3F6;border:1.5px dashed var(--rule);border-radius:10px;padding:8px 8px 8px 12px;color:var(--muted)}
-.jt-keylock-val{flex:1;min-width:0;font-size:14px;font-weight:600;color:#33405C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums}
-.jt-presshold{position:relative;overflow:hidden;flex:0 0 auto;border:1.5px solid var(--ink);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;color:var(--ink);-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:none}
-.jt-presshold-fill{position:absolute;inset:0;background:color-mix(in srgb,#D9262E 22%,#fff);transform:scaleX(0);transform-origin:left}
-.jt-presshold.pressing .jt-presshold-fill{transform:scaleX(1);transition:transform var(--hold) linear}
-.jt-presshold-label{position:relative}
-.jt-keywarn{background:#FFF4E5;border:1px solid #F2C894;border-radius:12px;padding:12px 14px;color:#6B3A00;display:flex;flex-direction:column;gap:8px}
-.jt-keywarn strong{font-size:14.5px}
-.jt-keywarn ul{display:flex;flex-direction:column;gap:5px;padding-left:16px;list-style:disc}
-.jt-keywarn li{font-size:13px;line-height:1.5}
-.jt-keywarn-act{display:flex;justify-content:flex-end;gap:6px}
-/* 오프라인 표시 */
-.jt-netbar{position:sticky;top:0;z-index:45;background:#3A2A00;color:#FFE7A8;font-size:13px;font-weight:600;padding-top:env(safe-area-inset-top)}
-.jt-netbar.on{display:flex;align-items:center;justify-content:center;gap:6px;background:#0A7D58;color:#fff;padding:8px 12px}
-.jt-netbar-head{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;color:inherit;padding:8px 14px;text-align:left;font-weight:600}
-.jt-netbar-head span{flex:1}
-.jt-netbar[role=alert] .jt-fold-ic{color:#FFE7A8}
-.jt-netbar-head[aria-expanded=true] .jt-fold-ic{transform:rotate(180deg)}
-.jt-netbar-body{padding:0 14px 10px 37px;display:flex;flex-direction:column;gap:4px;font-weight:500;line-height:1.5}
-.jt-netbar-body b{display:block;color:#fff;font-weight:800}
-.jt-wx-head em.jt-wx-stale{color:#B7791F;font-weight:600}
-`;
-
-// src/main.jsx
-import { jsx as Z, jsxs as Ut } from "react/jsx-runtime";
-var pa = `rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /trips/{trip}/{document=**} {
-      allow read, write: if trip.size() >= 12;
-    }
-  }
-}`, hi = (e) => {
-  let n = e && (e.code || e.message) || "";
-  return n.includes("permission") ? "Firebase 보안 규칙이 막고 있어요. 아래 규칙을 Firestore '규칙' 탭에 붙여넣고 '게시'를 눌러 주세요." : n.includes("timeout") ? "Firebase에 연결되지 않았어요. 인터넷 연결과 Firestore 데이터베이스를 만들었는지 확인해 주세요." : n.includes("api-key") || n.includes("invalid") ? "설정값이 맞지 않아요. Firebase 콘솔에서 firebaseConfig 부분을 다시 복사해 주세요." : "연결하지 못했어요. 설정값과 인터넷 연결을 확인해 주세요. (" + n + ")";
-};
-function ji({ onDone: e }) {
-  let [n, o] = It("join"), [i, s] = It(""), [h, g] = It(""), [f, d] = It(!1), [j, b] = It(""), [z, x] = It(!1), A = async (N, y) => {
-    d(!0), b("");
-    try {
-      Ie(N, y), await Sn(), Nn(N, y), e();
-    } catch (C) {
-      b(hi(C)), d(!1);
-    }
-  }, v = () => {
-    let N = An(i);
-    if (!N) {
-      b("설정값을 찾지 못했어요. apiKey, projectId, appId가 들어 있는 firebaseConfig 부분 전체를 붙여넣어 주세요.");
-      return;
-    }
-    A(N, En());
-  }, E = () => {
-    let N = Fe(h);
-    if (!N) {
-      b("초대 링크가 아니에요. 가족에게 받은 주소 전체를 붙여넣어 주세요.");
-      return;
-    }
-    A(N.c, N.t);
-  };
-  return /* @__PURE__ */ Ut("div", { className: "jt", children: [
-    /* @__PURE__ */ Z("style", { children: Qe }),
-    /* @__PURE__ */ Ut("div", { className: "jt-setup", children: [
-      /* @__PURE__ */ Z("h1", { children: "가족 여행 앱" }),
-      /* @__PURE__ */ Ut("div", { className: "jt-seg", role: "tablist", children: [
-        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": n === "join", className: n === "join" ? "on" : "", onClick: () => o("join"), children: "초대받았어요" }),
-        /* @__PURE__ */ Z("button", { role: "tab", "aria-selected": n === "new", className: n === "new" ? "on" : "", onClick: () => o("new"), children: "처음 만들어요" })
+] })
+        ] }, s)) }),
+        /* @__PURE__ */ o("div", { className: "jt-calc", children: [
+          /* @__PURE__ */ o("div", { children: [
+            /* @__PURE__ */ t("span", { children: "내가 결제한 돈" }),
+            /* @__PURE__ */ t("b", { children: nt(h.paid[n] || 0) })
+          ] }),
+          /* @__PURE__ */ o("div", { children: [
+            /* @__PURE__ */ t("span", { children: "내가 쓴 돈" }),
+            /* @__PURE__ */ o("b", { children: [
+              "− ",
+              nt(h.share[n] || 0)
+            ] })
+          ] }),
+          /* @__PURE__ */ o("div", { className: "sum", children: [
+            /* @__PURE__ */ t("span", { children: v > 0.5 ? "더 결제했으니 받을 돈" : v < -0.5 ? "덜 결제했으니 보낼 돈" : "결과" }),
+            /* @__PURE__ */ t("b", { className: we(v), children: v > 0.5 ? nt(v) : v < -0.5 ? nt(-v) : "주고받을 돈 없음" })
+          ] })
+        ] })
       ] }),
-      n === "join" ? /* @__PURE__ */ Ut("div", { className: "jt-form", children: [
-        /* @__PURE__ */ Z("p", { className: "jt-lead", children: "가족에게 받은 초대 링크를 누르면 바로 들어와요. 홈 화면 아이콘으로 열었는데 이 화면이 보이면, 초대 링크를 아래에 붙여넣어 주세요." }),
-        /* @__PURE__ */ Z("textarea", { rows: 3, value: h, onChange: (N) => g(N.target.value), placeholder: "https://…#j=…", "aria-label": "초대 링크" }),
-        j && /* @__PURE__ */ Z("p", { className: "jt-warn-inline", children: j }),
-        /* @__PURE__ */ Z("button", { className: "jt-primary", disabled: f || !h.trim(), onClick: E, children: f ? "연결 중" : "여행에 들어가기" })
-      ] }) : /* @__PURE__ */ Ut("div", { className: "jt-form", children: [
-        /* @__PURE__ */ Z("p", { className: "jt-lead", children: "가족 중 한 명만 한 번 하면 돼요. Firebase 프로젝트의 웹 앱 설정값(firebaseConfig)을 붙여넣어 주세요." }),
-        /* @__PURE__ */ Z(
-          "textarea",
+      /* @__PURE__ */ t("h4", { className: "jt-subhead", children: "날짜마다 나는" }),
+      /* @__PURE__ */ t("ul", { className: "jt-daynet", children: C.map((c) => {
+        let s = mt(l, c.day), E = c.res.net[n] || 0;
+        return /* @__PURE__ */ o("li", { style: { "--lc": q[c.day % q.length] }, children: [
+          /* @__PURE__ */ t("span", { className: "jt-pip" }),
+          /* @__PURE__ */ o("span", { className: "jt-daynet-label", children: [
+            c.day + 1,
+            "일차 ",
+            Pt(s),
+            " (",
+            zt(s),
+            ")"
+          ] }),
+          /* @__PURE__ */ o("span", { className: "jt-daynet-sub", children: [
+            "결제 ",
+            nt(c.res.paid[n] || 0),
+            ", 내가 쓴 돈 ",
+            nt(c.res.share[n] || 0)
+          ] }),
+          /* @__PURE__ */ t("b", { className: "jt-net " + we(E), children: an(E) })
+        ] }, c.day);
+      }) }),
+      /* @__PURE__ */ t("h4", { className: "jt-subhead", children: "나와 관련된 경비" }),
+      /* @__PURE__ */ t(
+        nn,
+        {
+          days: C,
+          start: l,
+          members: u,
+          rate: p,
+          onEdit: i,
+          filter: (c) => c.payer === n || (c.split || []).includes(n),
+          empty: "나와 관련된 경비가 아직 없어요."
+        }
+      ),
+      /* @__PURE__ */ t("p", { className: "jt-explain", children: "결제한 돈이 내가 쓴 돈보다 많으면 받을 돈, 적으면 보낼 돈이에요. 날짜별로 받을 돈과 보낼 돈을 서로 빼고 더하면 위의 결과와 같아요." })
+    ] }),
+    N === "day" && /* @__PURE__ */ o(rt, { children: [
+      /* @__PURE__ */ t("p", { className: "jt-hint jt-listhint", children: "하루씩 따로 계산한 결과예요. 그날그날 정산하고 싶을 때 쓰세요. 항목을 누르면 고칠 수 있어요." }),
+      C.map((c) => {
+        let s = mt(l, c.day);
+        return /* @__PURE__ */ o("div", { className: "jt-daycard", style: { "--lc": q[c.day % q.length] }, children: [
+          /* @__PURE__ */ o("h4", { children: [
+            /* @__PURE__ */ o("span", { className: "jt-daychip", children: [
+              c.day + 1,
+              "일차"
+            ] }),
+            Pt(s),
+            " (",
+            zt(s),
+            ")",
+            /* @__PURE__ */ t("span", { className: "jt-group-sum", children: nt(c.sum) })
+          ] }),
+          /* @__PURE__ */ t(en, { moves: c.res.moves, rate: p, me: n }),
+          /* @__PURE__ */ t("ul", { className: "jt-spend-list", children: c.items.map((E) => /* @__PURE__ */ t(Cn, { e: E, members: u, rate: p, onEdit: i }, E.id)) })
+        ] }, c.day);
+      })
+    ] }),
+    N === "all" && /* @__PURE__ */ o(rt, { children: [
+      /* @__PURE__ */ o("div", { className: "jt-allcard", children: [
+        /* @__PURE__ */ t("h4", { children: "여행 전체를 합쳐서 보내면 될 돈" }),
+        /* @__PURE__ */ t(en, { moves: h.moves, rate: p, me: n }),
+        /* @__PURE__ */ t("p", { className: "jt-explain", children: "모든 날의 경비를 합친 뒤 송금 횟수가 가장 적도록 묶었어요. 그래서 요일별 정산을 하나씩 더한 것보다 송금이 적어요. 각자 주고받는 총액은 같아요." })
+      ] }),
+      /* @__PURE__ */ t("h4", { className: "jt-subhead", children: "전체 경비" }),
+      /* @__PURE__ */ t(nn, { days: C, start: l, members: u, rate: p, onEdit: i, empty: "기록된 경비가 없어요." }),
+      /* @__PURE__ */ t("h4", { className: "jt-subhead", children: "사람별 계산" }),
+      /* @__PURE__ */ t("ul", { className: "jt-people card", children: u.map((c) => /* @__PURE__ */ o("li", { children: [
+        /* @__PURE__ */ t(lt, { name: c, members: u, size: 28 }),
+        /* @__PURE__ */ o("div", { className: "jt-person-main", children: [
+          /* @__PURE__ */ t("strong", { children: c }),
+          /* @__PURE__ */ o("span", { children: [
+            "결제 ",
+            nt(h.paid[c]),
+            ", 쓴 돈 ",
+            nt(h.share[c])
+          ] })
+        ] }),
+        /* @__PURE__ */ t("div", { className: "jt-net " + we(h.net[c]), children: an(h.net[c]) })
+      ] }, c)) })
+    ] })
+  ] });
+}
+function pa({ id: e, data: a, className: n, onClick: i, alt: r = "사진" }) {
+  let [g, u] = y(a || Nt.get(e) || null), [p, l] = y(!1);
+  W(() => {
+    if (a) {
+      u(a);
+      return;
+    }
+    if (Nt.has(e)) {
+      u(Nt.get(e));
+      return;
+    }
+    let w = !0;
+    return l(!1), Zo(e).then((N) => {
+      w && (N ? u(N) : l(!0));
+    }), () => {
+      w = !1;
+    };
+  }, [e, a]);
+  let x = g ? /* @__PURE__ */ t("img", { src: g, alt: r, draggable: !1 }) : /* @__PURE__ */ t("span", { className: "jt-photo-wait", children: p ? "사진을 불러오지 못했어요" : "불러오는 중" });
+  return i ? /* @__PURE__ */ t("button", { type: "button", className: "jt-photo " + (n || ""), onClick: i, "aria-label": "사진 크게 보기", children: x }) : /* @__PURE__ */ t("span", { className: "jt-photo " + (n || ""), children: x });
+}
+function Pi({ photos: e, index: a, onClose: n }) {
+  let [i, r] = y(a), g = e.length;
+  return W(() => {
+    let u = (p) => {
+      p.key === "Escape" && n(), p.key === "ArrowRight" && r((l) => (l + 1) % g), p.key === "ArrowLeft" && r((l) => (l - 1 + g) % g);
+    };
+    return window.addEventListener("keydown", u), () => window.removeEventListener("keydown", u);
+  }, [g, n]), /* @__PURE__ */ o("div", { className: "jt-lightbox", role: "dialog", "aria-label": "사진 보기", onClick: n, children: [
+    /* @__PURE__ */ t("button", { className: "jt-lb-close", onClick: n, "aria-label": "닫기", children: /* @__PURE__ */ t(Jt, { size: 24 }) }),
+    /* @__PURE__ */ t("div", { className: "jt-lb-stage", onClick: (u) => u.stopPropagation(), children: /* @__PURE__ */ t(pa, { id: e[i], className: "contain" }) }),
+    g > 1 && /* @__PURE__ */ o(rt, { children: [
+      /* @__PURE__ */ t(
+        "button",
+        {
+          className: "jt-lb-nav prev",
+          onClick: (u) => {
+            u.stopPropagation(), r((i - 1 + g) % g);
+          },
+          "aria-label": "이전 사진",
+          children: /* @__PURE__ */ t(ln, { size: 26 })
+        }
+      ),
+      /* @__PURE__ */ t(
+        "button",
+        {
+          className: "jt-lb-nav next",
+          onClick: (u) => {
+            u.stopPropagation(), r((i + 1) % g);
+          },
+          "aria-label": "다음 사진",
+          children: /* @__PURE__ */ t(cn, { size: 26 })
+        }
+      ),
+      /* @__PURE__ */ o("div", { className: "jt-lb-count", children: [
+        i + 1,
+        " / ",
+        g
+      ] })
+    ] })
+  ] });
+}
+function $i({ text: e }) {
+  let a = e.split(/(https?:\/\/[^\s]+)/g);
+  return /* @__PURE__ */ t("p", { className: "jt-post-text", children: a.map(
+    (n, i) => i % 2 ? /* @__PURE__ */ t("a", { href: n, target: "_blank", rel: "noopener noreferrer", children: n }, i) : n
+  ) });
+}
+function zn({ url: e, onRemove: a }) {
+  let n = /* @__PURE__ */ o(rt, { children: [
+    /* @__PURE__ */ t("span", { className: "jt-linkcard-icon", children: /* @__PURE__ */ t(jo, { size: 16 }) }),
+    /* @__PURE__ */ o("span", { className: "jt-linkcard-text", children: [
+      /* @__PURE__ */ t("strong", { children: Yo(e) }),
+      /* @__PURE__ */ t("span", { children: e })
+    ] })
+  ] });
+  return a ? /* @__PURE__ */ o("div", { className: "jt-linkcard", children: [
+    n,
+    /* @__PURE__ */ t("button", { type: "button", className: "jt-icon sm", onClick: a, "aria-label": "링크 빼기", children: /* @__PURE__ */ t(Jt, { size: 16 }) })
+  ] }) : /* @__PURE__ */ o("a", { className: "jt-linkcard", href: e, target: "_blank", rel: "noopener noreferrer", children: [
+    n,
+    /* @__PURE__ */ t(Rt, { size: 15, className: "jt-linkcard-go" })
+  ] });
+}
+function Ri({ initial: e, onSave: a, onDelete: n }) {
+  let [i, r] = y(e?.text || ""), [g, u] = y(e?.urls || []), [p, l] = y(""), [x, w] = y(() => (e?.photos || []).map((s) => ({ id: s }))), [N, d] = y(!1), [A, h] = y(""), z = J(null), C = () => {
+    if (!p.trim()) return;
+    let s = Ua(p);
+    if (!s) {
+      h("주소 형식이 맞지 않아요. 예: https://tabelog.com/...");
+      return;
+    }
+    g.includes(s) || u([...g, s]), l(""), h("");
+  }, v = async (s) => {
+    let E = Array.from(s || []).filter((T) => T.type.startsWith("image/"));
+    if (!E.length) return;
+    let k = ae - x.length;
+    if (k <= 0) {
+      h(`사진은 글 하나에 ${ae}장까지 올릴 수 있어요.`);
+      return;
+    }
+    d(!0), h("사진 준비 중");
+    let S = [], m = 0;
+    for (let T of E.slice(0, k))
+      try {
+        S.push({ id: xt(), data: await ti(T) });
+      } catch {
+        m++;
+      }
+    w((T) => [...T, ...S]), d(!1), m ? h(`${m}장은 열 수 없는 형식이라 빠졌어요. JPG나 PNG로 다시 골라 주세요.`) : E.length > k ? h(`${ae}장까지만 넣었어요.`) : h(""), z.current && (z.current.value = "");
+  }, M = async () => {
+    let s = g;
+    if (p.trim()) {
+      let k = Ua(p);
+      if (!k) {
+        h("주소 형식이 맞지 않아요. 고치거나 지운 뒤 올려 주세요.");
+        return;
+      }
+      s.includes(k) || (s = [...s, k]);
+    }
+    d(!0), h(x.some((k) => k.data) ? "사진 올리는 중" : ""), await a({ text: i.trim(), urls: s, photos: x }) || (d(!1), h("올리지 못했어요. 사진 수를 줄이거나 잠시 후 다시 올려 주세요."));
+  }, c = !N && (i.trim() || g.length || p.trim() || x.length);
+  return /* @__PURE__ */ o("div", { className: "jt-form", children: [
+    /* @__PURE__ */ t(
+      "textarea",
+      {
+        rows: 4,
+        value: i,
+        onChange: (s) => r(s.target.value),
+        placeholder: "오늘 있었던 일, 공유하고 싶은 정보를 남겨 주세요",
+        "aria-label": "글 내용"
+      }
+    ),
+    x.length > 0 && /* @__PURE__ */ t("div", { className: "jt-thumbs", children: x.map((s) => /* @__PURE__ */ o("div", { className: "jt-thumb", children: [
+      /* @__PURE__ */ t(pa, { id: s.id, data: s.data }),
+      /* @__PURE__ */ t(
+        "button",
+        {
+          type: "button",
+          className: "jt-thumb-x",
+          onClick: () => w(x.filter((E) => E.id !== s.id)),
+          "aria-label": "사진 빼기",
+          children: /* @__PURE__ */ t(Jt, { size: 14 })
+        }
+      )
+    ] }, s.id)) }),
+    /* @__PURE__ */ t(
+      "input",
+      {
+        ref: z,
+        type: "file",
+        accept: "image/*",
+        multiple: !0,
+        hidden: !0,
+        onChange: (s) => v(s.target.files)
+      }
+    ),
+    /* @__PURE__ */ o(
+      "button",
+      {
+        type: "button",
+        className: "jt-secondary jt-photo-add",
+        onClick: () => z.current && z.current.click(),
+        disabled: N || x.length >= ae,
+        children: [
+          /* @__PURE__ */ t(xo, { size: 17 }),
+          "사진 추가 (",
+          x.length,
+          "/",
+          ae,
+          ")"
+        ]
+      }
+    ),
+    /* @__PURE__ */ o("div", { className: "jt-field", children: [
+      /* @__PURE__ */ t("span", { children: "링크 (선택)" }),
+      g.map((s) => /* @__PURE__ */ t(zn, { url: s, onRemove: () => u(g.filter((E) => E !== s)) }, s)),
+      /* @__PURE__ */ o("div", { className: "jt-inline", children: [
+        /* @__PURE__ */ t(
+          "input",
           {
-            rows: 7,
-            value: i,
-            onChange: (N) => s(N.target.value),
-            placeholder: `const firebaseConfig = {
-  apiKey: "…",
-  authDomain: "…",
-  projectId: "…",
-  …
-};`,
-            "aria-label": "Firebase 설정값",
-            spellCheck: !1
+            type: "url",
+            inputMode: "url",
+            value: p,
+            onChange: (s) => l(s.target.value),
+            onKeyDown: (s) => s.key === "Enter" && C(),
+            placeholder: "https:// 주소 붙여넣기",
+            "aria-label": "링크 주소"
           }
         ),
-        /* @__PURE__ */ Ut("div", { className: "jt-field", children: [
-          /* @__PURE__ */ Z("span", { children: "Firestore 보안 규칙 (규칙 탭에 붙여넣기)" }),
-          /* @__PURE__ */ Z("pre", { className: "jt-rules", children: pa }),
-          /* @__PURE__ */ Z(
+        /* @__PURE__ */ t("button", { type: "button", className: "jt-secondary", onClick: C, children: "추가" })
+      ] })
+    ] }),
+    A && /* @__PURE__ */ t("p", { className: "jt-hint jt-formmsg", role: "status", children: A }),
+    /* @__PURE__ */ t("button", { className: "jt-primary", disabled: !c, onClick: M, children: N ? "잠시만요" : e ? "수정 저장" : "올리기" }),
+    e && /* @__PURE__ */ t(Et, { onConfirm: n, label: "이 글 삭제" })
+  ] });
+}
+function Ti({ post: e, me: a, members: n, onEdit: i, onLike: r, onComment: g, onDelComment: u, onOpenPhoto: p }) {
+  let [l, x] = y(!1), w = e.photos || [], N = e.urls || [], d = e.comments || [], A = w.slice(0, 4);
+  return /* @__PURE__ */ o("li", { className: "jt-post", children: [
+    /* @__PURE__ */ o("div", { className: "jt-post-head", children: [
+      /* @__PURE__ */ t(lt, { name: e.by, members: n, size: 34 }),
+      /* @__PURE__ */ o("div", { className: "jt-post-who", children: [
+        /* @__PURE__ */ t("strong", { children: e.by }),
+        /* @__PURE__ */ o("span", { children: [
+          ke(e.createdAt),
+          e.editedAt ? ", 수정됨" : ""
+        ] })
+      ] }),
+      e.by === a && /* @__PURE__ */ t("button", { className: "jt-icon sm", onClick: () => i(e), "aria-label": "내 글 고치기", children: /* @__PURE__ */ t(Xt, { size: 17 }) })
+    ] }),
+    e.text && /* @__PURE__ */ t($i, { text: e.text }),
+    w.length > 0 && /* @__PURE__ */ t("div", { className: "jt-gallery n" + Math.min(w.length, 4), children: A.map((h, z) => /* @__PURE__ */ o("div", { className: "jt-gallery-cell", children: [
+      /* @__PURE__ */ t(pa, { id: h, onClick: () => p(w, z) }),
+      z === 3 && w.length > 4 && /* @__PURE__ */ o("span", { className: "jt-more", children: [
+        "+",
+        w.length - 4
+      ] })
+    ] }, h)) }),
+    N.length > 0 && /* @__PURE__ */ t("div", { className: "jt-links", children: N.map((h) => /* @__PURE__ */ t(zn, { url: h }, h)) }),
+    /* @__PURE__ */ o("div", { className: "jt-post-foot", children: [
+      /* @__PURE__ */ t(Ee, { item: e, me: a, members: n, onReact: (h) => r(e.id, h) }),
+      /* @__PURE__ */ t(la, { count: d.length, open: l, onClick: () => x(!l) })
+    ] }),
+    l && /* @__PURE__ */ t(
+      Ae,
+      {
+        comments: d,
+        me: a,
+        members: n,
+        onAdd: (h) => g(e.id, h),
+        onDelete: (h) => u(e.id, h)
+      }
+    )
+  ] });
+}
+function Bi({ settings: e, board: a, me: n, ...i }) {
+  let [r, g] = y(null), u = [...a].sort((p, l) => l.createdAt - p.createdAt);
+  return /* @__PURE__ */ o("section", { children: [
+    u.length === 0 ? /* @__PURE__ */ o("div", { className: "jt-empty", children: [
+      /* @__PURE__ */ t("p", { children: "아직 올라온 글이 없어요." }),
+      /* @__PURE__ */ t("p", { children: "여행 사진, 맛집 링크, 전달할 말을 올려 보세요. 글과 사진은 가족 모두에게 보여요." })
+    ] }) : /* @__PURE__ */ t("ul", { className: "jt-posts", children: u.map((p) => /* @__PURE__ */ t(
+      Ti,
+      {
+        post: p,
+        me: n,
+        members: e.members,
+        onOpenPhoto: (l, x) => g({ photos: l, index: x }),
+        ...i
+      },
+      p.id
+    )) }),
+    r && /* @__PURE__ */ t(Pi, { photos: r.photos, index: r.index, onClose: () => g(null) })
+  ] });
+}
+var Ge = "trip:loc:", Li = 3 * 6e4, _i = (e, a) => q[(Math.max(0, e.indexOf(a)) * 2 + 3) % q.length], Oi = (e) => !!e && e.online && typeof e.lat == "number" && Date.now() - e.at < Li, En = (e) => `https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}&travelmode=walking`;
+function Ui({ settings: e, me: a, locs: n, shareOn: i, onToggle: r, myPos: g, geoErr: u }) {
+  let [p, l] = y(!1), [, x] = y(0);
+  W(() => {
+    let k = setInterval(() => x((S) => S + 1), 3e4);
+    return () => clearInterval(k);
+  }, []);
+  let w = e.members, N = w.map((k) => ({ m: k, l: n[k], live: Oi(n[k]) })), d = N.filter((k) => k.live).map((k) => ({ id: k.m, lat: k.l.lat, lng: k.l.lng, color: _i(w, k.m), label: k.m, text: k.m[0] })), A = d.map((k) => `${k.id}:${k.lat.toFixed(5)}:${k.lng.toFixed(5)}`).join("|"), h = se(() => d, [A]), [z, C] = y(null), [v, M] = y(() => {
+    let k = d[0] || g;
+    return k ? { lat: k.lat, lng: k.lng, z: 14 } : { lat: ht.lat, lng: ht.lng, z: 12 };
+  }), c = () => {
+    if (!d.length) return;
+    let k = d.reduce((T, D) => T + D.lat, 0) / d.length, S = d.reduce((T, D) => T + D.lng, 0) / d.length, m = Math.max(...d.map((T) => pe({ lat: k, lng: S }, T)));
+    M({ lat: k, lng: S, z: m < 300 ? 16 : m < 1e3 ? 15 : m < 3e3 ? 13 : m < 1e4 ? 12 : 10 }), C(null);
+  }, s = J(!1);
+  W(() => {
+    !s.current && d.length && (s.current = !0, c());
+  }, [A]);
+  let E = N.filter((k) => k.live).length;
+  return /* @__PURE__ */ o("section", { children: [
+    /* @__PURE__ */ o("div", { className: "jt-share" + (i ? " on" : ""), children: [
+      /* @__PURE__ */ o("div", { className: "jt-share-text", children: [
+        /* @__PURE__ */ t("strong", { children: i ? "내 위치를 가족에게 공유하는 중" : "내 위치 공유가 꺼져 있어요" }),
+        /* @__PURE__ */ t("span", { children: "앱이 열려 있는 동안만 공유돼요." }),
+        /* @__PURE__ */ o("button", { type: "button", className: "jt-helpbtn", onClick: () => l(!0), children: [
+          /* @__PURE__ */ t(wo, { size: 14 }),
+          "도움말"
+        ] })
+      ] }),
+      /* @__PURE__ */ t("button", { type: "button", role: "switch", "aria-checked": i, "aria-label": "내 위치 공유", className: "jt-switch", onClick: r, children: /* @__PURE__ */ t("i", {}) })
+    ] }),
+    i && u && /* @__PURE__ */ t("p", { className: "jt-warn-inline jt-share-err", children: u }),
+    /* @__PURE__ */ t(
+      wn,
+      {
+        gkey: e.gmapsKey,
+        view: v,
+        setView: M,
+        pins: h,
+        temp: null,
+        selectedId: z,
+        onTap: () => C(null),
+        onPinTap: (k) => C(k),
+        onPoi: () => {
+        }
+      }
+    ),
+    /* @__PURE__ */ o("div", { className: "jt-fam-bar", children: [
+      /* @__PURE__ */ o("span", { children: [
+        "지금 위치가 보이는 가족 ",
+        /* @__PURE__ */ t("b", { children: E }),
+        "/",
+        w.length,
+        "명"
+      ] }),
+      /* @__PURE__ */ o("button", { type: "button", className: "jt-secondary sm", onClick: c, disabled: !E, children: [
+        /* @__PURE__ */ t(vo, { size: 14 }),
+        "모두 보기"
+      ] })
+    ] }),
+    /* @__PURE__ */ t("ul", { className: "jt-fam-list", children: N.map(({ m: k, l: S, live: m }) => {
+      let T = k === a, D = m && g && !T ? pe(g, S) : null;
+      return /* @__PURE__ */ o("li", { className: "jt-fam" + (m ? " live" : "") + (z === k ? " sel" : ""), children: [
+        /* @__PURE__ */ o(
+          "button",
+          {
+            type: "button",
+            className: "jt-fam-main",
+            disabled: !m,
+            onClick: () => {
+              C(k), M({ lat: S.lat, lng: S.lng, z: 16 });
+            },
+            children: [
+              /* @__PURE__ */ o("span", { className: "jt-fam-av", children: [
+                /* @__PURE__ */ t(lt, { name: k, members: w, size: 34 }),
+                m && /* @__PURE__ */ t("i", { className: "jt-live-dot" })
+              ] }),
+              /* @__PURE__ */ o("span", { className: "jt-fam-txt", children: [
+                /* @__PURE__ */ o("strong", { children: [
+                  k,
+                  T ? " (나)" : ""
+                ] }),
+                /* @__PURE__ */ t("span", { children: m ? `위치 공유 중, ${ke(S.at)}${D != null ? `, 나와 ${kn(D)}` : ""}` : S && S.at ? `앱 꺼짐, 마지막 접속 ${ke(S.at)}` : "아직 위치를 공유한 적이 없어요" })
+              ] })
+            ]
+          }
+        ),
+        m && !T && /* @__PURE__ */ o("a", { className: "jt-maplink", href: En(S), target: "_blank", rel: "noopener noreferrer", children: [
+          /* @__PURE__ */ t(Ct, { size: 13 }),
+          "길 찾기"
+        ] })
+      ] }, k);
+    }) }),
+    p && /* @__PURE__ */ o(St, { title: '"앱이 켜진 동안에만"은 이렇게 동작해요', onClose: () => l(!1), children: [
+      /* @__PURE__ */ o("ul", { className: "jt-helplist", children: [
+        /* @__PURE__ */ o("li", { children: [
+          /* @__PURE__ */ t("b", { children: "앱을 보고 있을 때" }),
+          /* @__PURE__ */ t("span", { children: "움직이면 바로, 가만히 있어도 1분마다 위치가 갱신돼요." })
+        ] }),
+        /* @__PURE__ */ o("li", { children: [
+          /* @__PURE__ */ t("b", { children: "앱을 닫거나 화면이 꺼질 때" }),
+          /* @__PURE__ */ t("span", { children: '그 즉시 내 위치 정보를 지우고 "마지막 접속 시간"만 남겨요.' })
+        ] }),
+        /* @__PURE__ */ o("li", { children: [
+          /* @__PURE__ */ t("b", { children: "앱이 갑자기 종료될 때" }),
+          /* @__PURE__ */ t("span", { children: '위치를 못 지운 채로 꺼져도, 3분 동안 갱신이 없으면 자동으로 "앱 꺼짐"으로 바뀌어요.' })
+        ] }),
+        /* @__PURE__ */ o("li", { children: [
+          /* @__PURE__ */ t("b", { children: "공유 설정" }),
+          /* @__PURE__ */ t("span", { children: "스위치를 끄면 바로 공유가 멈춰요. 이 설정은 기기마다 따로 저장돼서, 각자 켜야 해요." })
+        ] })
+      ] }),
+      /* @__PURE__ */ t("button", { type: "button", className: "jt-primary", onClick: () => l(!1), children: "확인" })
+    ] }),
+    /* @__PURE__ */ t("p", { className: "jt-hint jt-fam-tip", children: '가족이 흩어졌을 때 단톡방에 "앱 한 번 열어 줘"라고 하면, 여는 순간 위치가 모여요. 공유 켜기는 사람마다 각자 해야 해요.' })
+  ] });
+}
+var An = "trip:chat:", qe = "trip:read:", Ze = (e) => An + e.at.toString(36).padStart(10, "0") + "-" + e.id, Ki = (e) => {
+  let a = new Date(e);
+  return `${at(a.getHours())}:${at(a.getMinutes())}`;
+}, Wi = (e) => {
+  let a = new Date(e);
+  return `${a.getMonth() + 1}월 ${a.getDate()}일 (${zt(a)})`;
+};
+function on(e) {
+  return e.split(/(https?:\/\/[^\s]+)/g).map(
+    (a, n) => n % 2 ? /* @__PURE__ */ t("a", { href: a, target: "_blank", rel: "noopener noreferrer", children: a }, n) : a
+  );
+}
+function Hi({ settings: e, me: a, msgs: n, reads: i, notice: r, onSend: g, onDelete: u, onEdit: p, onPin: l, onUnpin: x, onSendLoc: w, badgeAsk: N, onBadgeAsk: d }) {
+  let A = e.members, [h, z] = y(""), [C, v] = y(null), [M, c] = y(!1), [s, E] = y(null), [k, S] = y(""), [m, T] = y(!1), [D, j] = y(null), L = r ? n.find((R) => R.id === r.id) : null, f = r ? { ...r, ...L ? { text: L.text, kind: L.kind, lat: L.lat, lng: L.lng } : {} } : null, U = (R) => {
+    let tt = document.getElementById("msg-" + R);
+    tt && (tt.scrollIntoView({ block: "center", behavior: "smooth" }), j(R), setTimeout(() => j(null), 1600));
+  }, Y = (R) => {
+    E(R.id), S(R.text), v(null);
+  }, $ = (R) => {
+    let tt = k.trim();
+    tt && (tt !== R.text && p(R, tt), E(null));
+  }, I = J(null), X = J(!0), Bt = n.length;
+  W(() => {
+    let R = n[Bt - 1], tt = window.innerHeight + window.scrollY > document.documentElement.scrollHeight - 260;
+    (X.current || tt || R && R.by === a) && I.current && I.current.scrollIntoView({ block: "end", behavior: X.current ? "auto" : "smooth" }), X.current = !1;
+  }, [Bt]);
+  let pt = () => {
+    let R = h.trim();
+    R && (g(R), z(""));
+  }, de = async () => {
+    c(!0), await w(), c(!1);
+  }, me = "", Lt = null;
+  return /* @__PURE__ */ o("section", { className: "jt-chat", children: [
+    Bt === 0 && /* @__PURE__ */ o("div", { className: "jt-empty", children: [
+      /* @__PURE__ */ t("p", { children: "아직 대화가 없어요." }),
+      /* @__PURE__ */ t("p", { children: "가족에게 첫 메시지를 남겨 보세요. 아래 위치 버튼으로 내 위치도 보낼 수 있어요." })
+    ] }),
+    f && /* @__PURE__ */ o("div", { className: "jt-notice" + (m ? " open" : ""), children: [
+      /* @__PURE__ */ o("button", { type: "button", className: "jt-notice-head", onClick: () => T(!m), "aria-expanded": m, children: [
+        /* @__PURE__ */ t(dn, { size: 17, className: "jt-notice-ic", "aria-hidden": "true" }),
+        /* @__PURE__ */ t("span", { className: "jt-notice-label", children: "공지" }),
+        /* @__PURE__ */ t("span", { className: "jt-notice-text", children: f.kind === "loc" ? `${f.by}의 위치` : f.text }),
+        /* @__PURE__ */ t(kt, { size: 18, className: "jt-fold-ic", "aria-hidden": "true" })
+      ] }),
+      m && /* @__PURE__ */ o("div", { className: "jt-notice-body", children: [
+        f.kind === "loc" ? /* @__PURE__ */ o("p", { children: [
+          f.by,
+          "이(가) 보낸 위치예요.",
+          " ",
+          /* @__PURE__ */ t("a", { href: $t({ lat: f.lat, lng: f.lng }), target: "_blank", rel: "noopener noreferrer", children: "지도에서 보기" })
+        ] }) : /* @__PURE__ */ t("p", { className: "jt-msg-text", children: on(f.text) }),
+        /* @__PURE__ */ o("span", { className: "jt-notice-meta", children: [
+          f.by,
+          "의 메시지, ",
+          f.pinnedBy,
+          "이(가) 공지로 등록",
+          L ? "" : " (원래 메시지는 지워졌어요)"
+        ] }),
+        /* @__PURE__ */ o("div", { className: "jt-notice-act", children: [
+          L && /* @__PURE__ */ t("button", { type: "button", className: "jt-like", onClick: () => U(f.id), children: "메시지로 이동" }),
+          /* @__PURE__ */ o(
             "button",
             {
               type: "button",
-              className: "jt-secondary",
-              onClick: async () => {
-                try {
-                  await navigator.clipboard.writeText(pa), x(!0);
-                } catch {
-                  x(!1);
-                }
+              className: "jt-like",
+              onClick: () => {
+                x(), T(!1);
               },
-              children: z ? "규칙을 복사했어요" : "규칙 복사"
+              children: [
+                /* @__PURE__ */ t(La, { size: 14 }),
+                "공지 해제"
+              ]
             }
           )
-        ] }),
-        j && /* @__PURE__ */ Z("p", { className: "jt-warn-inline", children: j }),
-        /* @__PURE__ */ Z("button", { className: "jt-primary", disabled: f || !i.trim(), onClick: v, children: f ? "연결 확인 중" : "연결하고 여행 만들기" })
+        ] })
       ] })
     ] }),
-    /* @__PURE__ */ Z("style", { children: ".jt-lead{font-size:14px;color:#33405C}.jt-rules{margin:0;font-size:11.5px;line-height:1.5;background:#fff;border-radius:10px;padding:10px 12px;overflow-x:auto;white-space:pre}.jt .jt-setup .jt-seg{margin-bottom:16px}" })
-  ] });
-}
-function vi() {
-  let [e, n] = It(() => {
-    let o = kn();
-    if (!o) return !1;
-    try {
-      return Ie(o.c, o.t), !0;
-    } catch {
-      return !1;
-    }
-  });
-  return bi(() => {
-    "serviceWorker" in navigator && location.protocol === "https:" && navigator.serviceWorker.register("./sw.js").catch(() => {
-    });
-  }, []), e ? /* @__PURE__ */ Z(Ze, {}) : /* @__PURE__ */ Z(ji, { onDone: () => n(!0) });
-}
-xi(document.getElementById("root")).render(/* @__PURE__ */ Z(vi, {}));
+    N && /* @__PURE__ */ o("div", { className: "jt-badgeask", children: [
+      /* @__PURE__ */ t("span", { children: "홈 화면 앱 아이콘에도 안 읽은 메시지 수를 표시할 수 있어요." }),
+      /* @__PURE__ */ t("button", { type: "button", className: "jt-secondary sm", onClick: d, children: "표시 허용" })
+    ] }),
+    /* @__PURE__ */ t("ol", { className: "jt-msgs", children: n.map((R) => {
+      let tt = Wi(R.at), Gt = tt !== me, dt = R.by === a, qt = !Gt && Lt && Lt.by === R.by && R.at - Lt.at < 5 * 6e4;
+      return me = tt, Lt = R, /* @__PURE__ */ o(lo.Fragment, { children: [
+        Gt && /* @__PURE__ */ t("li", { className: "jt-daysep", "aria-label": tt, children: /* @__PURE__ */ t("span", { children: tt }) }),
+        /* @__PURE__ */ o(
+          "li",
+          {
+            id: "msg-" + R.id,
+            className: "jt-msg" + (dt ? " mine" : "") + (qt ? " cont" : "") + (D === R.id ? " flash" : ""),
+            children: [
+              !dt && /* @__PURE__ */ t("span", { className: "jt-msg-av", children: !qt && /* @__PURE__ */ t(lt, { name: R.by, members: A, size: 30 }) }),
+              /* @__PURE__ */ o("div", { className: "jt-msg-col", children: [
+                !dt && !qt && /* @__PURE__ */ t("span", { className: "jt-msg-name", children: R.by }),
+                /* @__PURE__ */ o("div", { className: "jt-msg-row", children: [
+                  s === R.id ? /* @__PURE__ */ o("div", { className: "jt-msg-editbox", children: [
+                    /* @__PURE__ */ t(
+                      "textarea",
+                      {
+                        rows: 2,
+                        value: k,
+                        onChange: (Q) => S(Q.target.value),
+                        onKeyDown: (Q) => {
+                          Q.key === "Enter" && !Q.shiftKey && !Q.nativeEvent.isComposing && (Q.preventDefault(), $(R)), Q.key === "Escape" && E(null);
+                        },
+                        "aria-label": "메시지 수정",
+                        autoFocus: !0
+                      }
+                    ),
+                    /* @__PURE__ */ o("div", { className: "jt-msg-editact", children: [
+                      /* @__PURE__ */ t("button", { type: "button", className: "jt-ghost sm", onClick: () => E(null), children: "취소" }),
+                      /* @__PURE__ */ t("button", { type: "button", className: "jt-secondary sm", onClick: () => $(R), disabled: !k.trim(), children: "저장" })
+                    ] })
+                  ] }) : /* @__PURE__ */ t(
+                    "button",
+                    {
+                      type: "button",
+                      className: "jt-bubble" + (R.kind === "loc" ? " loc" : "") + (r && r.id === R.id ? " pinned" : ""),
+                      onClick: () => v(C === R.id ? null : R.id),
+                      "aria-label": dt ? "내 메시지, 누르면 메뉴" : "누르면 공지 메뉴",
+                      "aria-expanded": C === R.id,
+                      children: R.kind === "loc" ? /* @__PURE__ */ o("span", { className: "jt-locmsg", children: [
+                        /* @__PURE__ */ t(It, { size: 16 }),
+                        dt ? "내 위치를 보냈어요" : `${R.by}의 현재 위치`
+                      ] }) : /* @__PURE__ */ t("span", { className: "jt-msg-text", children: on(R.text) })
+                    }
+                  ),
+                  /* @__PURE__ */ o("span", { className: "jt-msg-meta", children: [
+                    (() => {
+                      let Q = A.filter((ue) => ue !== R.by && (i[ue] || 0) < R.at);
