@@ -1,49 +1,97 @@
-}
+gkey: n.gmapsKey,
+          dayItems: s.filter((T) => T.day === S.day && T.id !== S.item?.id),
+          onSave: (T) => {
+            Wn(T, S.item?.id, S.day), rt();
+          },
+          onDelete: () => {
+            Hn(S.item.id), rt();
+          }
         }
       ) }),
-      ue && !f && /* @__PURE__ */ t(St, { title: "가족과 위치를 공유할까요?", onClose: () => he(!1, !0), children: /* @__PURE__ */ o("div", { className: "jt-form", children: [
+      S?.type === "wish" && /* @__PURE__ */ t(Nt, { title: S.item ? "가고 싶은 곳 수정" : "가고 싶은 곳 추가", onClose: rt, children: /* @__PURE__ */ t(
+        yi,
+        {
+          initial: S.item,
+          gkey: n.gmapsKey,
+          onSave: (T) => {
+            S.item ? Gn(S.item.id, T) : Ea(T), rt();
+          },
+          onDelete: () => {
+            Aa(S.item.id), rt();
+          }
+        }
+      ) }),
+      S?.type === "spend" && /* @__PURE__ */ t(Nt, { title: S.item ? "경비 수정" : "경비 기록", onClose: rt, children: /* @__PURE__ */ t(
+        vi,
+        {
+          settings: Y,
+          me: u,
+          defaultDay: O,
+          initial: S.item,
+          onSave: (T) => {
+            Vn(T, S.item?.id), rt();
+          },
+          onDelete: () => {
+            qn(S.item.id), rt();
+          }
+        }
+      ) }),
+      S?.type === "post" && /* @__PURE__ */ t(Nt, { title: S.item ? "글 수정" : "새 글", onClose: rt, children: /* @__PURE__ */ t(
+        Wi,
+        {
+          initial: S.item,
+          onSave: async (T) => {
+            let U = await Zn(T, S.item?.id);
+            return U && rt(), U;
+          },
+          onDelete: () => {
+            Qn(S.item.id), rt();
+          }
+        }
+      ) }),
+      ue && !S && /* @__PURE__ */ t(Nt, { title: "가족과 위치를 공유할까요?", onClose: () => be(!1, !0), children: /* @__PURE__ */ o("div", { className: "jt-form", children: [
         /* @__PURE__ */ o("p", { className: "jt-ask", children: [
           "켜 두면 ",
           /* @__PURE__ */ t("b", { children: "앱이 열려 있는 동안만" }),
           " 내 위치가 가족 지도에 보여요. 앱을 닫거나 화면이 꺼지면 바로 사라져요."
         ] }),
         /* @__PURE__ */ t("p", { className: "jt-hint jt-ask-hint", children: '언제든 위쪽 위치 버튼이나 "위치 공유" 탭에서 켜고 끌 수 있어요.' }),
-        /* @__PURE__ */ t("button", { className: "jt-primary", onClick: () => he(!0), children: "위치 공유 켜기" }),
-        /* @__PURE__ */ t("button", { className: "jt-ghost", onClick: () => he(!1, !0), children: "나중에 할게요" })
+        /* @__PURE__ */ t("button", { className: "jt-primary", onClick: () => be(!0), children: "위치 공유 켜기" }),
+        /* @__PURE__ */ t("button", { className: "jt-ghost", onClick: () => be(!1, !0), children: "나중에 할게요" })
       ] }) }),
-      be && /* @__PURE__ */ t("div", { className: "jt-toast", role: "status", children: be }),
-      f?.type === "toPlan" && /* @__PURE__ */ t(St, { title: `"${f.wish.name}" 몇째 날에 갈까요?`, onClose: ot, children: /* @__PURE__ */ t("div", { className: "jt-daypick", children: Array.from({ length: n.days }, (B, K) => {
-        let V = mt(n.start, K);
+      he && /* @__PURE__ */ t("div", { className: "jt-toast", role: "status", children: he }),
+      S?.type === "toPlan" && /* @__PURE__ */ t(Nt, { title: `"${S.wish.name}" 몇째 날에 갈까요?`, onClose: rt, children: /* @__PURE__ */ t("div", { className: "jt-daypick", children: Array.from({ length: n.days }, (T, U) => {
+        let V = ft(n.start, U);
         return /* @__PURE__ */ o(
           "button",
           {
-            style: { "--lc": q[K % q.length] },
+            style: { "--lc": q[U % q.length] },
             onClick: () => {
-              Yn(f.wish, K), ot(), z("plan");
+              Xn(S.wish, U), rt(), k("plan");
             },
             children: [
               /* @__PURE__ */ o("span", { className: "jt-daychip", children: [
-                K + 1,
+                U + 1,
                 "일차"
               ] }),
-              Pt(V),
+              $t(V),
               " (",
-              zt(V),
+              Mt(V),
               ")"
             ]
           },
-          K
+          U
         );
       }) }) })
     ] });
   }
   return /* @__PURE__ */ o("div", { className: "jt", children: [
-    /* @__PURE__ */ t("style", { children: ma }),
-    /* @__PURE__ */ t(ci, {}),
-    te
+    /* @__PURE__ */ t("style", { children: ua }),
+    /* @__PURE__ */ t(bi, {}),
+    ee
   ] });
 }
-var ma = `
+var ua = `
 .jt{--ink:#14213D;--muted:#66718A;--rule:#DCE1EA;--card:#fff;--blue:#0C86AE;font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;max-width:520px;margin:0 auto;display:flex;flex-direction:column;position:relative;font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%;--paper:#F1F3F6;--soft:#E7EAF0}
 .jt *{box-sizing:border-box}
 :where(.jt) button{font:inherit;color:inherit;cursor:pointer}
@@ -379,6 +427,3 @@ var ma = `
 .jt-near-sub{font-size:12px;color:var(--muted)}
 .jt-near-meta{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:12.5px;color:var(--muted);align-items:center}
 .jt-star{display:inline-flex;align-items:center;gap:3px;color:#B7791F;font-weight:800}
-.jt-star em{font-style:normal;font-weight:500;color:var(--muted)}
-.jt-open{color:#0A7D58;font-weight:700}
-.jt-closed{color:#B42318;font-weight:700}
