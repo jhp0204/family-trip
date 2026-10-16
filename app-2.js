@@ -1,3 +1,110 @@
+function GeoFix({ targets, gkey, onApply, onClose }) {
+  let [rows, setRows] = useState([]), [done, setDone] = useState(!1), [pick, setPick] = useState({}), stop = useRef(!1);
+  useEffect(() => {
+    let alive = !0;
+    return (async () => {
+      let gap = gkey && !gmAuthFailed ? 250 : 1100;
+      for (let w of targets) {
+        if (!alive || stop.current) break;
+        let r = await findPlaceFor(w, gkey, gap);
+        if (!alive) return;
+        setRows((x) => [...x, { w, ...r }]), r.status === "ok" && setPick((x) => ({ ...x, [w.id]: !0 })), await new Promise((ok) => setTimeout(ok, gap));
+      }
+      alive && setDone(!0);
+    })(), () => {
+      alive = !1;
+    };
+  }, []);
+  let found = rows.filter((x) => x.status === "ok"), missed = rows.filter((x) => x.status !== "ok"), chosen = found.filter((x) => pick[x.w.id]), gErr = (rows.find((x) => x.gErr) || {}).gErr || "", usedOsm = rows.some((x) => x.engine === "osm");
+  return /* @__PURE__ */ jsx(Sheet, { title: "위치 없는 장소 한 번에 찾기", onClose, children: /* @__PURE__ */ jsxs("div", { className: "jt-form", children: [
+    done ? /* @__PURE__ */ jsxs("p", { className: "jt-hint jt-geo-sum", children: [
+      targets.length,
+      "곳 중 ",
+      /* @__PURE__ */ jsxs("b", { children: [
+        found.length,
+        "곳"
+      ] }),
+      "을 찾았어요. 확실하지 않은 ",
+      missed.length,
+      "곳은 비워 뒀어요."
+    ] }) : /* @__PURE__ */ jsxs("div", { className: "jt-geo-run", children: [
+      /* @__PURE__ */ jsx("div", { className: "jt-geo-bar", children: /* @__PURE__ */ jsx("i", { style: { width: `${rows.length / targets.length * 100}%` } }) }),
+      /* @__PURE__ */ jsxs("span", { children: [
+        rows.length,
+        "/",
+        targets.length,
+        "곳 찾는 중"
+      ] }),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          className: "jt-ghost sm",
+          onClick: () => {
+            stop.current = !0, setDone(!0);
+          },
+          children: "여기까지만 찾기"
+        }
+      )
+    ] }),
+    rows.length > 0 && (gErr || !gkey && usedOsm) && /* @__PURE__ */ jsxs("div", { className: "jt-warn-inline jt-geo-why", children: [
+      gErr ? /* @__PURE__ */ jsx("b", { children: "구글 장소 검색을 쓰지 못해서 무료 검색(OpenStreetMap)으로 찾았어요." }) : /* @__PURE__ */ jsx("b", { children: "구글 지도 키가 없어 무료 검색(OpenStreetMap)으로 찾았어요." }),
+      /* @__PURE__ */ jsx("span", { children: gErr ? G_REASON(gErr) : "무료 검색은 한국어 이름을 잘 못 찾아요. 설정에 구글 지도 키를 넣으면 훨씬 잘 찾아요." })
+    ] }),
+    found.length > 0 && /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx("h4", { className: "jt-subhead", children: "찾았어요 (체크한 곳만 저장돼요)" }),
+      /* @__PURE__ */ jsx("ul", { className: "jt-geo-list", children: found.map(({ w, r }) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("label", { children: [
+        /* @__PURE__ */ jsx(
+          "input",
+          {
+            type: "checkbox",
+            checked: !!pick[w.id],
+            onChange: (e) => setPick((x) => ({ ...x, [w.id]: e.target.checked }))
+          }
+        ),
+        /* @__PURE__ */ jsxs("span", { children: [
+          /* @__PURE__ */ jsx("strong", { children: w.name }),
+          /* @__PURE__ */ jsxs("em", { children: [
+            r.name,
+            r.area ? `, ${r.area}` : ""
+          ] })
+        ] })
+      ] }) }, w.id)) })
+    ] }),
+    missed.length > 0 && /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx("h4", { className: "jt-subhead", children: "비워 둔 곳" }),
+      /* @__PURE__ */ jsx("ul", { className: "jt-geo-list miss", children: missed.map(({ w, status, engine }) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("span", { children: [
+        /* @__PURE__ */ jsx("strong", { children: w.name }),
+        /* @__PURE__ */ jsxs("em", { children: [
+          GEO_REASON[status],
+          engine ? engine === "google" ? " (구글 검색)" : " (무료 검색)" : ""
+        ] })
+      ] }) }, w.id)) }),
+      /* @__PURE__ */ jsx("p", { className: "jt-hint", children: '비워 둔 곳은 수정 화면의 "위치 검색"으로 직접 고를 수 있어요.' })
+    ] }),
+    /* @__PURE__ */ jsx(
+      "button",
+      {
+        className: "jt-primary",
+        disabled: !done || !chosen.length,
+        onClick: () => {
+          let upd = {};
+          chosen.forEach(({ w, r }) => {
+            upd[w.id] = {
+              lat: r.lat,
+              lng: r.lng,
+              ...r.placeId ? { placeId: r.placeId } : {},
+              // 구글 검색 링크(share.google 등)는 구글맵 링크로 바꿔 줌
+              ...r.link && (!w.link || isSearchLink(w.link)) ? { link: r.link } : {},
+              ...!w.area && r.area ? { area: r.area.split(" ").slice(0, 3).join(" ") } : {}
+            };
+          }), onApply(upd);
+        },
+        children: done ? `선택한 ${chosen.length}곳에 위치 저장` : "찾는 중"
+      }
+    )
+  ] }) });
+}
 function plannedDay(w, plan) {
   let p = (plan || []).find((x) => x.wishId === w.id) || (plan || []).find((x) => !x.wishId && x.title === w.name);
   return p ? p.day : null;
@@ -433,272 +540,5 @@ function PlanForm({ initial, preset, gkey, dayItems = [], onSave, onDelete }) {
       }
     ),
     initial && /* @__PURE__ */ jsx(DeleteButton, { onConfirm: onDelete, label: "이 일정 삭제" })
-  ] });
-}
-function WishForm({ initial, gkey, onSave, onDelete }) {
-  let [name, setName] = useState(initial?.name || ""), [cat, setCat] = useState(initial?.cat || "맛집"), [area, setArea] = useState(initial?.area || ""), [link, setLink] = useState(initial?.link || ""), [memo, setMemo] = useState(initial?.memo || ""), [pos, setPos] = useState(initial && hasPos(initial) ? { lat: initial.lat, lng: initial.lng, placeId: initial.placeId } : null), [results, setResults] = useState([]), [busy, setBusy] = useState(!1), [smsg, setSmsg] = useState(""), searchPlace = async () => {
-    let q = [name, area].filter((x) => x && x.trim()).join(" ").trim();
-    if (!q) {
-      setSmsg("이름을 먼저 적어 주세요.");
-      return;
-    }
-    setBusy(!0), setSmsg(""), setResults([]);
-    try {
-      let res = await placeSearch(q, gkey);
-      setResults(res), res.length || setSmsg("검색 결과가 없어요. 이름을 조금 바꾸거나 영어, 일본어로 적어 보세요.");
-    } catch {
-      setSmsg("검색을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.");
-    }
-    setBusy(!1);
-  };
-  return /* @__PURE__ */ jsxs("div", { className: "jt-form", children: [
-    /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
-      /* @__PURE__ */ jsx("span", { children: "이름" }),
-      /* @__PURE__ */ jsxs("div", { className: "jt-inline", children: [
-        /* @__PURE__ */ jsx(
-          "input",
-          {
-            value: name,
-            onChange: (e) => setName(e.target.value),
-            onKeyDown: (e) => e.key === "Enter" && !e.nativeEvent.isComposing && searchPlace(),
-            placeholder: "예: 이치란 도톤보리",
-            "aria-label": "이름"
-          }
-        ),
-        /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary", onClick: searchPlace, disabled: busy, children: busy ? "찾는 중" : "위치 검색" })
-      ] })
-    ] }),
-    smsg && /* @__PURE__ */ jsx("p", { className: "jt-hint", children: smsg }),
-    results.length > 0 && /* @__PURE__ */ jsx("ul", { className: "jt-results jt-form-results", children: results.map((r, i) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs(
-      "button",
-      {
-        type: "button",
-        onClick: () => {
-          setPos({ lat: r.lat, lng: r.lng, placeId: r.placeId }), name.trim() || setName(r.name), !area.trim() && r.area && setArea(r.area.split(" ").slice(0, 3).join(" ")), !link.trim() && r.link && setLink(r.link), setResults([]), setSmsg("");
-        },
-        children: [
-          /* @__PURE__ */ jsx("strong", { children: r.name }),
-          /* @__PURE__ */ jsx("span", { children: r.area })
-        ]
-      }
-    ) }, i)) }),
-    pos ? /* @__PURE__ */ jsxs("div", { className: "jt-picked", children: [
-      /* @__PURE__ */ jsx(MapPin, { size: 14 }),
-      /* @__PURE__ */ jsx("span", { children: "지도 위치가 연결됐어요. 거리 표시와 지도에 나와요." }),
-      /* @__PURE__ */ jsx("button", { type: "button", className: "jt-ghost sm", onClick: () => setPos(null), children: "연결 해제" })
-    ] }) : /* @__PURE__ */ jsx("p", { className: "jt-hint jt-nopos", children: '지도 위치가 없어요. "위치 검색"으로 장소를 고르면 거리와 지도 핀이 표시돼요.' }),
-    /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
-      /* @__PURE__ */ jsx("span", { children: "종류" }),
-      /* @__PURE__ */ jsx("div", { className: "jt-chips", children: WISH_CATS.map((c) => /* @__PURE__ */ jsx("button", { type: "button", className: "jt-chip" + (cat === c ? " on" : ""), onClick: () => setCat(c), children: c }, c)) })
-    ] }),
-    /* @__PURE__ */ jsx(Field, { label: "동네 (선택)", children: /* @__PURE__ */ jsx("input", { value: area, onChange: (e) => setArea(e.target.value), placeholder: "예: 시부야" }) }),
-    /* @__PURE__ */ jsx(Field, { label: "구글맵 링크 (선택)", children: /* @__PURE__ */ jsx(
-      "input",
-      {
-        type: "url",
-        value: link,
-        onChange: (e) => setLink(e.target.value),
-        placeholder: "구글맵 앱에서 공유한 링크를 붙여넣기"
-      }
-    ) }),
-    /* @__PURE__ */ jsx("p", { className: "jt-hint", children: "링크가 없어도 이름과 동네로 구글맵에서 검색해 줘요." }),
-    /* @__PURE__ */ jsx(Field, { label: "메모 (선택)", children: /* @__PURE__ */ jsx("textarea", { rows: 2, value: memo, onChange: (e) => setMemo(e.target.value), placeholder: "왜 가고 싶은지, 영업시간 등" }) }),
-    /* @__PURE__ */ jsx(
-      "button",
-      {
-        className: "jt-primary",
-        disabled: !name.trim(),
-        onClick: () => onSave({
-          name: name.trim(),
-          cat,
-          area: area.trim(),
-          link: link.trim(),
-          memo: memo.trim(),
-          lat: pos ? pos.lat : void 0,
-          lng: pos ? pos.lng : void 0,
-          placeId: pos && pos.placeId ? pos.placeId : void 0
-        }),
-        children: initial ? "수정 저장" : "위시리스트에 추가"
-      }
-    ),
-    initial && /* @__PURE__ */ jsx(DeleteButton, { onConfirm: onDelete, label: "이 장소 삭제" })
-  ] });
-}
-function SpendForm({ settings, me, defaultDay, initial, onSave, onDelete }) {
-  let { members, days, start } = settings, [ownRate, setOwnRate] = useState(!!initial?.rate), [rateText2, setRateText] = useState(initial?.rate ? String(initial.rate) : String(Math.round(settings.rate * 100) / 100)), customRate = Number(rateText2), rateOk = !ownRate || customRate >= 300 && customRate <= 3e3, rate = ownRate && rateOk ? customRate : settings.rate, [title, setTitle] = useState(initial?.title || ""), [cur, setCur] = useState(initial?.cur === "KRW" ? "KRW" : "JPY"), [amount, setAmount] = useState(
-    initial ? String((initial.cur === "KRW" ? Number(initial.orig) : Number(initial.amount)) || "") : ""
-  ), [payer, setPayer] = useState(initial && members.includes(initial.payer) ? initial.payer : me), [cat, setCat] = useState(initial?.cat || "식비"), [day, setDay] = useState(initial ? Math.min(initial.day, days - 1) : defaultDay), [split, setSplit] = useState(initial ? (initial.split || []).filter((m) => members.includes(m)) : []), [fund, setFund] = useState(!!initial && isFund(initial)), typed = Number(amount) || 0, amt = cur === "KRW" ? Math.round(typed * 100 / rate) : typed, lost = initial ? [initial.payer, ...initial.split || []].filter((m, i, a) => m && m !== FUND && !members.includes(m) && a.indexOf(m) === i) : [], toggle = (m) => setSplit(split.includes(m) ? split.filter((x) => x !== m) : [...split, m]), ok = title.trim() && amt > 0 && (fund || split.length > 0) && rateOk;
-  return /* @__PURE__ */ jsxs("div", { className: "jt-form", children: [
-    /* @__PURE__ */ jsx(Field, { label: "어디에 썼나요", children: /* @__PURE__ */ jsx("input", { value: title, onChange: (e) => setTitle(e.target.value), placeholder: "예: 점심 라멘" }) }),
-    /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
-      /* @__PURE__ */ jsx("span", { children: "금액" }),
-      /* @__PURE__ */ jsxs("div", { className: "jt-amt", children: [
-        /* @__PURE__ */ jsx("div", { className: "jt-cur", role: "radiogroup", "aria-label": "통화", children: [
-          ["JPY", "¥ 엔화"],
-          ["KRW", "₩ 원화"]
-        ].map(([c, label]) => /* @__PURE__ */ jsx(
-          "button",
-          {
-            type: "button",
-            role: "radio",
-            "aria-checked": cur === c,
-            className: cur === c ? "on" : "",
-            onClick: () => {
-              c !== cur && (typed > 0 && setAmount(String(Math.round(c === "KRW" ? typed * rate / 100 : typed * 100 / rate))), setCur(c));
-            },
-            children: label
-          },
-          c
-        )) }),
-        /* @__PURE__ */ jsx(
-          "input",
-          {
-            type: "number",
-            inputMode: "numeric",
-            value: amount,
-            onChange: (e) => setAmount(e.target.value),
-            placeholder: cur === "KRW" ? "원화 금액" : "엔화 금액",
-            "aria-label": cur === "KRW" ? "원화 금액" : "엔화 금액"
-          }
-        )
-      ] })
-    ] }),
-    typed > 0 ? /* @__PURE__ */ jsxs("p", { className: "jt-hint jt-fxhint", children: [
-      cur === "KRW" ? /* @__PURE__ */ jsxs(Fragment, { children: [
-        "약 ",
-        /* @__PURE__ */ jsx("b", { children: yen(amt) }),
-        "로 정산돼요 (₩",
-        typed.toLocaleString("ko-KR"),
-        " 입력)"
-      ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-        "약 ",
-        /* @__PURE__ */ jsx("b", { children: won(amt, rate) })
-      ] }),
-      /* @__PURE__ */ jsx("br", {}),
-      ownRate && rateOk ? `100엔 = ₩${rateText2} (직접 입력)` : fxNote(settings)
-    ] }) : /* @__PURE__ */ jsx("p", { className: "jt-hint", children: fxNote(settings) }),
-    /* @__PURE__ */ jsxs("div", { className: "jt-ownrate", children: [
-      /* @__PURE__ */ jsxs("label", { className: "jt-check", children: [
-        /* @__PURE__ */ jsx("input", { type: "checkbox", checked: ownRate, onChange: (e) => setOwnRate(e.target.checked) }),
-        "환율 직접 입력 (환전소에서 바꾼 환율 등)"
-      ] }),
-      ownRate && /* @__PURE__ */ jsxs("div", { className: "jt-ownrate-row", children: [
-        /* @__PURE__ */ jsx("span", { children: "100엔 =" }),
-        /* @__PURE__ */ jsx(
-          "input",
-          {
-            type: "number",
-            inputMode: "decimal",
-            value: rateText2,
-            onChange: (e) => setRateText(e.target.value),
-            "aria-label": "직접 입력한 환율 (100엔당 원)"
-          }
-        ),
-        /* @__PURE__ */ jsx("span", { children: "원" })
-      ] }),
-      ownRate && !rateOk && /* @__PURE__ */ jsx("p", { className: "jt-warn-inline", children: "환율을 확인해 주세요. 100엔당 원화 금액이에요 (예: 910)." }),
-      ownRate && rateOk && /* @__PURE__ */ jsx("p", { className: "jt-hint", children: "이 경비는 정산할 때도 이 환율로 계산돼요." })
-    ] }),
-    lost.length > 0 && /* @__PURE__ */ jsxs("p", { className: "jt-warn-inline", children: [
-      lost.join(", "),
-      "은(는) 지금 가족 목록에 없어서 빠졌어요. 아래에서 사람을 다시 골라 저장해 주세요."
-    ] }),
-    /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
-      /* @__PURE__ */ jsx("span", { children: "누가 냈나요" }),
-      /* @__PURE__ */ jsx("div", { className: "jt-chips", children: members.map((m) => /* @__PURE__ */ jsx("button", { type: "button", className: "jt-chip" + (payer === m ? " on" : ""), onClick: () => setPayer(m), children: m }, m)) })
-    ] }),
-    /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
-      /* @__PURE__ */ jsxs("span", { className: "jt-split-label", children: [
-        "누구와 나누나요",
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            type: "button",
-            className: "jt-ghost sm",
-            onClick: () => {
-              setFund(!1), setSplit(split.length === members.length ? [] : members);
-            },
-            children: split.length === members.length ? "모두 해제" : "모두 선택"
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxs("div", { className: "jt-chips", children: [
-        /* @__PURE__ */ jsxs(
-          "button",
-          {
-            type: "button",
-            className: "jt-chip jt-fundchip" + (fund ? " on" : ""),
-            onClick: () => {
-              setFund(!fund), setSplit([]);
-            },
-            children: [
-              fund && /* @__PURE__ */ jsx(Check, { size: 14 }),
-              "공금"
-            ]
-          }
-        ),
-        members.map((m) => /* @__PURE__ */ jsxs(
-          "button",
-          {
-            type: "button",
-            className: "jt-chip" + (split.includes(m) ? " on" : ""),
-            onClick: () => {
-              setFund(!1), toggle(m);
-            },
-            children: [
-              split.includes(m) && /* @__PURE__ */ jsx(Check, { size: 14 }),
-              m
-            ]
-          },
-          m
-        ))
-      ] }),
-      !fund && amt > 0 && split.length > 0 && /* @__PURE__ */ jsxs("p", { className: "jt-hint", children: [
-        "1인당 ",
-        cur === "KRW" ? `₩${(Math.round(typed / split.length / 100) * 100).toLocaleString("ko-KR")}(${yen(amt / split.length)})` : yw(amt / split.length)
-      ] }),
-      fund && /* @__PURE__ */ jsxs("p", { className: "jt-hint jt-fundhint", children: [
-        "가족끼리 나누지 않고 공금에서 돌려받을 경비예요. 정산에서 빠지고, ",
-        payer,
-        '의 "공금에서 받을 돈"에 더해져요.'
-      ] }),
-      !fund && split.length === 0 && /* @__PURE__ */ jsx("p", { className: "jt-hint", children: "나눌 사람이나 공금을 골라 주세요." })
-    ] }),
-    /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
-      /* @__PURE__ */ jsx("span", { children: "종류" }),
-      /* @__PURE__ */ jsx("div", { className: "jt-chips", children: SPEND_CATS.map((c) => /* @__PURE__ */ jsx("button", { type: "button", className: "jt-chip" + (cat === c ? " on" : ""), onClick: () => setCat(c), children: c }, c)) })
-    ] }),
-    /* @__PURE__ */ jsx(Field, { label: "날짜", children: /* @__PURE__ */ jsx("select", { value: day, onChange: (e) => setDay(Number(e.target.value)), children: Array.from({ length: days }, (_, i) => {
-      let d = addDays(start, i);
-      return /* @__PURE__ */ jsxs("option", { value: i, children: [
-        i + 1,
-        "일차 ",
-        md(d),
-        " (",
-        wk(d),
-        ")"
-      ] }, i);
-    }) }) }),
-    /* @__PURE__ */ jsx(
-      "button",
-      {
-        className: "jt-primary",
-        disabled: !ok,
-        onClick: () => onSave({
-          title: title.trim(),
-          amount: amt,
-          payer,
-          cat,
-          day,
-          split: fund ? [] : split,
-          fund: fund || void 0,
-          cur,
-          orig: cur === "KRW" ? typed : void 0,
-          rate: ownRate && rateOk ? customRate : void 0
-        }),
-        children: initial ? "수정 저장" : "경비 기록하기"
-      }
-    ),
-    initial && /* @__PURE__ */ jsx(DeleteButton, { onConfirm: onDelete, label: "이 경비 삭제" })
   ] });
 }
