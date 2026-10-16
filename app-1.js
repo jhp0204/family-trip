@@ -32,6 +32,7 @@ import {
   Megaphone,
   Lock,
   WifiOff,
+  Dices,
   Wifi,
   Pin,
   PinOff,
@@ -760,40 +761,3 @@ function GeoFix({ targets, gkey, onApply, onClose }) {
     )
   ] }) });
 }
-function plannedDay(w, plan) {
-  let p = (plan || []).find((x) => x.wishId === w.id) || (plan || []).find((x) => !x.wishId && x.title === w.name);
-  return p ? p.day : null;
-}
-function useFold() {
-  let [open, setOpen] = useState({});
-  return [open, (id) => setOpen((o) => ({ ...o, [id]: !o[id] })), (ids, v) => setOpen(v ? Object.fromEntries(ids.map((id) => [id, !0])) : {})];
-}
-function FoldAll({ ids, open, setAll }) {
-  if (ids.length < 2) return null;
-  let allOpen = ids.every((id) => open[id]);
-  return /* @__PURE__ */ jsx("div", { className: "jt-foldall", children: /* @__PURE__ */ jsxs("button", { type: "button", className: "jt-ghost sm", onClick: () => setAll(ids, !allOpen), children: [
-    allOpen ? /* @__PURE__ */ jsx(ChevronUp, { size: 15 }) : /* @__PURE__ */ jsx(ChevronDown, { size: 15 }),
-    allOpen ? "모두 접기" : "모두 펼치기"
-  ] }) });
-}
-function CommentButton({ count, open, onClick }) {
-  return /* @__PURE__ */ jsxs(
-    "button",
-    {
-      type: "button",
-      className: "jt-like jt-cbtn" + (open ? " open" : ""),
-      onClick: (e) => {
-        e.stopPropagation(), onClick();
-      },
-      "aria-expanded": open,
-      children: [
-        /* @__PURE__ */ jsx(MessageSquare, { size: 15 }),
-        "댓글 ",
-        count || 0
-      ]
-    }
-  );
-}
-function CommentBox({ comments = [], me, members, onAdd, onDelete }) {
-  let [text, setText] = useState(""), send = () => {
-    let t = text.trim();
