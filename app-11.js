@@ -23,6 +23,9 @@
 .jt-cashbtn{display:inline-flex;align-items:center;gap:4px;align-self:flex-start;margin-top:4px;padding:6px 2px;font-size:13px;color:#0A6A8B}
 .jt-cashedit{margin-top:8px}
 .jt-pshare{font-size:12.5px;color:var(--muted);margin-top:6px}
+/* 영수증 */
+.jt-rthumbs{grid-template-columns:repeat(3,1fr)}
+.jt-rcpt{display:inline-flex;align-items:center;gap:2px;margin-left:6px;font-size:11px;font-weight:700;color:#0A6A8B;background:#EAF4F8;border-radius:5px;padding:0 5px;vertical-align:1px}
 `;
 
 // src/main.jsx
