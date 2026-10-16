@@ -1,3 +1,329 @@
+function PlanTab({ settings, schedule, day, setDay, onEdit, onAddAt, me, onComment, onDelComment, onReact }) {
+  let [fold, toggleFold, setFoldAll] = useFold(), [cOpen, setCOpen] = useState(null), { start, days, members } = settings, color = LINE[day % LINE.length], items = schedule.filter((i) => i.day === day).sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99")), clash = overlapIds(items), dateKey = iso(addDays(start, day)), isToday = dateKey === iso(/* @__PURE__ */ new Date()), w = useWeather(start, days);
+  return /* @__PURE__ */ jsxs("section", { style: { "--lc": color }, children: [
+    /* @__PURE__ */ jsx("div", { className: "jt-days", role: "tablist", "aria-label": "날짜 선택", children: Array.from({ length: days }, (_, i) => {
+      let d = addDays(start, i), active = i === day, n = schedule.filter((x) => x.day === i).length, today = iso(d) === iso(/* @__PURE__ */ new Date());
+      return /* @__PURE__ */ jsxs(
+        "button",
+        {
+          role: "tab",
+          "aria-selected": active,
+          "aria-label": `DAY ${i + 1}, ${d.getMonth() + 1}월 ${d.getDate()}일 ${wk(d)}요일, 일정 ${n}개`,
+          className: "jt-day" + (active ? " active" : ""),
+          style: { "--lc": LINE[i % LINE.length] },
+          onClick: () => setDay(i),
+          children: [
+            /* @__PURE__ */ jsxs("span", { className: "jt-day-no", children: [
+              "DAY ",
+              i + 1
+            ] }),
+            today && /* @__PURE__ */ jsx("i", { className: "jt-day-today", children: "오늘" }),
+            /* @__PURE__ */ jsxs("span", { className: "jt-day-date", children: [
+              md(d),
+              " ",
+              /* @__PURE__ */ jsx("em", { children: wk(d) })
+            ] }),
+            /* @__PURE__ */ jsx("span", { className: "jt-day-count", children: n ? `일정 ${n}개` : "일정 없음" })
+          ]
+        },
+        i
+      );
+    }) }),
+    /* @__PURE__ */ jsx(WeatherCard, { date: dateKey, w }),
+    items.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "jt-empty", children: [
+      /* @__PURE__ */ jsx("p", { children: "이 날은 아직 비어 있어요." }),
+      /* @__PURE__ */ jsx("p", { children: '위시리스트에서 일정으로 넣거나 직접 추가해 보세요. 제목에 "10:00"이나 "15시"처럼 시간을 쓰면 시간표에 자동으로 들어가요.' })
+    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx(FoldAll, { ids: items.map((i) => i.id), open: fold, setAll: setFoldAll }),
+      /* @__PURE__ */ jsx("ol", { className: "jt-line", children: items.map((i, idx) => {
+        let sp = i.time ? span(i) : null, next = items[idx + 1], canRoute = next && placeOf(next);
+        return /* @__PURE__ */ jsxs("li", { className: "jt-row", children: [
+          /* @__PURE__ */ jsx("div", { className: "jt-time", children: i.time || "미정" }),
+          /* @__PURE__ */ jsx("div", { className: "jt-rail", children: /* @__PURE__ */ jsx("span", { className: "jt-node" }) }),
+          /* @__PURE__ */ jsxs("div", { className: "jt-card" + (fold[i.id] ? " open" : ""), children: [
+            /* @__PURE__ */ jsxs("button", { type: "button", className: "jt-fold-head", onClick: () => toggleFold(i.id), "aria-expanded": !!fold[i.id], children: [
+              /* @__PURE__ */ jsx("span", { className: "jt-card-title", children: i.title }),
+              /* @__PURE__ */ jsx(ChevronDown, { size: 18, className: "jt-fold-ic", "aria-hidden": "true" })
+            ] }),
+            fold[i.id] && /* @__PURE__ */ jsxs("div", { className: "jt-fold-body", children: [
+              i.time && w.status === "ok" && /* @__PURE__ */ jsx("div", { className: "jt-fold-wx", children: /* @__PURE__ */ jsx(HourChip, { v: w.hourly[`${dateKey}T${i.time.slice(0, 2)}`] }) }),
+              sp && i.end && /* @__PURE__ */ jsxs("div", { className: "jt-meta", children: [
+                i.time,
+                "~",
+                i.end,
+                ", ",
+                durText(sp.e - sp.s)
+              ] }),
+              clash.has(i.id) && /* @__PURE__ */ jsx("div", { className: "jt-clash", children: "다른 일정과 시간이 겹쳐요" }),
+              i.place && /* @__PURE__ */ jsxs("div", { className: "jt-meta", children: [
+                /* @__PURE__ */ jsx(MapPin, { size: 13 }),
+                i.place
+              ] }),
+              i.memo && /* @__PURE__ */ jsx("div", { className: "jt-memo", children: i.memo }),
+              (i.place || i.link || hasPos(i)) && /* @__PURE__ */ jsxs("div", { className: "jt-maprow", children: [
+                /* @__PURE__ */ jsxs("a", { className: "jt-maplink", href: mapUrl(i), target: "_blank", rel: "noopener noreferrer", children: [
+                  /* @__PURE__ */ jsx(ExternalLink, { size: 14 }),
+                  "구글맵"
+                ] }),
+                (i.place || hasPos(i)) && /* @__PURE__ */ jsxs(
+                  "a",
+                  {
+                    className: "jt-maplink route",
+                    href: hereRouteUrl(hasPos(i) ? i : { name: i.place, placeId: i.placeId }),
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    children: [
+                      /* @__PURE__ */ jsx(Navigation, { size: 14 }),
+                      "여기서 길 찾기"
+                    ]
+                  }
+                )
+              ] }),
+              canRoute && /* @__PURE__ */ jsxs(
+                "a",
+                {
+                  className: "jt-next",
+                  href: routeUrl(i, next),
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  onClick: (e) => e.stopPropagation(),
+                  children: [
+                    /* @__PURE__ */ jsx(Navigation, { size: 14 }),
+                    /* @__PURE__ */ jsxs("span", { children: [
+                      "다음 일정 ",
+                      /* @__PURE__ */ jsx("b", { children: next.title }),
+                      "까지 길 찾기",
+                      placeOf(i) ? "" : " (현재 위치에서)"
+                    ] })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxs("div", { className: "jt-card-foot", children: [
+                /* @__PURE__ */ jsxs("div", { className: "jt-by", children: [
+                  /* @__PURE__ */ jsx(Avatar, { name: i.by, members, size: 16 }),
+                  i.by
+                ] }),
+                /* @__PURE__ */ jsxs("button", { type: "button", className: "jt-like jt-editbtn", onClick: () => onEdit(i), children: [
+                  /* @__PURE__ */ jsx(Pencil, { size: 14 }),
+                  "수정"
+                ] }),
+                /* @__PURE__ */ jsx(Reactions, { item: i, me, members, onReact: (e) => onReact(i.id, e) }),
+                /* @__PURE__ */ jsx(
+                  CommentButton,
+                  {
+                    count: (i.comments || []).length,
+                    open: cOpen === i.id,
+                    onClick: () => setCOpen(cOpen === i.id ? null : i.id)
+                  }
+                )
+              ] }),
+              cOpen === i.id && /* @__PURE__ */ jsx(
+                CommentBox,
+                {
+                  comments: i.comments || [],
+                  me,
+                  members,
+                  onAdd: (t) => onComment(i.id, t),
+                  onDelete: (cid) => onDelComment(i.id, cid)
+                }
+              )
+            ] })
+          ] })
+        ] }, i.id);
+      }) })
+    ] }),
+    /* @__PURE__ */ jsx(Timetable, { items, isToday, onEdit, members, onAddAt: (t, e) => onAddAt && onAddAt(day, t, e) })
+  ] });
+}
+function TileMap({ view, setView, pins, temp, selectedId, onTap, onPinTap }) {
+  let box = useRef(null), [size, setSize] = useState({ w: 0, h: 0 }), ptrs = useRef(/* @__PURE__ */ new Map()), drag = useRef({ moved: !1, startDist: 0 }), lastWheel = useRef(0), [stat, setStat] = useState({ ok: 0, bad: 0 });
+  useEffect(() => {
+    let el = box.current;
+    if (!el) return;
+    let update = () => setSize({ w: el.clientWidth, h: el.clientHeight });
+    update();
+    let ro = new ResizeObserver(update);
+    return ro.observe(el), () => ro.disconnect();
+  }, []);
+  let z = view.z, c = worldPx(view.lat, view.lng, z), tlx = c.x - size.w / 2, tly = c.y - size.h / 2, n = 2 ** z, tiles = [];
+  if (size.w) {
+    let x0 = Math.floor(tlx / TILE), x1 = Math.floor((tlx + size.w) / TILE), y0 = Math.max(0, Math.floor(tly / TILE)), y1 = Math.min(n - 1, Math.floor((tly + size.h) / TILE));
+    for (let x = x0; x <= x1; x++)
+      for (let y = y0; y <= y1; y++) {
+        let wx = (x % n + n) % n;
+        tiles.push(
+          /* @__PURE__ */ jsx(
+            "img",
+            {
+              src: `https://tile.openstreetmap.org/${z}/${wx}/${y}.png`,
+              alt: "",
+              draggable: !1,
+              onLoad: () => setStat((s) => s.ok ? s : { ...s, ok: 1 }),
+              onError: () => setStat((s) => s.bad ? s : { ...s, bad: 1 }),
+              style: { left: Math.round(x * TILE - tlx), top: Math.round(y * TILE - tly) }
+            },
+            `${z}/${x}/${y}`
+          )
+        );
+      }
+  }
+  let down = (e) => {
+    if (!e.target.closest("[data-pin],.jt-zoom,.jt-attr") && (box.current.setPointerCapture(e.pointerId), ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY }), ptrs.current.size === 1 && (drag.current = { moved: !1, startDist: 0 }), ptrs.current.size === 2)) {
+      let [a, b] = [...ptrs.current.values()];
+      drag.current.startDist = Math.hypot(a.x - b.x, a.y - b.y), drag.current.moved = !0;
+    }
+  }, move = (e) => {
+    let p = ptrs.current.get(e.pointerId);
+    if (!p) return;
+    let dx = e.clientX - p.x, dy = e.clientY - p.y;
+    if (ptrs.current.size === 1) {
+      if (!drag.current.moved && Math.hypot(dx, dy) < 4) return;
+      drag.current.moved = !0, ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY }), setView((v) => {
+        let cc = worldPx(v.lat, v.lng, v.z), next = fromWorld(cc.x - dx, cc.y - dy, v.z);
+        return { ...v, lat: Math.max(-80, Math.min(80, next.lat)), lng: next.lng };
+      });
+    } else
+      ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  }, up = (e) => {
+    let p = ptrs.current.get(e.pointerId);
+    if (!p) return;
+    let wasSingle = ptrs.current.size === 1;
+    if (ptrs.current.delete(e.pointerId), drag.current.startDist && ptrs.current.size === 1) {
+      let [r] = [...ptrs.current.values()], ratio = Math.hypot(p.x - r.x, p.y - r.y) / drag.current.startDist;
+      ratio > 1.35 ? setView((v) => ({ ...v, z: clampZ(v.z + (ratio > 2.6 ? 2 : 1)) })) : ratio < 0.7 && setView((v) => ({ ...v, z: clampZ(v.z - (ratio < 0.38 ? 2 : 1)) })), drag.current.startDist = 0;
+    }
+    if (wasSingle && !drag.current.moved && e.type === "pointerup") {
+      let rect = box.current.getBoundingClientRect(), pt = fromWorld(tlx + (e.clientX - rect.left), tly + (e.clientY - rect.top), z);
+      onTap(pt.lat, pt.lng);
+    }
+  }, wheel = (e) => {
+    let now = Date.now();
+    now - lastWheel.current < 250 || (lastWheel.current = now, setView((v) => ({ ...v, z: clampZ(v.z + (e.deltaY < 0 ? 1 : -1)) })));
+  }, place = (lat, lng) => {
+    let p = worldPx(lat, lng, z);
+    return { left: p.x - tlx, top: p.y - tly };
+  }, visible = (q) => q.left > -40 && q.left < size.w + 40 && q.top > -50 && q.top < size.h + 40;
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: "jt-map",
+      ref: box,
+      onPointerDown: down,
+      onPointerMove: move,
+      onPointerUp: up,
+      onPointerCancel: up,
+      onWheel: wheel,
+      role: "application",
+      "aria-label": "지도. 눌러서 핀을 꽂을 수 있어요",
+      children: [
+        tiles,
+        stat.bad > 0 && stat.ok === 0 && /* @__PURE__ */ jsx("div", { className: "jt-mapfail", role: "status", children: "지도 이미지를 불러오지 못했어요. 이 화면에서는 외부 지도 이미지가 막혀 있을 수 있어요." }),
+        size.w > 0 && pins.map((p) => {
+          let q = place(p.lat, p.lng);
+          return visible(q) ? /* @__PURE__ */ jsx(
+            "button",
+            {
+              "data-pin": "1",
+              type: "button",
+              className: "jt-pin" + (p.id === selectedId ? " sel" : ""),
+              style: { left: q.left, top: q.top, "--pc": p.color },
+              onClick: () => onPinTap(p.id),
+              "aria-label": p.label,
+              children: /* @__PURE__ */ jsx("i", {})
+            },
+            p.id
+          ) : null;
+        }),
+        size.w > 0 && temp && /* @__PURE__ */ jsx("span", { className: "jt-pin temp", style: { left: place(temp.lat, temp.lng).left, top: place(temp.lat, temp.lng).top }, children: /* @__PURE__ */ jsx("i", {}) }),
+        /* @__PURE__ */ jsxs("div", { className: "jt-zoom", children: [
+          /* @__PURE__ */ jsx("button", { type: "button", onClick: () => setView((v) => ({ ...v, z: clampZ(v.z + 1) })), "aria-label": "확대", children: "+" }),
+          /* @__PURE__ */ jsx("button", { type: "button", onClick: () => setView((v) => ({ ...v, z: clampZ(v.z - 1) })), "aria-label": "축소", children: "−" })
+        ] }),
+        /* @__PURE__ */ jsx("a", { className: "jt-attr", href: "https://www.openstreetmap.org/copyright", target: "_blank", rel: "noopener noreferrer", children: "© OpenStreetMap" })
+      ]
+    }
+  );
+}
+var ML_CDN = "https://unpkg.com/maplibre-gl@4.7.1/dist/", MAP_STYLE = "https://tiles.openfreemap.org/styles/liberty", mlPromise = null;
+function loadMapLibre() {
+  return window.maplibregl ? Promise.resolve(window.maplibregl) : mlPromise || (mlPromise = new Promise((res, rej) => {
+    let css = document.createElement("link");
+    css.rel = "stylesheet", css.href = ML_CDN + "maplibre-gl.css", document.head.appendChild(css);
+    let sc = document.createElement("script");
+    sc.src = ML_CDN + "maplibre-gl.js", sc.onload = () => window.maplibregl ? res(window.maplibregl) : rej(new Error("maplibre")), sc.onerror = () => {
+      mlPromise = null, rej(new Error("maplibre"));
+    }, document.head.appendChild(sc);
+  }), mlPromise);
+}
+var KO_LABEL = ["coalesce", ["get", "name:ko"], ["get", "name:en"], ["get", "name"]];
+function koreanize(map) {
+  (map.getStyle().layers || []).forEach((l) => {
+    let tf = l.layout && l.layout["text-field"];
+    if (l.type === "symbol" && tf && JSON.stringify(tf).includes("name"))
+      try {
+        map.setLayoutProperty(l.id, "text-field", KO_LABEL);
+      } catch {
+      }
+  });
+}
+var xmlEsc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]), pinSvg = (color, big, text) => {
+  let w = big ? 34 : 28, h = big ? 44 : 36, mid = text ? `<circle cx="14" cy="14" r="9" fill="#fff"/><text x="14" y="18" font-size="11" font-weight="800" text-anchor="middle" fill="${color}" font-family="sans-serif">${xmlEsc(text)}</text>` : '<circle cx="14" cy="14" r="5.5" fill="#fff"/>';
+  return `<svg width="${w}" height="${h}" viewBox="0 0 28 36" aria-hidden="true"><path d="M14 0C6.3 0 0 6.2 0 13.9 0 24.3 14 36 14 36s14-11.7 14-22.1C28 6.2 21.7 0 14 0z" fill="${color}" stroke="#fff" stroke-width="1.5"/>${mid}</svg>`;
+};
+function KoMap(props) {
+  let { view, setView, pins, temp, selectedId, onTap, onPinTap } = props, box = useRef(null), mapRef = useRef(null), mlRef = useRef(null), marks = useRef([]), tempMark = useRef(null), cb = useRef({});
+  cb.current = { onTap, onPinTap, setView };
+  let [state, setState] = useState("loading");
+  return useEffect(() => {
+    let alive = !0;
+    return loadMapLibre().then((ml) => {
+      if (!alive || !box.current) return;
+      mlRef.current = ml;
+      let map = new ml.Map({
+        container: box.current,
+        style: MAP_STYLE,
+        center: [view.lng, view.lat],
+        zoom: view.z - 1,
+        attributionControl: { compact: !0 },
+        dragRotate: !1,
+        pitchWithRotate: !1
+      });
+      map.touchZoomRotate.disableRotation(), map.addControl(new ml.NavigationControl({ showCompass: !1 }), "top-right"), map.on("load", () => {
+        koreanize(map), alive && setState("ok");
+      }), map.on("click", (e) => {
+        e.originalEvent && e.originalEvent.target.closest && e.originalEvent.target.closest(".jt-mlpin") || cb.current.onTap(e.lngLat.lat, e.lngLat.lng);
+      }), map.on("moveend", () => {
+        let c = map.getCenter();
+        cb.current.setView({ lat: c.lat, lng: c.lng, z: map.getZoom() + 1 });
+      }), mapRef.current = map, setTimeout(() => alive && !map.loaded() && setState((st) => st === "loading" ? "slow" : st), 6e3), setTimeout(() => {
+        alive && mapRef.current === map && !map.loaded() && (map.remove(), mapRef.current = null, setState("fail"));
+      }, 15e3);
+    }).catch(() => alive && setState("fail")), () => {
+      alive = !1, mapRef.current && mapRef.current.remove(), mapRef.current = null;
+    };
+  }, []), useEffect(() => {
+    let map = mapRef.current;
+    if (!map) return;
+    let c = map.getCenter();
+    (Math.abs(c.lat - view.lat) > 1e-6 || Math.abs(c.lng - view.lng) > 1e-6 || Math.abs(map.getZoom() + 1 - view.z) > 0.01) && map.flyTo({ center: [view.lng, view.lat], zoom: view.z - 1, duration: 600 });
+  }, [view.lat, view.lng, view.z]), useEffect(() => {
+    let map = mapRef.current, ml = mlRef.current;
+    !map || !ml || (marks.current.forEach((m) => m.remove()), marks.current = pins.map((p) => {
+      let el = document.createElement("button");
+      return el.type = "button", el.className = "jt-mlpin" + (p.id === selectedId ? " sel" : ""), el.setAttribute("aria-label", p.label), el.innerHTML = pinSvg(p.color, p.id === selectedId, p.text), el.addEventListener("click", (e) => {
+        e.stopPropagation(), cb.current.onPinTap(p.id);
+      }), new ml.Marker({ element: el, anchor: "bottom" }).setLngLat([p.lng, p.lat]).addTo(map);
+    }));
+  }, [pins, selectedId, state]), useEffect(() => {
+    let map = mapRef.current, ml = mlRef.current;
+    if (tempMark.current && tempMark.current.remove(), tempMark.current = null, !map || !ml || !temp) return;
+    let el = document.createElement("div");
+    el.className = "jt-mlpin temp", el.innerHTML = pinSvg("#14213D", !0), tempMark.current = new ml.Marker({ element: el, anchor: "bottom" }).setLngLat([temp.lng, temp.lat]).addTo(map);
+  }, [temp, state]), state === "fail" ? /* @__PURE__ */ jsx(TileMap, { ...props }) : /* @__PURE__ */ jsxs("div", { className: "jt-mlwrap", children: [
+    /* @__PURE__ */ jsx("div", { ref: box, className: "jt-ml", role: "application", "aria-label": "지도. 눌러서 핀을 꽂을 수 있어요" }),
+    (state === "loading" || state === "slow") && /* @__PURE__ */ jsx("div", { className: "jt-mlmsg", role: "status", children: state === "slow" ? "지도가 느리게 열리고 있어요. 계속 안 열리면 기본 지도로 바꿔 보여 드려요." : "지도 불러오는 중" })
+  ] });
+}
 var gmPromise = null, gmKeyLoaded = "", gmAuthFailed = !1, gmFailListeners = /* @__PURE__ */ new Set();
 function loadGoogleMaps(key) {
   return gmAuthFailed ? Promise.reject(new Error("auth")) : gmPromise && gmKeyLoaded === key ? gmPromise : gmKeyLoaded && gmKeyLoaded !== key ? Promise.reject(new Error("reload")) : (gmKeyLoaded = key, gmPromise = new Promise((res, rej) => {
@@ -178,503 +504,3 @@ async function placeSearchDetailed(text, gkey, bias) {
       gErr = String(e && (e.message || e.code) || e || "error");
     }
   else gkey && gmAuthFailed && (gErr = "auth");
-  let r = await fetch(
-    "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language=ko&countrycodes=jp&q=" + encodeURIComponent(text)
-  );
-  if (!r.ok) throw new Error("search");
-  return { list: (await r.json()).map((d) => {
-    let parts = String(d.display_name || "").split(",").map((x) => x.trim());
-    return { name: d.name || parts[0] || text, area: parts.slice(1, 3).join(" "), lat: Number(d.lat), lng: Number(d.lon), link: "" };
-  }), engine: "osm", gErr };
-}
-async function placeSearch(text, gkey, bias) {
-  return (await placeSearchDetailed(text, gkey, bias)).list;
-}
-function NearbyTab({ settings, wish, onSave }) {
-  let [cat, setCat] = useState(NEAR_CATS[0]), [radius, setRadius] = useState(1e3), [pos, setPos] = useState(null), [posMsg, setPosMsg] = useState(""), [list, setList] = useState([]), [busy, setBusy] = useState(!1), [msg, setMsg] = useState(""), [src, setSrc] = useState(""), [savedNow, setSavedNow] = useState({}), fallback = () => {
-    setPos({ lat: WEATHER_SPOT.lat, lng: WEATHER_SPOT.lng, here: !1, at: Date.now() }), setPosMsg("현재 위치를 쓸 수 없어서 오사카 시내 기준으로 보여 드려요. 휴대폰에서 위치 권한을 허용하면 내 위치 기준으로 바뀌어요.");
-  }, locate = () => {
-    if (setPosMsg("현재 위치를 찾는 중"), !navigator.geolocation) return fallback();
-    navigator.geolocation.getCurrentPosition(
-      (p) => {
-        setPos({ lat: p.coords.latitude, lng: p.coords.longitude, here: !0, at: Date.now() }), setPosMsg("");
-      },
-      fallback,
-      { enableHighAccuracy: !0, timeout: 1e4, maximumAge: 6e4 }
-    );
-  };
-  useEffect(() => {
-    locate();
-  }, []), useEffect(() => {
-    if (!pos) return;
-    let alive = !0;
-    return (async () => {
-      setBusy(!0), setMsg("");
-      let res = null, from = "";
-      if (settings.gmapsKey && !gmAuthFailed)
-        try {
-          res = await nearbyGoogle(settings.gmapsKey, { lat: pos.lat, lng: pos.lng }, cat, radius), from = "google";
-        } catch {
-          res = null;
-        }
-      if (!res)
-        try {
-          res = await nearbyOsm(pos, cat, radius), from = "osm";
-        } catch {
-          alive && (setList([]), setMsg("주변 장소를 불러오지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요."), setBusy(!1));
-          return;
-        }
-      res.forEach((x) => x.dist = distM(pos, x)), from === "osm" && res.sort((a, b) => a.dist - b.dist), alive && (setList(res.slice(0, 20)), setSrc(from), setBusy(!1), res.length || setMsg(`반경 ${radText(radius)} 안에서 찾지 못했어요. 범위를 넓혀 보세요.`));
-    })(), () => {
-      alive = !1;
-    };
-  }, [pos, cat, radius, settings.gmapsKey]);
-  let isSaved = (x) => savedNow[x.id] || wish.some((w) => x.placeId && w.placeId === x.placeId || w.name === x.name && hasPos(w) && Math.abs(w.lat - x.lat) < 5e-4);
-  return /* @__PURE__ */ jsxs("section", { children: [
-    /* @__PURE__ */ jsxs("div", { className: "jt-near-head", children: [
-      /* @__PURE__ */ jsxs("span", { children: [
-        /* @__PURE__ */ jsx(LocateFixed, { size: 15 }),
-        pos ? pos.here ? "내 위치 기준" : "오사카 시내 기준" : "위치 확인 중",
-        ", 반경 ",
-        radText(radius)
-      ] }),
-      /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary sm", onClick: locate, children: "위치 다시 찾기" })
-    ] }),
-    posMsg && /* @__PURE__ */ jsx("p", { className: "jt-hint jt-near-msg", children: posMsg }),
-    /* @__PURE__ */ jsx("div", { className: "jt-chips jt-filter", children: NEAR_CATS.map((c) => /* @__PURE__ */ jsx("button", { type: "button", className: "jt-chip" + (cat.id === c.id ? " on" : ""), onClick: () => setCat(c), children: c.label }, c.id)) }),
-    /* @__PURE__ */ jsx("div", { className: "jt-seg three jt-radius", role: "tablist", "aria-label": "찾는 범위", children: RADII.map((r) => /* @__PURE__ */ jsx("button", { role: "tab", "aria-selected": radius === r, className: radius === r ? "on" : "", onClick: () => setRadius(r), children: radText(r) }, r)) }),
-    busy && /* @__PURE__ */ jsxs("p", { className: "jt-hint jt-near-msg", children: [
-      "주변 ",
-      cat.label,
-      " 찾는 중"
-    ] }),
-    !busy && msg && /* @__PURE__ */ jsx("div", { className: "jt-empty", children: /* @__PURE__ */ jsx("p", { children: msg }) }),
-    !busy && list.length > 0 && /* @__PURE__ */ jsx("ul", { className: "jt-near-list", children: list.map((x) => {
-      let saved = isSaved(x);
-      return /* @__PURE__ */ jsxs("li", { className: "jt-near", children: [
-        /* @__PURE__ */ jsxs("div", { className: "jt-near-main", children: [
-          /* @__PURE__ */ jsx("strong", { children: x.name }),
-          x.sub && /* @__PURE__ */ jsx("span", { className: "jt-near-sub", children: x.sub }),
-          /* @__PURE__ */ jsxs("div", { className: "jt-near-meta", children: [
-            x.rating != null && /* @__PURE__ */ jsxs("span", { className: "jt-star", children: [
-              /* @__PURE__ */ jsx(Star, { size: 13, fill: "currentColor" }),
-              x.rating.toFixed(1),
-              x.count ? /* @__PURE__ */ jsxs("em", { children: [
-                "(",
-                x.count.toLocaleString("ko-KR"),
-                ")"
-              ] }) : null
-            ] }),
-            /* @__PURE__ */ jsx("span", { children: x.type }),
-            x.open === !0 && /* @__PURE__ */ jsx("span", { className: "jt-open", children: "영업 중" }),
-            x.open === !1 && /* @__PURE__ */ jsx("span", { className: "jt-closed", children: "영업 종료" })
-          ] }),
-          /* @__PURE__ */ jsxs("div", { className: "jt-near-dist", children: [
-            /* @__PURE__ */ jsx(Navigation, { size: 12 }),
-            distText(x.dist)
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxs("div", { className: "jt-near-act", children: [
-          saved ? /* @__PURE__ */ jsxs("span", { className: "jt-near-saved", children: [
-            /* @__PURE__ */ jsx(Check, { size: 14 }),
-            "저장됨"
-          ] }) : /* @__PURE__ */ jsx(
-            "button",
-            {
-              type: "button",
-              className: "jt-secondary sm",
-              onClick: () => {
-                onSave({
-                  name: x.name,
-                  cat: cat.wish,
-                  area: x.addr || x.sub || "",
-                  link: x.url || "",
-                  memo: x.rating != null ? `구글 평점 ${x.rating.toFixed(1)}${x.count ? ` (${x.count}명)` : ""}` : "",
-                  lat: x.lat,
-                  lng: x.lng,
-                  ...x.placeId ? { placeId: x.placeId } : {}
-                }), setSavedNow({ ...savedNow, [x.id]: !0 });
-              },
-              children: "가고 싶은 곳에 저장"
-            }
-          ),
-          /* @__PURE__ */ jsxs("a", { className: "jt-maplink", href: x.url || mapUrl({ lat: x.lat, lng: x.lng }), target: "_blank", rel: "noopener noreferrer", children: [
-            /* @__PURE__ */ jsx(ExternalLink, { size: 13 }),
-            "구글맵"
-          ] }),
-          /* @__PURE__ */ jsxs("a", { className: "jt-maplink route", href: hereRouteUrl(x), target: "_blank", rel: "noopener noreferrer", children: [
-            /* @__PURE__ */ jsx(Navigation, { size: 13 }),
-            "길 찾기"
-          ] })
-        ] })
-      ] }, x.id);
-    }) }),
-    src && list.length > 0 && /* @__PURE__ */ jsx("p", { className: "jt-near-src", children: src === "google" ? "장소 정보: Google 지도" : "장소 정보: © OpenStreetMap 기여자" })
-  ] });
-}
-function WishMap({ settings, wish, plan, me, onSave, onEdit, onLike, onPlan, onDelete, onComment, onDelComment, onReact }) {
-  let pinned = wish.filter(hasPos), [view, setView] = useState(
-    () => pinned.length ? {
-      lat: pinned.reduce((s, w) => s + w.lat, 0) / pinned.length,
-      lng: pinned.reduce((s, w) => s + w.lng, 0) / pinned.length,
-      z: pinned.length > 1 ? 11 : 15
-    } : { lat: 35.6762, lng: 139.6503, z: 11 }
-  ), [temp, setTemp] = useState(null), [sel, setSel] = useState(null), [q, setQ] = useState(""), [results, setResults] = useState([]), [busy, setBusy] = useState(!1), [msg, setMsg] = useState(""), selected = wish.find((w) => w.id === sel), pinKey = pinned.map((w) => `${w.id}:${w.lat}:${w.lng}:${w.cat}`).join("|"), pinsMemo = useMemo(
-    () => pinned.map((w) => ({
-      id: w.id,
-      lat: w.lat,
-      lng: w.lng,
-      color: WISH_TONE[w.cat] || WISH_TONE.기타,
-      label: w.name
-    })),
-    [pinKey]
-  ), search = async () => {
-    let text = q.trim();
-    if (text) {
-      setBusy(!0), setMsg(""), setResults([]);
-      try {
-        let res = await placeSearch(text, settings.gmapsKey, { lat: view.lat, lng: view.lng });
-        res.length || setMsg("검색 결과가 없어요. 일본어나 영어로 다시 검색하거나 지도를 직접 눌러 보세요."), setResults(res);
-      } catch {
-        setMsg("검색을 불러오지 못했어요. 지도를 직접 눌러 핀을 꽂아 주세요.");
-      }
-      setBusy(!1);
-    }
-  }, pick = (r) => {
-    setView({ lat: r.lat, lng: r.lng, z: 16 }), setSel(null), setTemp({ lat: r.lat, lng: r.lng, name: r.name, cat: "맛집", area: r.area, link: r.link || "", placeId: r.placeId }), setResults([]);
-  }, liked = selected && selected.likes.includes(me);
-  return /* @__PURE__ */ jsxs("section", { children: [
-    /* @__PURE__ */ jsxs("div", { className: "jt-inline jt-mapsearch", children: [
-      /* @__PURE__ */ jsx(
-        "input",
-        {
-          value: q,
-          onChange: (e) => setQ(e.target.value),
-          onKeyDown: (e) => e.key === "Enter" && search(),
-          placeholder: "장소 검색 (예: 센소지, 이치란 시부야)",
-          "aria-label": "장소 검색"
-        }
-      ),
-      /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary", onClick: search, disabled: busy, children: busy ? "검색 중" : "검색" })
-    ] }),
-    msg && /* @__PURE__ */ jsx("p", { className: "jt-hint jt-mapmsg", children: msg }),
-    results.length > 0 && /* @__PURE__ */ jsx("ul", { className: "jt-results", children: results.map((r, i) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("button", { type: "button", onClick: () => pick(r), children: [
-      /* @__PURE__ */ jsx("strong", { children: r.name }),
-      /* @__PURE__ */ jsx("span", { children: r.area })
-    ] }) }, i)) }),
-    /* @__PURE__ */ jsx(
-      TripMap,
-      {
-        gkey: settings.gmapsKey,
-        onPoi: (poi) => {
-          setSel(null), setTemp({ ...poi, cat: "맛집" });
-        },
-        view,
-        setView,
-        pins: pinsMemo,
-        temp,
-        selectedId: sel,
-        onTap: (lat, lng) => {
-          setSel(null), setTemp({ lat: Number(lat.toFixed(6)), lng: Number(lng.toFixed(6)), name: "", cat: "맛집", area: "" });
-        },
-        onPinTap: (id) => {
-          setTemp(null), setSel(id);
-        }
-      }
-    ),
-    !temp && !selected && /* @__PURE__ */ jsxs("p", { className: "jt-hint jt-mapmsg", children: [
-      "지도를 눌러 핀을 꽂으면 가고 싶은 곳으로 저장돼요. 지금까지 지도에 저장한 곳은 ",
-      pinned.length,
-      "개예요."
-    ] }),
-    temp && /* @__PURE__ */ jsxs("div", { className: "jt-mappanel", children: [
-      /* @__PURE__ */ jsx("strong", { children: "이 위치를 저장할까요?" }),
-      /* @__PURE__ */ jsx(
-        "input",
-        {
-          value: temp.name,
-          onChange: (e) => setTemp({ ...temp, name: e.target.value }),
-          placeholder: "장소 이름 (예: 이치란 시부야점)",
-          "aria-label": "장소 이름"
-        }
-      ),
-      /* @__PURE__ */ jsx("div", { className: "jt-chips", children: WISH_CATS.map((c) => /* @__PURE__ */ jsx(
-        "button",
-        {
-          type: "button",
-          className: "jt-chip" + (temp.cat === c ? " on" : ""),
-          onClick: () => setTemp({ ...temp, cat: c }),
-          children: c
-        },
-        c
-      )) }),
-      /* @__PURE__ */ jsxs("div", { className: "jt-inline", children: [
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            type: "button",
-            className: "jt-primary",
-            disabled: !temp.name.trim(),
-            onClick: () => {
-              onSave({
-                name: temp.name.trim(),
-                cat: temp.cat,
-                area: temp.area || "",
-                link: temp.link || "",
-                memo: "",
-                lat: temp.lat,
-                lng: temp.lng,
-                ...temp.placeId ? { placeId: temp.placeId } : {}
-              }), setTemp(null);
-            },
-            children: "가고 싶은 곳에 저장"
-          }
-        ),
-        /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary", onClick: () => setTemp(null), children: "취소" })
-      ] })
-    ] }),
-    selected && /* @__PURE__ */ jsxs("div", { className: "jt-mappanel", children: [
-      /* @__PURE__ */ jsxs("div", { className: "jt-wish-top", children: [
-        /* @__PURE__ */ jsx("span", { className: "jt-tag", style: { background: WISH_TONE[selected.cat] || WISH_TONE.기타 }, children: selected.cat }),
-        /* @__PURE__ */ jsx("strong", { children: selected.name }),
-        /* @__PURE__ */ jsx("button", { type: "button", className: "jt-icon sm jt-wish-edit", onClick: () => onEdit(selected), "aria-label": `${selected.name} 수정`, children: /* @__PURE__ */ jsx(Pencil, { size: 16 }) })
-      ] }),
-      selected.area && /* @__PURE__ */ jsxs("div", { className: "jt-meta", children: [
-        /* @__PURE__ */ jsx(MapPin, { size: 13 }),
-        selected.area
-      ] }),
-      selected.memo && /* @__PURE__ */ jsx("div", { className: "jt-memo", children: selected.memo }),
-      /* @__PURE__ */ jsxs("div", { className: "jt-wish-bottom", children: [
-        /* @__PURE__ */ jsxs(
-          HoldButton,
-          {
-            className: "jt-like" + (liked ? " on" : ""),
-            onTap: () => onLike(selected.id),
-            names: selected.likes,
-            members: settings.members,
-            title: "가고 싶어요",
-            "aria-pressed": liked,
-            "aria-label": `가고 싶어요 ${selected.likes.length}명, 길게 누르면 누른 사람 보기`,
-            children: [
-              /* @__PURE__ */ jsx(Heart, { size: 16, fill: liked ? "currentColor" : "none" }),
-              "가고 싶어요 ",
-              selected.likes.length
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsx(Reactions, { item: selected, me, members: settings.members, onReact: (e) => onReact(selected.id, e) }),
-        plannedDay(selected, plan) != null ? /* @__PURE__ */ jsxs("span", { className: "jt-planned", style: { color: LINE[plannedDay(selected, plan) % LINE.length] }, children: [
-          plannedDay(selected, plan) + 1,
-          "일차 일정에 있어요"
-        ] }) : /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary sm", onClick: () => onPlan(selected), children: "일정에 넣기" }),
-        /* @__PURE__ */ jsxs("span", { className: "jt-by grow", children: [
-          /* @__PURE__ */ jsx(Avatar, { name: selected.by, members: settings.members, size: 16 }),
-          selected.by
-        ] }),
-        /* @__PURE__ */ jsx(
-          DeleteButton,
-          {
-            onConfirm: () => {
-              onDelete(selected.id), setSel(null);
-            },
-            label: ""
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxs("div", { className: "jt-maprow", children: [
-        /* @__PURE__ */ jsxs("a", { className: "jt-maplink", href: mapUrl(selected), target: "_blank", rel: "noopener noreferrer", children: [
-          /* @__PURE__ */ jsx(ExternalLink, { size: 14 }),
-          "구글맵에서 열기"
-        ] }),
-        /* @__PURE__ */ jsxs("a", { className: "jt-maplink route", href: hereRouteUrl(selected), target: "_blank", rel: "noopener noreferrer", children: [
-          /* @__PURE__ */ jsx(Navigation, { size: 14 }),
-          "여기서 길 찾기"
-        ] })
-      ] }),
-      /* @__PURE__ */ jsx(
-        CommentBox,
-        {
-          comments: selected.comments || [],
-          me,
-          members: settings.members,
-          onAdd: (t) => onComment(selected.id, t),
-          onDelete: (cid) => onDelComment(selected.id, cid)
-        }
-      )
-    ] })
-  ] });
-}
-function WishTab(props) {
-  let [own, setOwn] = useState("list"), view = props.view || own, setView = props.setView || setOwn;
-  return /* @__PURE__ */ jsxs("section", { children: [
-    /* @__PURE__ */ jsx("div", { className: "jt-seg three", role: "tablist", children: [
-      ["list", "목록"],
-      ["map", "지도"],
-      ["near", "내 주변"]
-    ].map(([id, label]) => /* @__PURE__ */ jsx("button", { role: "tab", "aria-selected": view === id, className: view === id ? "on" : "", onClick: () => setView(id), children: label }, id)) }),
-    view === "list" && /* @__PURE__ */ jsx(WishList, { ...props }),
-    view === "map" && /* @__PURE__ */ jsx(WishMap, { ...props }),
-    view === "near" && /* @__PURE__ */ jsx(NearbyTab, { ...props })
-  ] });
-}
-function WishList({ settings, wish, plan, me, onBatchPos, onEdit, onLike, onPlan, onDelete, onComment, onDelComment, onReact }) {
-  let [cOpen, setCOpen] = useState(null), [fold, toggleFold, setFoldAll] = useFold(), [here, hereErr] = useHere(), [filter, setFilter] = useState("전체"), [pf, setPf] = useState("all"), [author, setAuthor] = useState("all"), inPlan = (w) => plannedDay(w, plan) != null, byCat = wish.filter((w) => (filter === "전체" || w.cat === filter) && (author === "all" || w.by === author)), pcount = { all: byCat.length, in: byCat.filter(inPlan).length, out: byCat.filter((w) => !inPlan(w)).length }, [open, setOpen] = useState(null), list = byCat.filter((w) => pf === "all" || (pf === "in" ? inPlan(w) : !inPlan(w))).sort((a, b) => b.likes.length - a.likes.length || b.createdAt - a.createdAt);
-  return /* @__PURE__ */ jsxs("section", { children: [
-    /* @__PURE__ */ jsx("div", { className: "jt-chips jt-filter", children: ["전체", ...WISH_CATS].map((c) => /* @__PURE__ */ jsx("button", { className: "jt-chip" + (filter === c ? " on" : ""), onClick: () => setFilter(c), children: c }, c)) }),
-    /* @__PURE__ */ jsxs("div", { className: "jt-listbar", children: [
-      /* @__PURE__ */ jsxs("label", { className: "jt-pfsel", children: [
-        /* @__PURE__ */ jsx("span", { className: "jt-sr", children: "일정 반영 여부" }),
-        /* @__PURE__ */ jsxs("select", { value: pf, onChange: (e) => setPf(e.target.value), children: [
-          /* @__PURE__ */ jsxs("option", { value: "all", children: [
-            "전체 (",
-            pcount.all,
-            ")"
-          ] }),
-          /* @__PURE__ */ jsxs("option", { value: "in", children: [
-            "일정 반영 (",
-            pcount.in,
-            ")"
-          ] }),
-          /* @__PURE__ */ jsxs("option", { value: "out", children: [
-            "미반영 (",
-            pcount.out,
-            ")"
-          ] })
-        ] }),
-        /* @__PURE__ */ jsx(ChevronDown, { size: 16, "aria-hidden": "true" })
-      ] }),
-      /* @__PURE__ */ jsxs("label", { className: "jt-pfsel", children: [
-        /* @__PURE__ */ jsx("span", { className: "jt-sr", children: "작성자" }),
-        /* @__PURE__ */ jsxs("select", { value: author, onChange: (e) => setAuthor(e.target.value), children: [
-          /* @__PURE__ */ jsx("option", { value: "all", children: "작성자 전체" }),
-          settings.members.map((m) => /* @__PURE__ */ jsxs("option", { value: m, children: [
-            m,
-            " (",
-            wish.filter((w) => w.by === m).length,
-            ")"
-          ] }, m))
-        ] }),
-        /* @__PURE__ */ jsx(ChevronDown, { size: 16, "aria-hidden": "true" })
-      ] }),
-      /* @__PURE__ */ jsx(FoldAll, { ids: list.map((w) => w.id), open: fold, setAll: setFoldAll })
-    ] }),
-    list.length === 0 && /* @__PURE__ */ jsx("div", { className: "jt-empty", children: wish.length === 0 ? /* @__PURE__ */ jsxs(Fragment, { children: [
-      /* @__PURE__ */ jsx("p", { children: "아직 가고 싶은 곳이 없어요." }),
-      /* @__PURE__ */ jsx("p", { children: "먹고 싶은 것, 보고 싶은 곳을 하나씩 올려 보세요." })
-    ] }) : /* @__PURE__ */ jsx("p", { children: author !== "all" ? `${author}이(가) 올린 곳 중 조건에 맞는 곳이 없어요.` : pf === "in" ? "일정에 반영된 곳이 없어요." : pf === "out" ? "미반영된 곳이 없어요. 모두 일정에 넣었어요." : "이 종류에는 아직 장소가 없어요." }) }),
-    !here && hereErr && wish.some(hasPos) && /* @__PURE__ */ jsx("p", { className: "jt-warn-inline jt-here-err", children: hereErr === "denied" ? "위치 권한이 꺼져 있어 거리를 표시하지 못해요. 휴대폰 설정에서 이 앱(또는 브라우저)의 위치 권한을 허용해 주세요." : "지금 위치를 확인하지 못해 거리를 표시하지 못해요. 잠시 후 다시 시도할게요." }),
-    /* @__PURE__ */ jsx("ul", { className: "jt-list", children: list.map((w) => {
-      let liked = w.likes.includes(me), pd = plannedDay(w, plan);
-      return /* @__PURE__ */ jsxs("li", { className: "jt-wish" + (fold[w.id] ? " open" : ""), children: [
-        /* @__PURE__ */ jsxs("button", { type: "button", className: "jt-fold-head", onClick: () => toggleFold(w.id), "aria-expanded": !!fold[w.id], children: [
-          /* @__PURE__ */ jsx("span", { className: "jt-tag", style: { background: WISH_TONE[w.cat] || WISH_TONE.기타 }, children: w.cat }),
-          /* @__PURE__ */ jsx("strong", { className: "jt-fold-name", children: w.name }),
-          !hasPos(w) && /* @__PURE__ */ jsx("span", { className: "jt-dist none", children: "위치 없음" }),
-          here && hasPos(w) && (() => {
-            let m = distM(here, w);
-            return /* @__PURE__ */ jsx("span", { className: "jt-dist " + distTone(m), "aria-label": `지금 위치에서 ${distShort(m)}`, children: distShort(m) });
-          })(),
-          pd != null && /* @__PURE__ */ jsxs("span", { className: "jt-daybadge", style: { background: LINE[pd % LINE.length] }, children: [
-            pd + 1,
-            "일차"
-          ] }),
-          /* @__PURE__ */ jsx(ChevronDown, { size: 18, className: "jt-fold-ic", "aria-hidden": "true" })
-        ] }),
-        fold[w.id] && /* @__PURE__ */ jsxs("div", { className: "jt-fold-body", children: [
-          /* @__PURE__ */ jsx("div", { className: "jt-fold-tools", children: /* @__PURE__ */ jsxs("button", { type: "button", className: "jt-like jt-editbtn", onClick: () => onEdit(w), children: [
-            /* @__PURE__ */ jsx(Pencil, { size: 14 }),
-            "수정"
-          ] }) }),
-          w.area && /* @__PURE__ */ jsxs("div", { className: "jt-meta", children: [
-            /* @__PURE__ */ jsx(MapPin, { size: 13 }),
-            w.area
-          ] }),
-          w.memo && /* @__PURE__ */ jsx("div", { className: "jt-memo", children: w.memo }),
-          /* @__PURE__ */ jsxs("div", { className: "jt-maprow", children: [
-            /* @__PURE__ */ jsxs("a", { className: "jt-maplink", href: mapUrl(w), target: "_blank", rel: "noopener noreferrer", children: [
-              /* @__PURE__ */ jsx(ExternalLink, { size: 14 }),
-              "구글맵에서 열기"
-            ] }),
-            /* @__PURE__ */ jsxs("a", { className: "jt-maplink route", href: hereRouteUrl(w), target: "_blank", rel: "noopener noreferrer", children: [
-              /* @__PURE__ */ jsx(Navigation, { size: 14 }),
-              "여기서 길 찾기"
-            ] }),
-            /* @__PURE__ */ jsxs(
-              "button",
-              {
-                type: "button",
-                className: "jt-maplink",
-                onClick: () => setOpen(open === w.id ? null : w.id),
-                "aria-expanded": open === w.id,
-                children: [
-                  /* @__PURE__ */ jsx(MapIcon, { size: 14 }),
-                  open === w.id ? "지도 닫기" : "지도 미리보기"
-                ]
-              }
-            )
-          ] }),
-          open === w.id && /* @__PURE__ */ jsxs("div", { className: "jt-embed", children: [
-            /* @__PURE__ */ jsx(
-              "iframe",
-              {
-                title: `${w.name} 지도`,
-                src: embedUrl(w),
-                loading: "lazy",
-                referrerPolicy: "no-referrer-when-downgrade",
-                allowFullScreen: !0
-              }
-            ),
-            /* @__PURE__ */ jsx("p", { children: "지도가 보이지 않으면 '구글맵에서 열기'를 눌러 주세요." })
-          ] }),
-          /* @__PURE__ */ jsxs("div", { className: "jt-wish-bottom", children: [
-            /* @__PURE__ */ jsxs(
-              HoldButton,
-              {
-                className: "jt-like" + (liked ? " on" : ""),
-                onTap: () => onLike(w.id),
-                names: w.likes,
-                members: settings.members,
-                title: "가고 싶어요",
-                "aria-pressed": liked,
-                "aria-label": `가고 싶어요 ${w.likes.length}명, 길게 누르면 누른 사람 보기`,
-                children: [
-                  /* @__PURE__ */ jsx(Heart, { size: 16, fill: liked ? "currentColor" : "none" }),
-                  "가고 싶어요 ",
-                  w.likes.length
-                ]
-              }
-            ),
-            /* @__PURE__ */ jsx(Reactions, { item: w, me, members: settings.members, onReact: (e) => onReact(w.id, e) }),
-            pd != null ? /* @__PURE__ */ jsxs("span", { className: "jt-planned", style: { color: LINE[pd % LINE.length] }, children: [
-              pd + 1,
-              "일차 일정에 있어요"
-            ] }) : /* @__PURE__ */ jsx("button", { className: "jt-secondary sm", onClick: () => onPlan(w), children: "일정에 넣기" }),
-            /* @__PURE__ */ jsx(
-              CommentButton,
-              {
-                count: (w.comments || []).length,
-                open: cOpen === w.id,
-                onClick: () => setCOpen(cOpen === w.id ? null : w.id)
-              }
-            ),
-            /* @__PURE__ */ jsxs("span", { className: "jt-by grow", children: [
-              /* @__PURE__ */ jsx(Avatar, { name: w.by, members: settings.members, size: 16 }),
-              w.by
-            ] }),
-            /* @__PURE__ */ jsx(DeleteButton, { onConfirm: () => onDelete(w.id), label: "" })
-          ] }),
-          cOpen === w.id && /* @__PURE__ */ jsx(
-            CommentBox,
-            {
-              comments: w.comments || [],
-              me,
-              members: settings.members,
-              onAdd: (t) => onComment(w.id, t),
-              onDelete: (cid) => onDelComment(w.id, cid)
-            }
-          )
-        ] })
-      ] }, w.id);
-    }) })
-  ] });
-}
