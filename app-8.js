@@ -367,7 +367,16 @@ function App() {
         ...hasPos(w) ? { lat: w.lat, lng: w.lng } : {}
       }
     ]), setDay(d);
-  }, saveSpend = (vals, id) => mutate(
+  }, withPhotos = async (vals, prev) => {
+    let list = vals.photos || [];
+    for (let ph of list.filter((x) => x.data))
+      await save(photoKey(ph.id), ph.data) || setToast("영수증 사진을 저장하지 못했어요. 인터넷 연결을 확인해 주세요.");
+    let ids = list.map((x) => x.id);
+    return (prev || []).filter((x) => !ids.includes(x)).forEach(deletePhoto), { ...vals, photos: ids.length ? ids : void 0 };
+  }, saveSpend = async (rawVals, id) => {
+    let vals = await withPhotos(rawVals, id ? (spend.find((e) => e.id === id) || {}).photos : []);
+    return saveSpendRaw(vals, id);
+  }, saveSpendRaw = (vals, id) => mutate(
     KEYS.spend,
     [],
     setSpend,
@@ -375,10 +384,19 @@ function App() {
   ), mutateLedger = async (fn) => {
     let key = LEDGER_PREFIX + encodeURIComponent(me), cur = await load(key, { cash: { jpy: 0 }, items: [] }), next = fn({ cash: cur.cash || { jpy: 0 }, items: cur.items || [] });
     setLedgers((m) => ({ ...m, [me]: next })), await save(key, next) || setToast("개인 경비를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.");
-  }, savePItem = (vals, id) => mutateLedger((l) => ({
+  }, savePItem = async (rawVals, id) => {
+    let prevItem = id ? (ledgers[me] && ledgers[me].items || []).find((x) => x.id === id) : null, vals = await withPhotos(rawVals, prevItem ? prevItem.photos : []);
+    return savePItemRaw(vals, id);
+  }, savePItemRaw = (vals, id) => mutateLedger((l) => ({
     ...l,
     items: id ? l.items.map((x) => x.id === id ? { ...x, ...vals, editedAt: Date.now() } : x) : [...l.items, { id: uid(), createdAt: Date.now(), ...vals }]
-  })), delPItem = (id) => mutateLedger((l) => ({ ...l, items: l.items.filter((x) => x.id !== id) })), setCash = (jpy) => mutateLedger((l) => ({ ...l, cash: { ...l.cash, jpy } })), delSpend = (id) => mutate(KEYS.spend, [], setSpend, (list) => list.filter((e) => e.id !== id)), savePost = async ({ text, urls, photos }, id) => {
+  })), delPItem = (id) => {
+    let it = (ledgers[me] && ledgers[me].items || []).find((x) => x.id === id);
+    return it && it.photos && it.photos.forEach(deletePhoto), mutateLedger((l) => ({ ...l, items: l.items.filter((x) => x.id !== id) }));
+  }, setCash = (jpy) => mutateLedger((l) => ({ ...l, cash: { ...l.cash, jpy } })), delSpend = (id) => {
+    let it = spend.find((e) => e.id === id);
+    return it && it.photos && it.photos.forEach(deletePhoto), mutate(KEYS.spend, [], setSpend, (list) => list.filter((e) => e.id !== id));
+  }, savePost = async ({ text, urls, photos }, id) => {
     for (let p of photos.filter((x) => x.data)) {
       if (!await save(photoKey(p.id), p.data)) return !1;
       photoCache.set(p.id, p.data);
@@ -615,7 +633,7 @@ function App() {
         ["board", "공지", Megaphone],
         ["plan", "일정", CalendarDays],
         ["wish", "가고 싶은 곳", Heart],
-        ["spend", "경비", Wallet],
+        ["spend", "경비&정산", Wallet],
         ["family", "위치 공유", Users],
         ["chat", "채팅", MessagesSquare]
       ].map(([id, label, Icon]) => /* @__PURE__ */ jsxs("button", { className: tab === id ? "on" : "", onClick: () => setTab(id), "aria-current": tab === id, children: [
