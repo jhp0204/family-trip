@@ -1,87 +1,94 @@
-["family", "위치 공유", Eo],
-        ["chat", "채팅", Mo]
-      ].map(([T, W, q]) => /* @__PURE__ */ a("button", { className: g === T ? "on" : "", onClick: () => S(T), "aria-current": g === T, children: [
+] }) : null;
+      })(),
+      /* @__PURE__ */ e("nav", { className: "jt-nav", "aria-label": "메뉴", children: [
+        ["board", "공지", ya],
+        ["plan", "일정", No],
+        ["wish", "가고 싶은 곳", cn],
+        ["spend", "경비", Co],
+        ["family", "위치 공유", Mo],
+        ["chat", "채팅", Do]
+      ].map(([_, W, q]) => /* @__PURE__ */ a("button", { className: f === _ ? "on" : "", onClick: () => S(_), "aria-current": f === _, children: [
         /* @__PURE__ */ a("span", { className: "jt-nav-ic", children: [
           /* @__PURE__ */ e(q, { size: 21 }),
-          T === "chat" && Ft > 0 && g !== "chat" && /* @__PURE__ */ e("b", { className: "jt-badge", "aria-label": `안 읽은 메시지 ${Ft}개`, children: Ft > 99 ? "99+" : Ft })
+          _ === "chat" && Ft > 0 && f !== "chat" && /* @__PURE__ */ e("b", { className: "jt-badge", "aria-label": `안 읽은 메시지 ${Ft}개`, children: Ft > 99 ? "99+" : Ft })
         ] }),
         W
-      ] }, T)) }),
-      v?.type === "plan" && /* @__PURE__ */ e(Nt, { title: v.item ? "일정 수정" : `${v.day + 1}일차 일정 추가`, onClose: st, children: /* @__PURE__ */ e(
-        Ni,
+      ] }, _)) }),
+      I?.type === "plan" && /* @__PURE__ */ e(Nt, { title: I.item ? "일정 수정" : `${I.day + 1}일차 일정 추가`, onClose: st, children: /* @__PURE__ */ e(
+        Ei,
         {
-          initial: v.item,
-          preset: v.preset,
+          initial: I.item,
+          preset: I.preset,
           gkey: o.gmapsKey,
-          dayItems: s.filter((T) => T.day === v.day && T.id !== v.item?.id),
-          onSave: (T) => {
-            Ga(T, v.item?.id, v.day), st();
+          dayItems: s.filter((_) => _.day === I.day && _.id !== I.item?.id),
+          onSave: (_) => {
+            Va(_, I.item?.id, I.day), st();
           },
           onDelete: () => {
-            Xa(v.item.id), st();
+            Za(I.item.id), st();
           }
         }
       ) }),
-      v?.type === "wish" && /* @__PURE__ */ e(Nt, { title: v.item ? "가고 싶은 곳 수정" : "가고 싶은 곳 추가", onClose: st, children: /* @__PURE__ */ e(
-        Ci,
+      I?.type === "wish" && /* @__PURE__ */ e(Nt, { title: I.item ? "가고 싶은 곳 수정" : "가고 싶은 곳 추가", onClose: st, children: /* @__PURE__ */ e(
+        Ai,
         {
-          initial: v.item,
+          initial: I.item,
           gkey: o.gmapsKey,
-          onSave: (T) => {
-            v.item ? Za(v.item.id, T) : Mn(T), st();
+          onSave: (_) => {
+            I.item ? eo(I.item.id, _) : Pn(_), st();
           },
           onDelete: () => {
-            In(v.item.id), st();
+            Rn(I.item.id), st();
           }
         }
       ) }),
-      v?.type === "spend" && /* @__PURE__ */ e(Nt, { title: v.item ? "경비 수정" : "경비 기록", onClose: st, children: /* @__PURE__ */ e(
-        zi,
+      I?.type === "spend" && /* @__PURE__ */ e(Nt, { title: I.item ? "경비 수정" : "경비 기록", onClose: st, children: /* @__PURE__ */ e(
+        Si,
         {
-          settings: Y,
-          me: d,
+          settings: J,
+          me: c,
           defaultDay: K,
-          initial: v.item,
-          onSave: (T) => {
-            to(T, v.item?.id), st();
+          initial: I.item,
+          onSave: (_) => {
+            ao(_, I.item?.id), st();
           },
           onDelete: () => {
-            eo(v.item.id), st();
+            oo(I.item.id), st();
           }
         }
       ) }),
-      v?.type === "post" && /* @__PURE__ */ e(Nt, { title: v.item ? "글 수정" : "새 글", onClose: st, children: /* @__PURE__ */ e(
-        qi,
+      I?.type === "post" && /* @__PURE__ */ e(Nt, { title: I.item ? "글 수정" : "새 글", onClose: st, children: /* @__PURE__ */ e(
+        Zi,
         {
-          initial: v.item,
-          onSave: async (T) => {
-            let W = await no(T, v.item?.id);
+          initial: I.item,
+          onSave: async (_) => {
+            let W = await io(_, I.item?.id);
             return W && st(), W;
           },
           onDelete: () => {
-            ao(v.item.id), st();
+            so(I.item.id), st();
           }
         }
       ) }),
-      ue && !v && /* @__PURE__ */ e(Nt, { title: "가족과 위치를 공유할까요?", onClose: () => be(!1, !0), children: /* @__PURE__ */ a("div", { className: "jt-form", children: [
+      ge && !I && /* @__PURE__ */ e(Nt, { title: "가족과 위치를 공유할까요?", onClose: () => je(!1, !0), children: /* @__PURE__ */ a("div", { className: "jt-form", children: [
         /* @__PURE__ */ a("p", { className: "jt-ask", children: [
           "켜 두면 ",
           /* @__PURE__ */ e("b", { children: "앱이 열려 있는 동안만" }),
           " 내 위치가 가족 지도에 보여요. 앱을 닫거나 화면이 꺼지면 바로 사라져요."
         ] }),
         /* @__PURE__ */ e("p", { className: "jt-hint jt-ask-hint", children: '언제든 위쪽 위치 버튼이나 "위치 공유" 탭에서 켜고 끌 수 있어요.' }),
-        /* @__PURE__ */ e("button", { className: "jt-primary", onClick: () => be(!0), children: "위치 공유 켜기" }),
-        /* @__PURE__ */ e("button", { className: "jt-ghost", onClick: () => be(!1, !0), children: "나중에 할게요" })
+        /* @__PURE__ */ e("button", { className: "jt-primary", onClick: () => je(!0), children: "위치 공유 켜기" }),
+        /* @__PURE__ */ e("button", { className: "jt-ghost", onClick: () => je(!1, !0), children: "나중에 할게요" })
       ] }) }),
-      he && /* @__PURE__ */ e("div", { className: "jt-toast", role: "status", children: he }),
-      v?.type === "toPlan" && /* @__PURE__ */ e(Nt, { title: `"${v.wish.name}" 몇째 날에 갈까요?`, onClose: st, children: /* @__PURE__ */ e("div", { className: "jt-daypick", children: Array.from({ length: o.days }, (T, W) => {
-        let q = ut(o.start, W);
+      xe && /* @__PURE__ */ e("div", { className: "jt-toast", role: "status", children: xe }),
+      I?.type === "toPlan" && /* @__PURE__ */ e(Nt, { title: `"${I.wish.name}" 몇째 날에 갈까요?`, onClose: st, children: /* @__PURE__ */ e("div", { className: "jt-daypick", children: Array.from({ length: o.days }, (_, W) => {
+        let q = mt(o.start, W);
         return /* @__PURE__ */ a(
           "button",
           {
-            style: { "--lc": V[W % V.length] },
+            style: { "--lc": Z[W % Z.length] },
             onClick: () => {
-              Qa(v.wish, W), st(), S("plan");
+              no(I.wish, W), st(), S("plan");
             },
             children: [
               /* @__PURE__ */ a("span", { className: "jt-daychip", children: [
@@ -100,12 +107,12 @@
     ] });
   }
   return /* @__PURE__ */ a("div", { className: "jt", children: [
-    /* @__PURE__ */ e("style", { children: hn }),
-    /* @__PURE__ */ e(wi, {}),
-    te
+    /* @__PURE__ */ e("style", { children: yn }),
+    /* @__PURE__ */ e(Ci, {}),
+    ne
   ] });
 }
-var hn = `
+var yn = `
 .jt{--ink:#14213D;--muted:#66718A;--rule:#DCE1EA;--card:#fff;--blue:#0C86AE;font-family:"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;max-width:520px;margin:0 auto;display:flex;flex-direction:column;position:relative;font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%;--paper:#F1F3F6;--soft:#E7EAF0}
 .jt *{box-sizing:border-box}
 :where(.jt) button{font:inherit;color:inherit;cursor:pointer}
@@ -441,3 +448,7 @@ var hn = `
 .jt-near-sub{font-size:12px;color:var(--muted)}
 .jt-near-meta{display:flex;flex-wrap:wrap;gap:4px 8px;font-size:12.5px;color:var(--muted);align-items:center}
 .jt-star{display:inline-flex;align-items:center;gap:3px;color:#B7791F;font-weight:800}
+.jt-star em{font-style:normal;font-weight:500;color:var(--muted)}
+.jt-open{color:#0A7D58;font-weight:700}
+.jt-closed{color:#B42318;font-weight:700}
+.jt-near-dist{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#33405C;font-variant-numeric:tabular-nums}
