@@ -173,7 +173,7 @@ function CommentBox({ comments = [], me, members, onAdd, onDelete }) {
   ] });
 }
 function SettingsForm({ initial, onSave, onCancel, wish = [], onBatchPos }) {
-  let [geoOpen, setGeoOpen] = useState(!1), noPos = wish.filter((w) => !hasPos(w)), [title, setTitle] = useState(initial?.title || "가족 일본여행"), [start, setStart] = useState(initial?.start || iso(new Date(Date.now() + 30 * 864e5))), [days, setDays] = useState(initial?.days || 4), [members, setMembers] = useState(initial?.members || []), [rate, setRate] = useState(initial?.rate || 900), [gmapsKey, setGmapsKey] = useState(initial?.gmapsKey || ""), [keyMode, setKeyMode] = useState("locked"), keyRef = useRef(null), maskKey = (k) => k ? k.length > 10 ? k.slice(0, 4) + "••••••••" + k.slice(-4) : "••••••••" : "설정 안 됨 (기본 지도 사용 중)", [name, setName] = useState(""), add = () => {
+  let [geoOpen, setGeoOpen] = useState(!1), noPos = wish.filter((w) => !hasPos(w)), [title, setTitle] = useState(initial?.title || "가족 일본여행"), [start, setStart] = useState(initial?.start || iso(new Date(Date.now() + 30 * 864e5))), [days, setDays] = useState(initial?.days || 4), [members, setMembers] = useState(initial?.members || []), [rate, setRate] = useState(initial?.rate || 900), [gmapsKey, setGmapsKey] = useState(initial?.gmapsKey || ""), [pgroups, setPgroups] = useState(initial?.pgroups || []), [pick, setPick] = useState([]), [keyMode, setKeyMode] = useState("locked"), keyRef = useRef(null), maskKey = (k) => k ? k.length > 10 ? k.slice(0, 4) + "••••••••" + k.slice(-4) : "••••••••" : "설정 안 됨 (기본 지도 사용 중)", [name, setName] = useState(""), add = () => {
     let n = name.trim();
     !n || members.includes(n) || (setMembers([...members, n]), setName(""));
   }, ok = title.trim() && start && members.length > 0;
@@ -213,6 +213,41 @@ function SettingsForm({ initial, onSave, onCancel, wish = [], onBatchPos }) {
           ),
           /* @__PURE__ */ jsx("button", { type: "button", className: "jt-secondary", onClick: add, children: "추가" })
         ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
+        /* @__PURE__ */ jsx("span", { children: "개인 경비 함께 쓰기 (선택)" }),
+        pgroups.filter((g) => g.every((m) => members.includes(m))).length > 0 && /* @__PURE__ */ jsx("div", { className: "jt-chips", children: pgroups.filter((g) => g.every((m) => members.includes(m))).map((g) => /* @__PURE__ */ jsxs("span", { className: "jt-chip on", children: [
+          g.join(" + "),
+          /* @__PURE__ */ jsx("button", { type: "button", onClick: () => setPgroups(pgroups.filter((x) => x !== g)), "aria-label": `${g.join(", ")} 묶음 풀기`, children: /* @__PURE__ */ jsx(X, { size: 14 }) })
+        ] }, g.join("+"))) }),
+        /* @__PURE__ */ jsxs("div", { className: "jt-chips", children: [
+          members.filter((m) => !pgroups.some((g) => g.includes(m))).map((m) => /* @__PURE__ */ jsxs(
+            "button",
+            {
+              type: "button",
+              className: "jt-chip" + (pick.includes(m) ? " on" : ""),
+              onClick: () => setPick(pick.includes(m) ? pick.filter((x) => x !== m) : [...pick, m]),
+              children: [
+                pick.includes(m) && /* @__PURE__ */ jsx(Check, { size: 14 }),
+                m
+              ]
+            },
+            m
+          )),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              type: "button",
+              className: "jt-secondary sm",
+              disabled: pick.length < 2,
+              onClick: () => {
+                setPgroups([...pgroups, pick]), setPick([]);
+              },
+              children: "묶기"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx("p", { className: "jt-hint", children: "두 명 이상 골라 묶으면 개인 경비를 한 장부로 같이 써요(예: 커플). 묶음 안의 사람끼리만 보여요." })
       ] }),
       /* @__PURE__ */ jsx(Field, { label: "예비 환율 (100엔당 원, 공식 환율을 못 불러올 때만 써요)", children: /* @__PURE__ */ jsx("input", { type: "number", inputMode: "numeric", value: rate, onChange: (e) => setRate(Number(e.target.value) || 0) }) }),
       /* @__PURE__ */ jsxs("div", { className: "jt-field", children: [
@@ -267,7 +302,7 @@ function SettingsForm({ initial, onSave, onCancel, wish = [], onBatchPos }) {
         {
           className: "jt-primary",
           disabled: !ok,
-          onClick: () => onSave({ title: title.trim(), start, days, members, rate: rate || 900, gmapsKey }),
+          onClick: () => onSave({ title: title.trim(), start, days, members, rate: rate || 900, gmapsKey, pgroups: pgroups.filter((g) => g.filter((m) => members.includes(m)).length > 1) }),
           children: initial ? "설정 저장" : "여행 시작하기"
         }
       ),
