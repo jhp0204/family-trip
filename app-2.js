@@ -1,4 +1,41 @@
-t && (onAdd(t), setText(""));
+function plannedDay(w, plan) {
+  let p = (plan || []).find((x) => x.wishId === w.id) || (plan || []).find((x) => !x.wishId && x.title === w.name);
+  return p ? p.day : null;
+}
+function useFold() {
+  let [open, setOpen] = useState({});
+  return [open, (id) => setOpen((o) => ({ ...o, [id]: !o[id] })), (ids, v) => setOpen(v ? Object.fromEntries(ids.map((id) => [id, !0])) : {})];
+}
+function FoldAll({ ids, open, setAll }) {
+  if (ids.length < 2) return null;
+  let allOpen = ids.every((id) => open[id]);
+  return /* @__PURE__ */ jsx("div", { className: "jt-foldall", children: /* @__PURE__ */ jsxs("button", { type: "button", className: "jt-ghost sm", onClick: () => setAll(ids, !allOpen), children: [
+    allOpen ? /* @__PURE__ */ jsx(ChevronUp, { size: 15 }) : /* @__PURE__ */ jsx(ChevronDown, { size: 15 }),
+    allOpen ? "모두 접기" : "모두 펼치기"
+  ] }) });
+}
+function CommentButton({ count, open, onClick }) {
+  return /* @__PURE__ */ jsxs(
+    "button",
+    {
+      type: "button",
+      className: "jt-like jt-cbtn" + (open ? " open" : ""),
+      onClick: (e) => {
+        e.stopPropagation(), onClick();
+      },
+      "aria-expanded": open,
+      children: [
+        /* @__PURE__ */ jsx(MessageSquare, { size: 15 }),
+        "댓글 ",
+        count || 0
+      ]
+    }
+  );
+}
+function CommentBox({ comments = [], me, members, onAdd, onDelete }) {
+  let [text, setText] = useState(""), send = () => {
+    let t = text.trim();
+    t && (onAdd(t), setText(""));
   };
   return /* @__PURE__ */ jsxs("div", { className: "jt-comments", onClick: (e) => e.stopPropagation(), onKeyDown: (e) => e.stopPropagation(), children: [
     comments.length === 0 && /* @__PURE__ */ jsx("p", { className: "jt-hint jt-nocomment", children: "첫 댓글을 남겨 보세요." }),
@@ -665,22 +702,3 @@ function SpendForm({ settings, me, defaultDay, initial, onSave, onDelete }) {
     initial && /* @__PURE__ */ jsx(DeleteButton, { onConfirm: onDelete, label: "이 경비 삭제" })
   ] });
 }
-var WEATHER_SPOT = { name: "오사카", lat: 34.6937, lng: 135.5023 }, FORECAST_DAYS = 16;
-function sky(code) {
-  return code === 0 ? { Icon: Sun, label: "맑음", tone: "#E8800A" } : code === 1 || code === 2 ? { Icon: CloudSun, label: code === 1 ? "대체로 맑음" : "구름 조금", tone: "#E8800A" } : code === 3 ? { Icon: Cloud, label: "흐림", tone: "#66718A" } : code === 45 || code === 48 ? { Icon: CloudFog, label: "안개", tone: "#66718A" } : code >= 51 && code <= 57 ? { Icon: CloudDrizzle, label: "이슬비", tone: "#0C86AE" } : code >= 61 && code <= 67 || code >= 80 && code <= 82 ? { Icon: CloudRain, label: code >= 80 ? "소나기" : "비", tone: "#0C86AE" } : code >= 71 && code <= 77 || code === 85 || code === 86 ? { Icon: CloudSnow, label: "눈", tone: "#7B5FC4" } : code >= 95 ? { Icon: CloudLightning, label: "뇌우", tone: "#7B5FC4" } : { Icon: Cloud, label: "흐림", tone: "#66718A" };
-}
-var deg = (n) => n == null ? "–" : Math.round(n) + "°", wCache = /* @__PURE__ */ new Map();
-async function getJSON(url) {
-  let hit = wCache.get(url);
-  if (hit && Date.now() - hit.at < 30 * 6e4) return hit.d;
-  let r = await fetch(url);
-  if (!r.ok) throw new Error("weather " + r.status);
-  let d = await r.json();
-  return wCache.set(url, { at: Date.now(), d }), d;
-}
-var shiftYear = (d, y) => {
-  let md2 = d.slice(5) === "02-29" ? "02-28" : d.slice(5);
-  return `${Number(d.slice(0, 4)) + y}-${md2}`;
-};
-function useWeather(start, days) {
-  let [w, setW] = useState({ status: "loading" });
