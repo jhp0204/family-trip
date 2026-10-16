@@ -381,18 +381,26 @@ function App() {
     [],
     setSpend,
     (list) => id ? list.map((e) => e.id === id ? { ...e, ...vals, editedAt: Date.now(), editedBy: me } : e) : [...list, { id: uid(), by: me, createdAt: Date.now(), ...vals }]
-  ), mutateLedger = async (fn) => {
-    let key = LEDGER_PREFIX + encodeURIComponent(me), cur = await load(key, { cash: { jpy: 0 }, items: [] }), next = fn({ cash: cur.cash || { jpy: 0 }, items: cur.items || [] });
-    setLedgers((m) => ({ ...m, [me]: next })), await save(key, next) || setToast("개인 경비를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.");
+  ), myLedger = settings ? ledgerName(me, settings) : me, mutateLedger = async (fn, name = myLedger) => {
+    let key = LEDGER_PREFIX + encodeURIComponent(name), cur = await load(key, { cash: { jpy: 0 }, items: [] }), next = fn({ cash: cur.cash || { jpy: 0 }, items: cur.items || [] });
+    setLedgers((m) => ({ ...m, [name]: next })), await save(key, next) || setToast("개인 경비를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.");
   }, savePItem = async (rawVals, id) => {
-    let prevItem = id ? (ledgers[me] && ledgers[me].items || []).find((x) => x.id === id) : null, vals = await withPhotos(rawVals, prevItem ? prevItem.photos : []);
+    let prevItem = id ? (ledgers[myLedger] && ledgers[myLedger].items || []).find((x) => x.id === id) : null, vals = await withPhotos(rawVals, prevItem ? prevItem.photos : []);
     return savePItemRaw(vals, id);
   }, savePItemRaw = (vals, id) => mutateLedger((l) => ({
     ...l,
-    items: id ? l.items.map((x) => x.id === id ? { ...x, ...vals, editedAt: Date.now() } : x) : [...l.items, { id: uid(), createdAt: Date.now(), ...vals }]
+    items: id ? l.items.map((x) => x.id === id ? { ...x, ...vals, editedAt: Date.now() } : x) : [...l.items, { id: uid(), createdAt: Date.now(), by: me, ...vals }]
   })), delPItem = (id) => {
-    let it = (ledgers[me] && ledgers[me].items || []).find((x) => x.id === id);
+    let it = (ledgers[myLedger] && ledgers[myLedger].items || []).find((x) => x.id === id);
     return it && it.photos && it.photos.forEach(deletePhoto), mutateLedger((l) => ({ ...l, items: l.items.filter((x) => x.id !== id) }));
+  }, legacyLedgers = settings && myLedger.includes("+") ? groupOf(me, settings).map((n) => ({ name: n, l: ledgers[n] })).filter((x) => x.l && ((x.l.items || []).length || x.l.cash && x.l.cash.jpy)).map((x) => ({ name: x.name, count: (x.l.items || []).length, l: x.l })) : [], mergeLedgers = async () => {
+    let moved = legacyLedgers;
+    await mutateLedger((l) => ({
+      cash: { jpy: (Number(l.cash && l.cash.jpy) || 0) + moved.reduce((a, x) => a + (Number(x.l.cash && x.l.cash.jpy) || 0), 0) },
+      items: [...l.items, ...moved.flatMap((x) => (x.l.items || []).map((it) => ({ ...it, by: it.by || x.name })))]
+    }));
+    for (let x of moved) await mutateLedger(() => ({ cash: { jpy: 0 }, items: [] }), x.name);
+    setToast("따로 쓰던 개인 경비를 함께 쓰기로 합쳤어요.");
   }, setCash = (jpy) => mutateLedger((l) => ({ ...l, cash: { ...l.cash, jpy } })), delSpend = (id) => {
     let it = spend.find((e) => e.id === id);
     return it && it.photos && it.photos.forEach(deletePhoto), mutate(KEYS.spend, [], setSpend, (list) => list.filter((e) => e.id !== id));
@@ -579,7 +587,9 @@ function App() {
             spend,
             me,
             view: ui.spend,
-            ledger: ledgers[me],
+            ledger: ledgers[myLedger],
+            legacyLedgers,
+            onMergeLedgers: mergeLedgers,
             onEditPersonal: (item) => setSheet({ type: "pspend", item }),
             onCash: setCash,
             setView: (v) => setUi((u) => ({ ...u, spend: v })),
