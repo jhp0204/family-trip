@@ -1,4 +1,23 @@
-return useEffect(() => {
+var WEATHER_SPOT = { name: "오사카", lat: 34.6937, lng: 135.5023 }, FORECAST_DAYS = 16;
+function sky(code) {
+  return code === 0 ? { Icon: Sun, label: "맑음", tone: "#E8800A" } : code === 1 || code === 2 ? { Icon: CloudSun, label: code === 1 ? "대체로 맑음" : "구름 조금", tone: "#E8800A" } : code === 3 ? { Icon: Cloud, label: "흐림", tone: "#66718A" } : code === 45 || code === 48 ? { Icon: CloudFog, label: "안개", tone: "#66718A" } : code >= 51 && code <= 57 ? { Icon: CloudDrizzle, label: "이슬비", tone: "#0C86AE" } : code >= 61 && code <= 67 || code >= 80 && code <= 82 ? { Icon: CloudRain, label: code >= 80 ? "소나기" : "비", tone: "#0C86AE" } : code >= 71 && code <= 77 || code === 85 || code === 86 ? { Icon: CloudSnow, label: "눈", tone: "#7B5FC4" } : code >= 95 ? { Icon: CloudLightning, label: "뇌우", tone: "#7B5FC4" } : { Icon: Cloud, label: "흐림", tone: "#66718A" };
+}
+var deg = (n) => n == null ? "–" : Math.round(n) + "°", wCache = /* @__PURE__ */ new Map();
+async function getJSON(url) {
+  let hit = wCache.get(url);
+  if (hit && Date.now() - hit.at < 30 * 6e4) return hit.d;
+  let r = await fetch(url);
+  if (!r.ok) throw new Error("weather " + r.status);
+  let d = await r.json();
+  return wCache.set(url, { at: Date.now(), d }), d;
+}
+var shiftYear = (d, y) => {
+  let md2 = d.slice(5) === "02-29" ? "02-28" : d.slice(5);
+  return `${Number(d.slice(0, 4)) + y}-${md2}`;
+};
+function useWeather(start, days) {
+  let [w, setW] = useState({ status: "loading" });
+  return useEffect(() => {
     let alive = !0, run = async () => {
       try {
         let base = `latitude=${WEATHER_SPOT.lat}&longitude=${WEATHER_SPOT.lng}&timezone=Asia%2FTokyo`, today = iso(/* @__PURE__ */ new Date()), lastFc = iso(addDays(today, FORECAST_DAYS - 1)), trip = Array.from({ length: days }, (_, i) => iso(addDays(start, i))), fcDays = trip.filter((d) => d >= today && d <= lastFc), daily = {}, hourly = {};
@@ -163,7 +182,7 @@ function HourChip({ v }) {
 }
 var HOUR = 56;
 function Timetable({ items, isToday, onEdit, members, onAddAt }) {
-  let [ghost, setGhost] = useState(null), [now, setNow] = useState(() => {
+  let [ghost, setGhost] = useState(null), [drag, setDrag] = useState(null), laneRef = useRef(null), dragRef = useRef({ on: !1, timer: null, x: 0, y: 0, used: !1 }), [now, setNow] = useState(() => {
     let d = /* @__PURE__ */ new Date();
     return d.getHours() * 60 + d.getMinutes();
   });
@@ -175,21 +194,63 @@ function Timetable({ items, isToday, onEdit, members, onAddAt }) {
     }, 6e4);
     return () => clearInterval(t);
   }, [isToday]);
-  let timed = items.filter((i) => i.time).map((i) => ({ ...i, ...span(i) })).sort((a, b) => a.s - b.s || a.e - b.e), clusters = [], cur = [], curEnd = -1;
+  let VIS_MIN = 28, timed = items.filter((i) => i.time).map((i) => {
+    let sp = span(i);
+    return { ...i, ...sp, ve: Math.max(sp.e, sp.s + VIS_MIN) };
+  }).sort((a, b) => a.s - b.s || a.e - b.e), realClash = overlapIds(items), clusters = [], cur = [], curEnd = -1;
   timed.forEach((it) => {
-    cur.length && it.s >= curEnd && (clusters.push(cur), cur = [], curEnd = -1), cur.push(it), curEnd = Math.max(curEnd, it.e);
+    cur.length && it.s >= curEnd && (clusters.push(cur), cur = [], curEnd = -1), cur.push(it), curEnd = Math.max(curEnd, it.ve);
   }), cur.length && clusters.push(cur);
   let placed = [];
   clusters.forEach((cl) => {
     let cols = [];
     cl.forEach((it) => {
       let c = cols.findIndex((e) => e <= it.s);
-      c === -1 ? (c = cols.length, cols.push(it.e)) : cols[c] = it.e, placed.push({ ...it, col: c, cl });
+      c === -1 ? (c = cols.length, cols.push(it.ve)) : cols[c] = it.ve, placed.push({ ...it, col: c, cl });
     }), cl.ncol = cols.length;
   });
-  let h0 = timed.length ? Math.min(8, Math.floor(timed[0].s / 60)) : 8, h1 = timed.length ? Math.max(21, Math.ceil(Math.max(...timed.map((i) => i.e)) / 60)) : 21, slotAt = (e) => {
-    let r = e.currentTarget.getBoundingClientRect(), m = h0 * 60 + (e.clientY - r.top) / HOUR * 60;
-    return Math.max(h0 * 60, Math.min(Math.floor(m / 30) * 30, h1 * 60 - 30, 23 * 60 + 30));
+  let h0 = timed.length ? Math.min(8, Math.floor(timed[0].s / 60)) : 8, h1 = timed.length ? Math.max(21, Math.ceil(Math.max(...timed.map((i) => i.e)) / 60)) : 21, slotAt = (e, step = 30) => {
+    let r = (laneRef.current || e.currentTarget).getBoundingClientRect(), m = h0 * 60 + (e.clientY - r.top) / HOUR * 60;
+    return Math.max(h0 * 60, Math.min(Math.floor(m / step) * step, h1 * 60 - step, 24 * 60 - step));
+  }, range = drag ? [Math.min(drag.a, drag.b), Math.max(drag.a, drag.b) + 15] : null;
+  useEffect(() => {
+    let el = laneRef.current;
+    if (!el) return;
+    let stop = (e) => dragRef.current.on && e.cancelable && e.preventDefault();
+    return el.addEventListener("touchmove", stop, { passive: !1 }), () => el.removeEventListener("touchmove", stop);
+  }, [items.length]);
+  let startDrag = (e) => {
+    let d = dragRef.current;
+    d.on = !0, d.used = !0;
+    try {
+      laneRef.current.setPointerCapture(e.pointerId);
+    } catch {
+    }
+    let m = slotAt(e, 15);
+    d.a = m, d.b = m, setDrag({ a: m, b: m }), setGhost(null), navigator.vibrate && navigator.vibrate(15);
+  }, onDown = (e) => {
+    if (!onAddAt || e.target.closest(".jt-tt-block") || e.button > 0) return;
+    let d = dragRef.current;
+    if (d.used = !1, d.x = e.clientX, d.y = e.clientY, clearTimeout(d.timer), e.pointerType === "mouse") startDrag(e);
+    else {
+      let ev = { clientX: e.clientX, clientY: e.clientY, pointerId: e.pointerId };
+      d.timer = setTimeout(() => startDrag(ev), 300);
+    }
+  }, onMove = (e) => {
+    let d = dragRef.current;
+    if (d.on) {
+      let m = slotAt(e, 15);
+      d.b = m, setDrag((x) => x && { ...x, b: m });
+      return;
+    }
+    if (d.timer && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 8 && (clearTimeout(d.timer), d.timer = null), e.pointerType !== "mouse" || e.target.closest(".jt-tt-block")) return setGhost(null);
+    setGhost(slotAt(e));
+  }, onUp = () => {
+    let d = dragRef.current;
+    if (clearTimeout(d.timer), d.timer = null, !d.on) return;
+    d.on = !1;
+    let r = [Math.min(d.a, d.b), Math.max(d.a, d.b) + 15];
+    setDrag(null), r && r[1] - r[0] > 15 ? onAddAt(fmtMin(r[0]), fmtMin(Math.min(r[1], 24 * 60 - 1))) : d.used = !1;
   }, hours = Array.from({ length: h1 - h0 + 1 }, (_, i) => h0 + i), y = (m) => (m - h0 * 60) / 60 * HOUR, untimed = items.length - timed.length;
   return /* @__PURE__ */ jsxs("div", { className: "jt-tt-wrap", children: [
     /* @__PURE__ */ jsx("h4", { className: "jt-subhead", children: "시간표" }),
@@ -201,28 +262,47 @@ function Timetable({ items, isToday, onEdit, members, onAddAt }) {
       /* @__PURE__ */ jsxs(
         "div",
         {
-          className: "jt-tt-lane",
+          ref: laneRef,
+          className: "jt-tt-lane" + (drag ? " dragging" : ""),
           onClick: (e) => {
-            e.target.closest(".jt-tt-block") || !onAddAt || onAddAt(fmtMin(slotAt(e)));
+            if (!(e.target.closest(".jt-tt-block") || !onAddAt)) {
+              if (dragRef.current.used) {
+                dragRef.current.used = !1;
+                return;
+              }
+              onAddAt(fmtMin(slotAt(e)));
+            }
           },
-          onPointerMove: (e) => {
-            if (e.pointerType !== "mouse" || e.target.closest(".jt-tt-block")) return setGhost(null);
-            setGhost(slotAt(e));
-          },
-          onPointerLeave: () => setGhost(null),
+          onPointerDown: onDown,
+          onPointerMove: onMove,
+          onPointerUp: onUp,
+          onPointerCancel: onUp,
+          onPointerLeave: () => !dragRef.current.on && setGhost(null),
+          onContextMenu: (e) => e.preventDefault(),
           children: [
+            range && /* @__PURE__ */ jsxs("div", { className: "jt-tt-sel", style: { top: y(range[0]) + 1, height: Math.max(12, y(range[1]) - y(range[0]) - 2) }, "aria-hidden": "true", children: [
+              /* @__PURE__ */ jsxs("b", { children: [
+                fmtMin(range[0]),
+                "~",
+                fmtMin(Math.min(range[1], 24 * 60 - 1))
+              ] }),
+              /* @__PURE__ */ jsxs("span", { children: [
+                durText(range[1] - range[0]),
+                " 일정 추가"
+              ] })
+            ] }),
             ghost != null && /* @__PURE__ */ jsxs("div", { className: "jt-tt-ghost", style: { top: y(ghost) + 1, height: HOUR / 2 - 2 }, "aria-hidden": "true", children: [
               "+ ",
               fmtMin(ghost),
               " 일정 추가"
             ] }),
             placed.map((it) => {
-              let n = it.cl.ncol, height = Math.max(24, y(it.e) - y(it.s) - 3);
+              let n = it.cl.ncol, height = Math.max(24, y(it.e) - y(it.s) - 3), clash = realClash.has(it.id);
               return /* @__PURE__ */ jsxs(
                 "button",
                 {
                   type: "button",
-                  className: "jt-tt-block" + (height < 44 ? " short" : "") + (n > 1 ? " clash" : ""),
+                  className: "jt-tt-block" + (height < 44 ? " short" : "") + (clash ? " clash" : ""),
                   style: {
                     top: y(it.s) + 1,
                     height,
@@ -250,7 +330,7 @@ function Timetable({ items, isToday, onEdit, members, onAddAt }) {
       isToday && now >= h0 * 60 && now <= h1 * 60 && /* @__PURE__ */ jsx("div", { className: "jt-tt-now", style: { top: y(now) }, "aria-label": `지금 ${fmtMin(now)}`, children: /* @__PURE__ */ jsx("span", { children: "지금" }) })
     ] }),
     /* @__PURE__ */ jsxs("p", { className: "jt-hint jt-tt-note", children: [
-      "시간표의 빈 곳을 누르면 그 시간(30분 단위)에 일정을 바로 추가할 수 있어요.",
+      "시간표의 빈 곳을 누르면 그 시간(30분 단위)에, 누른 채로 위아래로 끌면 시작부터 끝까지(15분 단위) 정해서 일정을 추가할 수 있어요. 휴대폰은 0.3초 꾹 누른 뒤 끌어 주세요.",
       untimed > 0 ? ` 시간을 정하지 않은 일정 ${untimed}개는 위 목록에만 보여요.` : ""
     ] })
   ] });
@@ -389,7 +469,7 @@ function PlanTab({ settings, schedule, day, setDay, onEdit, onAddAt, me, onComme
         ] }, i.id);
       }) })
     ] }),
-    /* @__PURE__ */ jsx(Timetable, { items, isToday, onEdit, members, onAddAt: (t) => onAddAt && onAddAt(day, t) })
+    /* @__PURE__ */ jsx(Timetable, { items, isToday, onEdit, members, onAddAt: (t, e) => onAddAt && onAddAt(day, t, e) })
   ] });
 }
 function TileMap({ view, setView, pins, temp, selectedId, onTap, onPinTap }) {
@@ -581,143 +661,3 @@ function KoMap(props) {
     (state === "loading" || state === "slow") && /* @__PURE__ */ jsx("div", { className: "jt-mlmsg", role: "status", children: state === "slow" ? "지도가 느리게 열리고 있어요. 계속 안 열리면 기본 지도로 바꿔 보여 드려요." : "지도 불러오는 중" })
   ] });
 }
-var gmPromise = null, gmKeyLoaded = "", gmAuthFailed = !1, gmFailListeners = /* @__PURE__ */ new Set();
-function loadGoogleMaps(key) {
-  return gmAuthFailed ? Promise.reject(new Error("auth")) : gmPromise && gmKeyLoaded === key ? gmPromise : gmKeyLoaded && gmKeyLoaded !== key ? Promise.reject(new Error("reload")) : (gmKeyLoaded = key, gmPromise = new Promise((res, rej) => {
-    window.__jtGmReady = () => res(window.google.maps), window.gm_authFailure = () => {
-      gmAuthFailed = !0, gmFailListeners.forEach((f) => f()), rej(new Error("auth"));
-    };
-    let sc = document.createElement("script");
-    sc.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(key) + "&v=weekly&language=ko&region=KR&loading=async&callback=__jtGmReady", sc.async = !0, sc.onerror = () => {
-      gmPromise = null, gmKeyLoaded = "", rej(new Error("load"));
-    }, document.head.appendChild(sc);
-  }), gmPromise);
-}
-function GMap(props) {
-  let { view, setView, pins, temp, selectedId, onTap, onPinTap, onPoi, gkey } = props, box = useRef(null), mapRef = useRef(null), gmRef = useRef(null), marks = useRef([]), tempMark = useRef(null), cb = useRef({});
-  cb.current = { onTap, onPinTap, onPoi, setView };
-  let [state, setState] = useState(gmAuthFailed ? "fail" : "loading");
-  useEffect(() => {
-    let alive = !0, onFail = () => alive && setState("fail");
-    return gmFailListeners.add(onFail), loadGoogleMaps(gkey).then(async (gm) => {
-      let { Map: Map2 } = await gm.importLibrary("maps"), { Marker } = await gm.importLibrary("marker"), { Size, Point } = await gm.importLibrary("core");
-      if (!alive || !box.current) return;
-      gmRef.current = { Marker, Size, Point };
-      let map = new Map2(box.current, {
-        center: { lat: view.lat, lng: view.lng },
-        zoom: Math.round(view.z),
-        disableDefaultUI: !0,
-        zoomControl: !0,
-        gestureHandling: "greedy",
-        clickableIcons: !0
-      });
-      map.addListener("click", async (e) => {
-        if (e.placeId) {
-          e.stop();
-          try {
-            let { Place } = await gm.importLibrary("places"), pl = new Place({ id: e.placeId });
-            await pl.fetchFields({ fields: ["displayName", "location", "formattedAddress", "googleMapsURI"] }), cb.current.onPoi({
-              name: pl.displayName || "",
-              lat: pl.location.lat(),
-              lng: pl.location.lng(),
-              area: pl.formattedAddress || "",
-              link: pl.googleMapsURI || "",
-              placeId: e.placeId
-            });
-            return;
-          } catch {
-          }
-        }
-        cb.current.onTap(e.latLng.lat(), e.latLng.lng());
-      }), map.addListener("idle", () => {
-        let c = map.getCenter();
-        cb.current.setView({ lat: c.lat(), lng: c.lng(), z: map.getZoom() });
-      }), mapRef.current = map, setState("ok");
-    }).catch(() => alive && setState("fail")), () => {
-      alive = !1, gmFailListeners.delete(onFail);
-    };
-  }, [gkey]), useEffect(() => {
-    let map = mapRef.current;
-    if (!map) return;
-    let c = map.getCenter();
-    (Math.abs(c.lat() - view.lat) > 1e-6 || Math.abs(c.lng() - view.lng) > 1e-6) && map.panTo({ lat: view.lat, lng: view.lng }), Math.round(view.z) !== map.getZoom() && map.setZoom(Math.round(view.z));
-  }, [view.lat, view.lng, view.z]);
-  let icon = (color, big, text) => {
-    let gm = gmRef.current, w = big ? 34 : 28, h = big ? 44 : 36;
-    return {
-      url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(pinSvg(color, big, text).replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')),
-      scaledSize: new gm.Size(w, h),
-      anchor: new gm.Point(w / 2, h)
-    };
-  };
-  return useEffect(() => {
-    let map = mapRef.current, gm = gmRef.current;
-    !map || !gm || (marks.current.forEach((m) => m.setMap(null)), marks.current = pins.map((p) => {
-      let m = new gm.Marker({ position: { lat: p.lat, lng: p.lng }, map, title: p.label, icon: icon(p.color, p.id === selectedId, p.text), zIndex: p.id === selectedId ? 10 : 1 });
-      return m.addListener("click", () => cb.current.onPinTap(p.id)), m;
-    }));
-  }, [pins, selectedId, state]), useEffect(() => {
-    let map = mapRef.current, gm = gmRef.current;
-    tempMark.current && tempMark.current.setMap(null), tempMark.current = null, !(!map || !gm || !temp) && (tempMark.current = new gm.Marker({ position: { lat: temp.lat, lng: temp.lng }, map, icon: icon("#14213D", !0), zIndex: 20, clickable: !1 }));
-  }, [temp, state]), state === "fail" ? /* @__PURE__ */ jsx(KoMap, { ...props }) : /* @__PURE__ */ jsxs("div", { className: "jt-mlwrap", children: [
-    /* @__PURE__ */ jsx("div", { ref: box, className: "jt-ml", role: "application", "aria-label": "구글 지도. 가게나 명소를 누르면 저장할 수 있어요" }),
-    state === "loading" && /* @__PURE__ */ jsx("div", { className: "jt-mlmsg", role: "status", children: "구글 지도 불러오는 중" })
-  ] });
-}
-function TripMap(props) {
-  return props.gkey && !gmAuthFailed ? /* @__PURE__ */ jsx(GMap, { ...props }) : /* @__PURE__ */ jsx(KoMap, { ...props });
-}
-var NEAR_CATS = [
-  { id: "food", label: "맛집", wish: "맛집", g: ["restaurant"], osm: '["amenity"~"^(restaurant|fast_food)$"]' },
-  { id: "cafe", label: "카페", wish: "맛집", g: ["cafe", "bakery"], osm: '["amenity"="cafe"]' },
-  { id: "sight", label: "볼거리", wish: "관광", g: ["tourist_attraction", "museum", "park"], osm: '["tourism"~"^(attraction|museum|viewpoint|gallery)$"]' },
-  { id: "shop", label: "쇼핑", wish: "쇼핑", g: ["shopping_mall", "department_store", "clothing_store"], osm: '["shop"~"^(mall|department_store|clothes)$"]' },
-  { id: "conv", label: "편의점", wish: "기타", g: ["convenience_store"], osm: '["shop"="convenience"]' }
-], RADII = [500, 1e3, 2e3], radText = (r) => r >= 1e3 ? r / 1e3 + "km" : r + "m";
-function distM(a, b) {
-  let t = (x) => x * Math.PI / 180, dLat = t(b.lat - a.lat), dLng = t(b.lng - a.lng), h = Math.sin(dLat / 2) ** 2 + Math.cos(t(a.lat)) * Math.cos(t(b.lat)) * Math.sin(dLng / 2) ** 2;
-  return 2 * 6371e3 * Math.asin(Math.sqrt(h));
-}
-var distText = (m) => (m < 1e3 ? `${Math.round(m / 10) * 10}m` : `${(m / 1e3).toFixed(1)}km`) + `, 걸어서 ${Math.max(1, Math.round(m / 75))}분`;
-async function nearbyGoogle(key, center, cat, radius) {
-  let gm = await loadGoogleMaps(key), { Place, SearchNearbyRankPreference } = await gm.importLibrary("places"), { places } = await Place.searchNearby({
-    fields: [
-      "id",
-      "displayName",
-      "location",
-      "formattedAddress",
-      "rating",
-      "userRatingCount",
-      "primaryTypeDisplayName",
-      "googleMapsURI",
-      "regularOpeningHours",
-      "utcOffsetMinutes"
-    ],
-    locationRestriction: { center, radius },
-    includedTypes: cat.g,
-    maxResultCount: 15,
-    rankPreference: SearchNearbyRankPreference.POPULARITY,
-    language: "ko"
-  }), out = [];
-  for (let p of places || []) {
-    let open;
-    try {
-      open = p.regularOpeningHours ? await p.isOpen() : void 0;
-    } catch {
-      open = void 0;
-    }
-    out.push({
-      id: p.id,
-      placeId: p.id,
-      name: p.displayName,
-      lat: p.location.lat(),
-      lng: p.location.lng(),
-      type: p.primaryTypeDisplayName || cat.label,
-      rating: p.rating,
-      count: p.userRatingCount,
-      addr: p.formattedAddress || "",
-      url: p.googleMapsURI || "",
-      open
-    });
-  }
-  return out;
