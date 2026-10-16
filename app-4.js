@@ -1,3 +1,143 @@
+var gmPromise = null, gmKeyLoaded = "", gmAuthFailed = !1, gmFailListeners = /* @__PURE__ */ new Set();
+function loadGoogleMaps(key) {
+  return gmAuthFailed ? Promise.reject(new Error("auth")) : gmPromise && gmKeyLoaded === key ? gmPromise : gmKeyLoaded && gmKeyLoaded !== key ? Promise.reject(new Error("reload")) : (gmKeyLoaded = key, gmPromise = new Promise((res, rej) => {
+    window.__jtGmReady = () => res(window.google.maps), window.gm_authFailure = () => {
+      gmAuthFailed = !0, gmFailListeners.forEach((f) => f()), rej(new Error("auth"));
+    };
+    let sc = document.createElement("script");
+    sc.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(key) + "&v=weekly&language=ko&region=KR&loading=async&callback=__jtGmReady", sc.async = !0, sc.onerror = () => {
+      gmPromise = null, gmKeyLoaded = "", rej(new Error("load"));
+    }, document.head.appendChild(sc);
+  }), gmPromise);
+}
+function GMap(props) {
+  let { view, setView, pins, temp, selectedId, onTap, onPinTap, onPoi, gkey } = props, box = useRef(null), mapRef = useRef(null), gmRef = useRef(null), marks = useRef([]), tempMark = useRef(null), cb = useRef({});
+  cb.current = { onTap, onPinTap, onPoi, setView };
+  let [state, setState] = useState(gmAuthFailed ? "fail" : "loading");
+  useEffect(() => {
+    let alive = !0, onFail = () => alive && setState("fail");
+    return gmFailListeners.add(onFail), loadGoogleMaps(gkey).then(async (gm) => {
+      let { Map: Map2 } = await gm.importLibrary("maps"), { Marker } = await gm.importLibrary("marker"), { Size, Point } = await gm.importLibrary("core");
+      if (!alive || !box.current) return;
+      gmRef.current = { Marker, Size, Point };
+      let map = new Map2(box.current, {
+        center: { lat: view.lat, lng: view.lng },
+        zoom: Math.round(view.z),
+        disableDefaultUI: !0,
+        zoomControl: !0,
+        gestureHandling: "greedy",
+        clickableIcons: !0
+      });
+      map.addListener("click", async (e) => {
+        if (e.placeId) {
+          e.stop();
+          try {
+            let { Place } = await gm.importLibrary("places"), pl = new Place({ id: e.placeId });
+            await pl.fetchFields({ fields: ["displayName", "location", "formattedAddress", "googleMapsURI"] }), cb.current.onPoi({
+              name: pl.displayName || "",
+              lat: pl.location.lat(),
+              lng: pl.location.lng(),
+              area: pl.formattedAddress || "",
+              link: pl.googleMapsURI || "",
+              placeId: e.placeId
+            });
+            return;
+          } catch {
+          }
+        }
+        cb.current.onTap(e.latLng.lat(), e.latLng.lng());
+      }), map.addListener("idle", () => {
+        let c = map.getCenter();
+        cb.current.setView({ lat: c.lat(), lng: c.lng(), z: map.getZoom() });
+      }), mapRef.current = map, setState("ok");
+    }).catch(() => alive && setState("fail")), () => {
+      alive = !1, gmFailListeners.delete(onFail);
+    };
+  }, [gkey]), useEffect(() => {
+    let map = mapRef.current;
+    if (!map) return;
+    let c = map.getCenter();
+    (Math.abs(c.lat() - view.lat) > 1e-6 || Math.abs(c.lng() - view.lng) > 1e-6) && map.panTo({ lat: view.lat, lng: view.lng }), Math.round(view.z) !== map.getZoom() && map.setZoom(Math.round(view.z));
+  }, [view.lat, view.lng, view.z]);
+  let icon = (color, big, text) => {
+    let gm = gmRef.current, w = big ? 34 : 28, h = big ? 44 : 36;
+    return {
+      url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(pinSvg(color, big, text).replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')),
+      scaledSize: new gm.Size(w, h),
+      anchor: new gm.Point(w / 2, h)
+    };
+  };
+  return useEffect(() => {
+    let map = mapRef.current, gm = gmRef.current;
+    !map || !gm || (marks.current.forEach((m) => m.setMap(null)), marks.current = pins.map((p) => {
+      let m = new gm.Marker({ position: { lat: p.lat, lng: p.lng }, map, title: p.label, icon: icon(p.color, p.id === selectedId, p.text), zIndex: p.id === selectedId ? 10 : 1 });
+      return m.addListener("click", () => cb.current.onPinTap(p.id)), m;
+    }));
+  }, [pins, selectedId, state]), useEffect(() => {
+    let map = mapRef.current, gm = gmRef.current;
+    tempMark.current && tempMark.current.setMap(null), tempMark.current = null, !(!map || !gm || !temp) && (tempMark.current = new gm.Marker({ position: { lat: temp.lat, lng: temp.lng }, map, icon: icon("#14213D", !0), zIndex: 20, clickable: !1 }));
+  }, [temp, state]), state === "fail" ? /* @__PURE__ */ jsx(KoMap, { ...props }) : /* @__PURE__ */ jsxs("div", { className: "jt-mlwrap", children: [
+    /* @__PURE__ */ jsx("div", { ref: box, className: "jt-ml", role: "application", "aria-label": "구글 지도. 가게나 명소를 누르면 저장할 수 있어요" }),
+    state === "loading" && /* @__PURE__ */ jsx("div", { className: "jt-mlmsg", role: "status", children: "구글 지도 불러오는 중" })
+  ] });
+}
+function TripMap(props) {
+  return props.gkey && !gmAuthFailed ? /* @__PURE__ */ jsx(GMap, { ...props }) : /* @__PURE__ */ jsx(KoMap, { ...props });
+}
+var NEAR_CATS = [
+  { id: "food", label: "맛집", wish: "맛집", g: ["restaurant"], osm: '["amenity"~"^(restaurant|fast_food)$"]' },
+  { id: "cafe", label: "카페", wish: "맛집", g: ["cafe", "bakery"], osm: '["amenity"="cafe"]' },
+  { id: "sight", label: "볼거리", wish: "관광", g: ["tourist_attraction", "museum", "park"], osm: '["tourism"~"^(attraction|museum|viewpoint|gallery)$"]' },
+  { id: "shop", label: "쇼핑", wish: "쇼핑", g: ["shopping_mall", "department_store", "clothing_store"], osm: '["shop"~"^(mall|department_store|clothes)$"]' },
+  { id: "conv", label: "편의점", wish: "기타", g: ["convenience_store"], osm: '["shop"="convenience"]' }
+], RADII = [500, 1e3, 2e3], radText = (r) => r >= 1e3 ? r / 1e3 + "km" : r + "m";
+function distM(a, b) {
+  let t = (x) => x * Math.PI / 180, dLat = t(b.lat - a.lat), dLng = t(b.lng - a.lng), h = Math.sin(dLat / 2) ** 2 + Math.cos(t(a.lat)) * Math.cos(t(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * 6371e3 * Math.asin(Math.sqrt(h));
+}
+var distText = (m) => (m < 1e3 ? `${Math.round(m / 10) * 10}m` : `${(m / 1e3).toFixed(1)}km`) + `, 걸어서 ${Math.max(1, Math.round(m / 75))}분`;
+async function nearbyGoogle(key, center, cat, radius) {
+  let gm = await loadGoogleMaps(key), { Place, SearchNearbyRankPreference } = await gm.importLibrary("places"), { places } = await Place.searchNearby({
+    fields: [
+      "id",
+      "displayName",
+      "location",
+      "formattedAddress",
+      "rating",
+      "userRatingCount",
+      "primaryTypeDisplayName",
+      "googleMapsURI",
+      "regularOpeningHours",
+      "utcOffsetMinutes"
+    ],
+    locationRestriction: { center, radius },
+    includedTypes: cat.g,
+    maxResultCount: 15,
+    rankPreference: SearchNearbyRankPreference.POPULARITY,
+    language: "ko"
+  }), out = [];
+  for (let p of places || []) {
+    let open;
+    try {
+      open = p.regularOpeningHours ? await p.isOpen() : void 0;
+    } catch {
+      open = void 0;
+    }
+    out.push({
+      id: p.id,
+      placeId: p.id,
+      name: p.displayName,
+      lat: p.location.lat(),
+      lng: p.location.lng(),
+      type: p.primaryTypeDisplayName || cat.label,
+      rating: p.rating,
+      count: p.userRatingCount,
+      addr: p.formattedAddress || "",
+      url: p.googleMapsURI || "",
+      open
+    });
+  }
+  return out;
 }
 async function nearbyOsm(center, cat, radius) {
   let q = `[out:json][timeout:20];nwr(around:${radius},${center.lat},${center.lng})${cat.osm}["name"];out center 40;`, r = await fetch("https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(q));
@@ -538,147 +678,3 @@ function WishList({ settings, wish, plan, me, onBatchPos, onEdit, onLike, onPlan
     }) })
   ] });
 }
-function settleMix(spend, members, rate) {
-  if (!spend.some((e) => e.cur === "KRW" || e.rate)) return { ...settle(spend, members), unit: "JPY" };
-  let conv = spend.map((e) => ({
-    ...e,
-    amount: e.cur === "KRW" ? Number(e.orig) || 0 : (Number(e.amount) || 0) * (e.rate || rate) / 100
-  }));
-  return { ...settle(conv, members), unit: "KRW" };
-}
-var wonExact = (v) => "₩" + (Math.round(v / 100) * 100).toLocaleString("ko-KR"), fmtU = (v, unit) => unit === "KRW" ? wonExact(v) : yw(v), netLabelU = (v, unit) => v > 0.5 ? `받을 돈 ${fmtU(v, unit)}` : v < -0.5 ? `보낼 돈 ${fmtU(-v, unit)}` : "주고받을 돈 없음", sumParts = (items) => {
-  let j = items.filter((e) => e.cur !== "KRW").reduce((a, e) => a + (Number(e.amount) || 0), 0), k = items.filter((e) => e.cur === "KRW").reduce((a, e) => a + (Number(e.orig) || 0), 0);
-  return [j ? yen(j) : "", k ? "₩" + k.toLocaleString("ko-KR") : ""].filter(Boolean).join(" + ") || yen(0);
-};
-function Moves({ moves, rate, me, unit = "JPY" }) {
-  return moves.length ? /* @__PURE__ */ jsx("ul", { className: "jt-moves2", children: moves.map((m, i) => /* @__PURE__ */ jsxs("li", { className: m.from === me || m.to === me ? "mine" : "", children: [
-    /* @__PURE__ */ jsxs("span", { className: "jt-moves-who", children: [
-      /* @__PURE__ */ jsx("b", { children: m.from }),
-      /* @__PURE__ */ jsx(ChevronRight, { size: 15, "aria-label": "에게" }),
-      /* @__PURE__ */ jsx("b", { children: m.to })
-    ] }),
-    /* @__PURE__ */ jsxs("span", { className: "jt-moves-amt", children: [
-      /* @__PURE__ */ jsx("strong", { children: unit === "KRW" ? wonExact(m.v) : yen(m.v) }),
-      unit !== "KRW" && /* @__PURE__ */ jsx("em", { children: won(m.v, rate) })
-    ] })
-  ] }, i)) }) : /* @__PURE__ */ jsx("p", { className: "jt-hint jt-nomoves", children: "주고받을 돈이 없어요." });
-}
-function SpendRow({ e, members, rate, onEdit }) {
-  let { Icon, color } = look(e.cat);
-  return /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsxs("button", { type: "button", className: "jt-spend", onClick: () => onEdit(e), "aria-label": `${e.title} 고치기`, children: [
-    /* @__PURE__ */ jsx("span", { className: "jt-spend-icon", style: { "--cc": color }, children: /* @__PURE__ */ jsx(Icon, { size: 18 }) }),
-    /* @__PURE__ */ jsxs("div", { className: "jt-spend-main", children: [
-      /* @__PURE__ */ jsx("div", { className: "jt-spend-name", children: e.title }),
-      /* @__PURE__ */ jsxs("div", { className: "jt-meta", children: [
-        isFund(e) ? /* @__PURE__ */ jsxs(Fragment, { children: [
-          e.payer === FUND ? "" : `${e.payer}이(가) 냄, `,
-          /* @__PURE__ */ jsx("span", { className: "jt-fundtag", children: "공금" }),
-          " 처리"
-        ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-          e.payer,
-          "이(가) 냄, ",
-          (e.split || []).length === members.length ? "모두" : (e.split || []).join(", "),
-          " 나눔"
-        ] }),
-        e.editedAt ? ", 수정됨" : ""
-      ] })
-    ] }),
-    /* @__PURE__ */ jsx("div", { className: "jt-spend-amt", children: e.cur === "KRW" ? /* @__PURE__ */ jsxs(Fragment, { children: [
-      /* @__PURE__ */ jsxs("strong", { children: [
-        "₩",
-        (Number(e.orig) || 0).toLocaleString("ko-KR")
-      ] }),
-      /* @__PURE__ */ jsxs("span", { children: [
-        "(",
-        yen(Number(e.amount) || 0),
-        ")"
-      ] })
-    ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-      /* @__PURE__ */ jsx("strong", { children: yen(Number(e.amount) || 0) }),
-      /* @__PURE__ */ jsxs("span", { children: [
-        "(",
-        won(Number(e.amount) || 0, e.rate || rate),
-        ")"
-      ] }),
-      e.rate ? /* @__PURE__ */ jsxs("span", { className: "jt-ratetag", children: [
-        "환율 ",
-        e.rate
-      ] }) : null
-    ] }) }),
-    /* @__PURE__ */ jsx("span", { className: "jt-spend-edit", "aria-hidden": "true", children: /* @__PURE__ */ jsx(Pencil, { size: 14 }) })
-  ] }) });
-}
-var netClass = (v) => v > 0.5 ? "plus" : v < -0.5 ? "minus" : "";
-function SpendDays({ days, start, members, rate, onEdit, filter, empty }) {
-  let shown = days.map((g) => ({ ...g, items: filter ? g.items.filter(filter) : g.items })).filter((g) => g.items.length);
-  return shown.length ? /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsx("p", { className: "jt-hint jt-listhint", children: "항목을 누르면 고치거나 지울 수 있어요." }),
-    shown.map((g) => {
-      let d = addDays(start, g.day);
-      return /* @__PURE__ */ jsxs("div", { className: "jt-group", children: [
-        /* @__PURE__ */ jsxs("h4", { style: { "--lc": LINE[g.day % LINE.length] }, children: [
-          /* @__PURE__ */ jsxs("span", { className: "jt-daychip", children: [
-            g.day + 1,
-            "일차"
-          ] }),
-          md(d),
-          " (",
-          wk(d),
-          ")"
-        ] }),
-        /* @__PURE__ */ jsx("ul", { className: "jt-spend-list", children: g.items.map((e) => /* @__PURE__ */ jsx(SpendRow, { e, members, rate, onEdit }, e.id)) })
-      ] }, g.day);
-    })
-  ] }) : /* @__PURE__ */ jsx("p", { className: "jt-hint jt-listhint", children: empty });
-}
-function SpendTab({ settings, spend, me, onEdit, view: pView, setView: pSetView }) {
-  let { members, rate, start } = settings, [own, setOwn] = useState("me"), view = pView || own, setView = pSetView || setOwn, total = spend.reduce((s, e) => s + (Number(e.amount) || 0), 0), result = useMemo(() => settleMix(spend, members, rate), [spend, members, rate]), U = result.unit, fundItems = spend.filter(isFund), myFund = fundItems.filter((e) => e.payer === me), fundBy = [...members, FUND].map((m) => [m, fundItems.filter((e) => e.payer === m)]).filter(([, items]) => items.length), F = (v) => fmtU(v, U), totalJ = spend.filter((e) => e.cur !== "KRW").reduce((a, e) => a + (Number(e.amount) || 0), 0), totalJW = spend.filter((e) => e.cur !== "KRW").reduce((a, e) => a + (Number(e.amount) || 0) * (e.rate || rate) / 100, 0), totalK = spend.filter((e) => e.cur === "KRW").reduce((a, e) => a + (Number(e.orig) || 0), 0), byCat = useMemo(() => {
-    let t = {};
-    return spend.forEach((e) => t[e.cat] = (t[e.cat] || 0) + (Number(e.amount) || 0)), SPEND_CATS.filter((c) => t[c]).map((c) => ({ c, v: t[c] }));
-  }, [spend]), days = useMemo(() => {
-    let g = {};
-    return spend.forEach((e) => (g[e.day] = g[e.day] || []).push(e)), Object.keys(g).map(Number).sort((a, b) => a - b).map((d) => ({
-      day: d,
-      sum: g[d].reduce((s, e) => s + (Number(e.amount) || 0), 0),
-      items: [...g[d]].sort((a, b) => b.createdAt - a.createdAt),
-      res: settleMix(g[d], members, rate),
-      parts: sumParts(g[d])
-    }));
-  }, [spend, members]), mine = result.net[me] || 0, myMoves = result.moves.filter((m) => m.from === me || m.to === me);
-  return spend.length === 0 ? /* @__PURE__ */ jsxs("section", { children: [
-    /* @__PURE__ */ jsxs("div", { className: "jt-total", children: [
-      /* @__PURE__ */ jsx("span", { children: "지금까지 쓴 돈" }),
-      /* @__PURE__ */ jsx("strong", { children: yen(0) }),
-      /* @__PURE__ */ jsx("span", { className: "jt-fx", children: fxNote(settings) })
-    ] }),
-    /* @__PURE__ */ jsxs("div", { className: "jt-empty", children: [
-      /* @__PURE__ */ jsx("p", { children: "아직 기록된 경비가 없어요." }),
-      /* @__PURE__ */ jsx("p", { children: "쓸 때마다 한 줄씩 남기면 누가 누구에게 보낼지 자동으로 계산돼요." })
-    ] })
-  ] }) : /* @__PURE__ */ jsxs("section", { children: [
-    /* @__PURE__ */ jsxs("div", { className: "jt-total", children: [
-      /* @__PURE__ */ jsx("span", { children: "지금까지 쓴 돈" }),
-      /* @__PURE__ */ jsx("strong", { children: U === "KRW" ? wonExact(totalK + totalJW) : yen(total) }),
-      /* @__PURE__ */ jsxs("em", { children: [
-        U === "KRW" ? `엔화 ${yen(totalJ)}(${wonExact(totalJW)}) + 원화 ₩${totalK.toLocaleString("ko-KR")}` : `약 ${won(total, rate)}`,
-        ", 그중 ",
-        me,
-        "가 쓴 돈 ",
-        F(result.share[me] || 0)
-      ] }),
-      spend.some(isFund) && /* @__PURE__ */ jsxs("span", { className: "jt-fundsum", children: [
-        "그중 ",
-        /* @__PURE__ */ jsx("span", { className: "jt-fundtag", children: "공금" }),
-        " 처리 ",
-        sumParts(spend.filter(isFund)),
-        " (정산 제외)"
-      ] }),
-      /* @__PURE__ */ jsx("span", { className: "jt-fx", children: fxNote(settings) }),
-      /* @__PURE__ */ jsx("div", { className: "jt-catbar", "aria-hidden": "true", children: byCat.map(({ c, v }) => /* @__PURE__ */ jsx("i", { style: { flexGrow: v, background: look(c).color } }, c)) }),
-      /* @__PURE__ */ jsx("ul", { className: "jt-catlegend", children: byCat.map(({ c, v }) => /* @__PURE__ */ jsxs("li", { children: [
-        /* @__PURE__ */ jsx("span", { className: "jt-dot", style: { background: look(c).color } }),
-        c,
-        " ",
-        /* @__PURE__ */ jsxs("b", { children: [
-          Math.round(v / total * 100),
-          "%"
