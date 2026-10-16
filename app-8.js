@@ -1,4 +1,3 @@
-.jt-star em{font-style:normal;font-weight:500;color:var(--muted)}
 .jt-open{color:#0A7D58;font-weight:700}
 .jt-closed{color:#B42318;font-weight:700}
 .jt-near-dist{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#33405C;font-variant-numeric:tabular-nums}
@@ -306,58 +305,60 @@
 .jt-geo-list strong{font-size:14px}
 .jt-geo-list em{font-style:normal;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis}
 .jt-geo-list.miss em{color:#9A4A00}
+.jt-geo-why{display:flex;flex-direction:column;gap:3px}
+.jt-geo-why b{font-size:13.5px}
 `;
 
 // src/main.jsx
-import { jsx as Q, jsxs as Vt } from "react/jsx-runtime";
-var In = `rules_version = '2';
+import { jsx as Q, jsxs as qt } from "react/jsx-runtime";
+var Da = `rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /trips/{trip}/{document=**} {
       allow read, write: if trip.size() >= 12;
     }
   }
-}`, ss = (e) => {
-  let a = e && (e.code || e.message) || "";
-  return a.includes("permission") ? "Firebase 보안 규칙이 막고 있어요. 아래 규칙을 Firestore '규칙' 탭에 붙여넣고 '게시'를 눌러 주세요." : a.includes("timeout") ? "Firebase에 연결되지 않았어요. 인터넷 연결과 Firestore 데이터베이스를 만들었는지 확인해 주세요." : a.includes("api-key") || a.includes("invalid") ? "설정값이 맞지 않아요. Firebase 콘솔에서 firebaseConfig 부분을 다시 복사해 주세요." : "연결하지 못했어요. 설정값과 인터넷 연결을 확인해 주세요. (" + a + ")";
+}`, ls = (e) => {
+  let n = e && (e.code || e.message) || "";
+  return n.includes("permission") ? "Firebase 보안 규칙이 막고 있어요. 아래 규칙을 Firestore '규칙' 탭에 붙여넣고 '게시'를 눌러 주세요." : n.includes("timeout") ? "Firebase에 연결되지 않았어요. 인터넷 연결과 Firestore 데이터베이스를 만들었는지 확인해 주세요." : n.includes("api-key") || n.includes("invalid") ? "설정값이 맞지 않아요. Firebase 콘솔에서 firebaseConfig 부분을 다시 복사해 주세요." : "연결하지 못했어요. 설정값과 인터넷 연결을 확인해 주세요. (" + n + ")";
 };
-function rs({ onDone: e }) {
-  let [a, n] = Lt("join"), [i, s] = Lt(""), [g, d] = Lt(""), [c, r] = Lt(!1), [x, N] = Lt(""), [E, u] = Lt(!1), I = async (w, v) => {
-    r(!0), N("");
+function cs({ onDone: e }) {
+  let [n, o] = _t("join"), [i, s] = _t(""), [m, u] = _t(""), [p, r] = _t(!1), [x, k] = _t(""), [z, c] = _t(!1), I = async (w, y) => {
+    r(!0), k("");
     try {
-      Je(w, v), await La(), Pa(w, v), e();
-    } catch (M) {
-      N(ss(M)), r(!1);
+      Ye(w, y), await Ln(), $n(w, y), e();
+    } catch (C) {
+      k(ls(C)), r(!1);
     }
-  }, p = () => {
-    let w = Ba(i);
+  }, g = () => {
+    let w = _n(i);
     if (!w) {
-      N("설정값을 찾지 못했어요. apiKey, projectId, appId가 들어 있는 firebaseConfig 부분 전체를 붙여넣어 주세요.");
+      k("설정값을 찾지 못했어요. apiKey, projectId, appId가 들어 있는 firebaseConfig 부분 전체를 붙여넣어 주세요.");
       return;
     }
-    I(w, Ta());
-  }, k = () => {
-    let w = Ye(g);
+    I(w, Bn());
+  }, A = () => {
+    let w = He(m);
     if (!w) {
-      N("초대 링크가 아니에요. 가족에게 받은 주소 전체를 붙여넣어 주세요.");
+      k("초대 링크가 아니에요. 가족에게 받은 주소 전체를 붙여넣어 주세요.");
       return;
     }
     I(w.c, w.t);
   };
-  return /* @__PURE__ */ Vt("div", { className: "jt", children: [
-    /* @__PURE__ */ Q("style", { children: ua }),
-    /* @__PURE__ */ Vt("div", { className: "jt-setup", children: [
+  return /* @__PURE__ */ qt("div", { className: "jt", children: [
+    /* @__PURE__ */ Q("style", { children: fn }),
+    /* @__PURE__ */ qt("div", { className: "jt-setup", children: [
       /* @__PURE__ */ Q("h1", { children: "가족 여행 앱" }),
-      /* @__PURE__ */ Vt("div", { className: "jt-seg", role: "tablist", children: [
-        /* @__PURE__ */ Q("button", { role: "tab", "aria-selected": a === "join", className: a === "join" ? "on" : "", onClick: () => n("join"), children: "초대받았어요" }),
-        /* @__PURE__ */ Q("button", { role: "tab", "aria-selected": a === "new", className: a === "new" ? "on" : "", onClick: () => n("new"), children: "처음 만들어요" })
+      /* @__PURE__ */ qt("div", { className: "jt-seg", role: "tablist", children: [
+        /* @__PURE__ */ Q("button", { role: "tab", "aria-selected": n === "join", className: n === "join" ? "on" : "", onClick: () => o("join"), children: "초대받았어요" }),
+        /* @__PURE__ */ Q("button", { role: "tab", "aria-selected": n === "new", className: n === "new" ? "on" : "", onClick: () => o("new"), children: "처음 만들어요" })
       ] }),
-      a === "join" ? /* @__PURE__ */ Vt("div", { className: "jt-form", children: [
+      n === "join" ? /* @__PURE__ */ qt("div", { className: "jt-form", children: [
         /* @__PURE__ */ Q("p", { className: "jt-lead", children: "가족에게 받은 초대 링크를 누르면 바로 들어와요. 홈 화면 아이콘으로 열었는데 이 화면이 보이면, 초대 링크를 아래에 붙여넣어 주세요." }),
-        /* @__PURE__ */ Q("textarea", { rows: 3, value: g, onChange: (w) => d(w.target.value), placeholder: "https://…#j=…", "aria-label": "초대 링크" }),
+        /* @__PURE__ */ Q("textarea", { rows: 3, value: m, onChange: (w) => u(w.target.value), placeholder: "https://…#j=…", "aria-label": "초대 링크" }),
         x && /* @__PURE__ */ Q("p", { className: "jt-warn-inline", children: x }),
-        /* @__PURE__ */ Q("button", { className: "jt-primary", disabled: c || !g.trim(), onClick: k, children: c ? "연결 중" : "여행에 들어가기" })
-      ] }) : /* @__PURE__ */ Vt("div", { className: "jt-form", children: [
+        /* @__PURE__ */ Q("button", { className: "jt-primary", disabled: p || !m.trim(), onClick: A, children: p ? "연결 중" : "여행에 들어가기" })
+      ] }) : /* @__PURE__ */ qt("div", { className: "jt-form", children: [
         /* @__PURE__ */ Q("p", { className: "jt-lead", children: "가족 중 한 명만 한 번 하면 돼요. Firebase 프로젝트의 웹 앱 설정값(firebaseConfig)을 붙여넣어 주세요." }),
         /* @__PURE__ */ Q(
           "textarea",
@@ -375,9 +376,9 @@ function rs({ onDone: e }) {
             spellCheck: !1
           }
         ),
-        /* @__PURE__ */ Vt("div", { className: "jt-field", children: [
+        /* @__PURE__ */ qt("div", { className: "jt-field", children: [
           /* @__PURE__ */ Q("span", { children: "Firestore 보안 규칙 (규칙 탭에 붙여넣기)" }),
-          /* @__PURE__ */ Q("pre", { className: "jt-rules", children: In }),
+          /* @__PURE__ */ Q("pre", { className: "jt-rules", children: Da }),
           /* @__PURE__ */ Q(
             "button",
             {
@@ -385,35 +386,35 @@ function rs({ onDone: e }) {
               className: "jt-secondary",
               onClick: async () => {
                 try {
-                  await navigator.clipboard.writeText(In), u(!0);
+                  await navigator.clipboard.writeText(Da), c(!0);
                 } catch {
-                  u(!1);
+                  c(!1);
                 }
               },
-              children: E ? "규칙을 복사했어요" : "규칙 복사"
+              children: z ? "규칙을 복사했어요" : "규칙 복사"
             }
           )
         ] }),
         x && /* @__PURE__ */ Q("p", { className: "jt-warn-inline", children: x }),
-        /* @__PURE__ */ Q("button", { className: "jt-primary", disabled: c || !i.trim(), onClick: p, children: c ? "연결 확인 중" : "연결하고 여행 만들기" })
+        /* @__PURE__ */ Q("button", { className: "jt-primary", disabled: p || !i.trim(), onClick: g, children: p ? "연결 확인 중" : "연결하고 여행 만들기" })
       ] })
     ] }),
     /* @__PURE__ */ Q("style", { children: ".jt-lead{font-size:14px;color:#33405C}.jt-rules{margin:0;font-size:11.5px;line-height:1.5;background:#fff;border-radius:10px;padding:10px 12px;overflow-x:auto;white-space:pre}.jt .jt-setup .jt-seg{margin-bottom:16px}" })
   ] });
 }
-function ls() {
-  let [e, a] = Lt(() => {
-    let n = Da();
-    if (!n) return !1;
+function ps() {
+  let [e, n] = _t(() => {
+    let o = Pn();
+    if (!o) return !1;
     try {
-      return Je(n.c, n.t), !0;
+      return Ye(o.c, o.t), !0;
     } catch {
       return !1;
     }
   });
-  return os(() => {
+  return ss(() => {
     "serviceWorker" in navigator && location.protocol === "https:" && navigator.serviceWorker.register("./sw.js").catch(() => {
     });
-  }, []), e ? /* @__PURE__ */ Q(ma, {}) : /* @__PURE__ */ Q(rs, { onDone: () => a(!0) });
+  }, []), e ? /* @__PURE__ */ Q(un, {}) : /* @__PURE__ */ Q(cs, { onDone: () => n(!0) });
 }
-is(document.getElementById("root")).render(/* @__PURE__ */ Q(ls, {}));
+rs(document.getElementById("root")).render(/* @__PURE__ */ Q(ps, {}));
